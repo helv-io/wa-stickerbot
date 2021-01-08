@@ -39,7 +39,7 @@ function start(client: Client) {
         try {
           await client.sendMp4AsSticker(message.chatId, base64, videoOpts);
         } catch {
-          await client.reply(message.chatId, 'Video is too long. 10s max.', message.id, true);
+          await client.reply(message.chatId, `Video is too long. ${videoOpts.endTime} max.`, message.id, true);
         }
       } else if (!filename.endsWith('.webp')) {
         // Sends as Image sticker
