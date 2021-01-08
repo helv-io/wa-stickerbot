@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/Helvio88/wa-stickerbot#readme",
   "dependencies": {
-    "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@open-wa/wa-automate": "^3.1.12",
     "express": "^4.17.1",
     "mime": "^2.4.7"
