@@ -1,1 +1,2 @@
 # wa-stickerbot
+Hello World!
