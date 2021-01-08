@@ -36,7 +36,11 @@ function start(client: Client) {
         // Sends as Video Sticker
         // tslint:disable-next-line: no-console
         console.log('MP4/GIF Sticker', filename);
-        await client.sendMp4AsSticker(message.chatId, base64, videoOpts);
+        try {
+          await client.sendMp4AsSticker(message.chatId, base64, videoOpts);
+        } catch {
+          await client.reply(message.chatId, 'Video is too long. 10s max.', message.id, true);
+        }
       } else if (!filename.endsWith('.webp')) {
         // Sends as Image sticker
         // tslint:disable-next-line: no-console
