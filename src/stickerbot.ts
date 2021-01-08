@@ -15,7 +15,7 @@ const config: ConfigObject = {
 
 const videoOpts = {
   crop: true,
-  endTime: '00:00:10.0',
+  endTime: '00:00:07.0',
   fps: 10,
   loop: 0,
   startTime: '00:00:00.0'
