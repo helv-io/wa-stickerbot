@@ -13,14 +13,6 @@ const config: ConfigObject = {
   qrTimeout: 0
 };
 
-const videoOpts = {
-  crop: true,
-  endTime: '00:00:07.0',
-  fps: 10,
-  loop: 0,
-  startTime: '00:00:00.0'
-}
-
 function start(client: Client) {
   client.onAnyMessage(async message => {
 
@@ -36,10 +28,22 @@ function start(client: Client) {
         // Sends as Video Sticker
         // tslint:disable-next-line: no-console
         console.log('MP4/GIF Sticker', filename);
-        try {
-          await client.sendMp4AsSticker(message.chatId, base64, videoOpts);
-        } catch {
-          await client.reply(message.chatId, `Video is too long. ${videoOpts.endTime} max.`, message.id, true);
+        let videoOpts = {
+          crop: true,
+          fps: 10,
+          loop: 0,
+          startTime: '00:00:00.0',
+          endTime: '00:00:15.0'
+        }
+        for(let i = 15; i > 0; i--)
+        {
+          videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
+          try {
+            await client.sendMp4AsSticker(message.chatId, base64, videoOpts);
+            break;
+          } catch {
+            await client.reply(message.chatId, `Video is too long. ${videoOpts.endTime} max.`, message.id, true);
+          }
         }
       } else if (!filename.endsWith('.webp')) {
         // Sends as Image sticker
