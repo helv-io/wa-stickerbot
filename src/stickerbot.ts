@@ -42,7 +42,8 @@ function start(client: Client) {
             await client.sendMp4AsSticker(message.chatId, base64, videoOpts);
             break;
           } catch {
-            await client.reply(message.chatId, `Video is too long. ${videoOpts.endTime} max.`, message.id, true);
+            // tslint:disable-next-line: no-console
+            console.log(`Video is too long. ${videoOpts.endTime} max.`);
           }
         }
       } else if (!filename.endsWith('.webp')) {
