@@ -9,7 +9,7 @@ sudo apt install -y nodejs`
 3. ffmpeg:
 `sudo apt install ffmpeg`
 4. A phone with WhatsApp installed
-5. [OPTIONAL] pm2 Package Manager
+5. [OPTIONAL] pm2 Package Manager `sudo npm install -g pm2`
 
 ### Downloading the source
 1. `cd /opt`
