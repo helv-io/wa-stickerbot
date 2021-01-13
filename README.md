@@ -18,7 +18,7 @@ sudo apt install -y nodejs`
 4. `npm install`
 5. `tsc`
 6. `node dist\stickerbot.js`
-7. Use your WhatsApp Client to scan the WhatsApp Web QR Code
+7. Use your WhatsApp Client to scan the WhatsApp Web QR Code, then press `CTRL+c`
 8. `sudo pm2 startup`
 9. `sudo pm2 start dist/stickerbot.js`
 10. `sudo pm2 save`
