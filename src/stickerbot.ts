@@ -28,8 +28,8 @@ function start(client: Client) {
         // Sends as Video Sticker
         // tslint:disable-next-line: no-console
         console.log('MP4/GIF Sticker', filename);
-        let videoOpts = {
-          crop: true,
+        const videoOpts = {
+          crop: false,
           fps: 10,
           loop: 0,
           startTime: '00:00:00.0',
