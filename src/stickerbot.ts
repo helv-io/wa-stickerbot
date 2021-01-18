@@ -1,7 +1,7 @@
 import { create, Client, ConfigObject, decryptMedia } from '@open-wa/wa-automate';
 import mime from 'mime';
 
-import config from '../config.sample.json';
+import config from '../config.json';
 
 /*
 const config: ConfigObject = {
