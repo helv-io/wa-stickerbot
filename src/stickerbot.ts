@@ -1,6 +1,9 @@
 import { create, Client, ConfigObject, decryptMedia } from '@open-wa/wa-automate';
 import mime from 'mime';
 
+import config from '../config.sample.json';
+
+/*
 const config: ConfigObject = {
   sessionId: "sticker_bot",
   authTimeout: 60,
@@ -12,6 +15,7 @@ const config: ConfigObject = {
   popup: true,
   qrTimeout: 0
 };
+*/
 
 function start(client: Client) {
   client.onAnyMessage(async message => {
