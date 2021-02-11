@@ -48,8 +48,6 @@ function start(client: Client) {
       const mediaData = await decryptMedia(message);
       const base64 = `data:${message.mimetype};base64,${mediaData.toString('base64')}`;
 
-      console.log(filename);
-
       await client.reply(message.from, `${filename}`, message.id, true);
 
       if(filename.endsWith('.mp4')) {
@@ -61,7 +59,6 @@ function start(client: Client) {
         {
           videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
           try {
-            console.log(message.from, message.chatId, videoOpts);
             await client.sendMp4AsSticker(message.from, base64, videoOpts);
             break;
           } catch {
@@ -71,7 +68,6 @@ function start(client: Client) {
       } else if (!filename.endsWith('.webp')) {
         // Sends as Image sticker
         console.log('IMAGE Sticker', filename);
-        console.log(message.from);
         await client.sendImageAsSticker(message.from, base64);
       }
     }
