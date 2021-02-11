@@ -57,7 +57,7 @@ function start(client: Client) {
         {
           videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
           try {
-            await client.sendMp4AsSticker(message.from, base64, videoOpts);
+            await client.sendMp4AsSticker(message.from, base64, videoOpts, meta);
             break;
           } catch {
             console.log(`Video is too long. ${videoOpts.endTime} max.`);
@@ -66,7 +66,7 @@ function start(client: Client) {
       } else if (!filename.endsWith('.webp')) {
         // Sends as Image sticker
         console.log('IMAGE Sticker', filename);
-        await client.sendImageAsSticker(message.from, base64);
+        await client.sendImageAsSticker(message.from, base64, meta);
       }
     }
   });
