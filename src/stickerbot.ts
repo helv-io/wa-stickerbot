@@ -34,14 +34,8 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 
 // Don't change anything starting from here
 
-function start(client: Client) {
-  client.onMessage(async message => {
-
-    /*if(!message.isGroupMsg) {
-      console.log('Private Message. No stickers.')
-      return;
-    }*/
-
+const start = (client: Client) => {
+  const onMsg = client.onMessage(async message => {
     // Handles Attachments
     if (message.mimetype) {
       const filename = `${message.t}.${mime.extension(message.mimetype)}`;
@@ -57,7 +51,10 @@ function start(client: Client) {
         {
           videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
           try {
-            await client.sendMp4AsSticker(message.from, base64, videoOpts, meta);
+            client.sendMp4AsSticker(message.from, base64, videoOpts, meta).then(
+              y => console.log(y),
+              n => console.log(n)
+            );
             break;
           } catch {
             console.log(`Video is too long. ${videoOpts.endTime} max.`);
@@ -66,17 +63,33 @@ function start(client: Client) {
       } else if (!filename.endsWith('.webp')) {
         // Sends as Image sticker
         console.log('IMAGE Sticker', filename);
-        await client.sendImageAsSticker(message.from, base64, meta);
+        client.sendImageAsSticker(message.from, base64, meta).then(
+          y => console.log(y),
+          n => console.log(n)
+        );
       }
     }
   });
 
+  onMsg.then(
+    y => console.log(y),
+    n => console.log(n)
+  );
+
   // Click "Use Here" when another WhatsApp Web page is open
   client.onStateChanged(state => {
-    console.log('statechanged', state)
-    if(state==="CONFLICT" || state==="UNLAUNCHED") client.forceRefocus();
-    if(state==='UNPAIRED') console.log('LOGGED OUT!!!!')
-  });
+    if(state === "CONFLICT" || state === "UNLAUNCHED") {
+      client.forceRefocus().then(
+        y => console.log(y),
+        n => console.log(n));
+    }
+  }).then(
+    y => console.log(y),
+    n => console.log(n)
+  );
 };
 
-create(config).then(client => start(client));
+create(config).then(client => start(client)).then(
+  success => console.log(success),
+  err => console.log(err),
+);
