@@ -3,16 +3,34 @@ import { ChatId } from '@open-wa/wa-automate/dist/api/model/aliases';
 import { StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
 import mime from 'mime';
 
-import config from '../config.json';
-import stickermeta from '../stickermeta.json';
+// Begin changes here
 
-const meta: StickerMetadata = stickermeta;
-const cfg: ConfigObject = config;
+const meta: StickerMetadata = {
+  "author": "Helvio",
+  "pack": "Sticker Bot",
+  "keepScale": true
+};
+
+const cfg: ConfigObject = {
+  "sessionId": "sticker_bot",
+  "authTimeout": 60,
+  "blockCrashLogs": true,
+  "disableSpins": true,
+  "headless": true,
+  "logConsole": true,
+  "logConsoleErrors": true,
+  "popup": true,
+  "qrTimeout": 0
+};
+
+// Don't change anything starting from here
 
 function start(client: Client) {
   client.onAnyMessage(async message => {
 
     const chatId: ChatId = message.chatId as ChatId;
+    // tslint:disable-next-line: no-console
+    console.log(meta);
 
     // Handles Attachments
     if (message.mimetype) {
