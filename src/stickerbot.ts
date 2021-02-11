@@ -33,7 +33,7 @@ function start(client: Client) {
       return;
     }
 
-    const chatId: ChatId = message.chatId as ChatId;
+    const chatId: ChatId = message.from;
     console.log(message.mimetype, message.t);
 
     // Handles Attachments
@@ -60,7 +60,7 @@ function start(client: Client) {
         {
           videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
           try {
-            console.log(chatId, base64, videoOpts, meta);
+            console.log(chatId, videoOpts, meta);
             await client.sendMp4AsSticker(chatId, base64, videoOpts, meta);
             break;
           } catch {
@@ -70,7 +70,7 @@ function start(client: Client) {
       } else if (!filename.endsWith('.webp')) {
         // Sends as Image sticker
         console.log('IMAGE Sticker', filename);
-        console.log(chatId, base64, meta);
+        console.log(chatId, meta);
         await client.sendImageAsSticker(chatId, base64, meta);
       }
 
