@@ -59,7 +59,7 @@ function start(client: Client) {
         {
           videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
           try {
-            console.log(message.from, videoOpts, meta);
+            console.log(message.from, message.chatId, videoOpts, meta);
             await client.sendMp4AsSticker(message.from, base64, videoOpts);
             break;
           } catch {
