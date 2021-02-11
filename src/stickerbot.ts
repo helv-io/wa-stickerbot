@@ -35,61 +35,67 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 // Don't change anything starting from here
 
 const start = (client: Client) => {
-  const onMsg = client.onMessage(async message => {
+  const onMsg = client.onMessage(message => {
     // Handles Attachments
     if (message.mimetype) {
-      const filename = `${message.t}.${mime.extension(message.mimetype)}`;
-      const mediaData = await decryptMedia(message);
-      const base64 = `data:${message.mimetype};base64,${mediaData.toString('base64')}`;
+      const filename = `${message.t}.${mime.extension(message.mimetype) || ''}`;
+      let mediaData: Buffer;
+      decryptMedia(message).then(
+        responseBuffer => {
+          mediaData = responseBuffer;
+          const base64 = `data:${message.mimetype || ''};base64,${mediaData.toString('base64')}`;
 
-      if(filename.endsWith('.mp4')) {
-        // Sends as Video Sticker
-        console.log('MP4/GIF Sticker', filename);
-        videoOpts.endTime = '00:00:15.0';
+          if(filename.endsWith('.mp4')) {
+            // Sends as Video Sticker
+            console.log('MP4/GIF Sticker', filename);
+            videoOpts.endTime = '00:00:15.0';
 
-        for(let i = 15; i > 0; i--)
-        {
-          videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
-          try {
-            client.sendMp4AsSticker(message.from, base64, videoOpts, meta).then(
-              y => console.log(y),
-              n => console.log(n)
+            for(let i = 15; i > 0; i--)
+            {
+              videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
+              try {
+                client.sendMp4AsSticker(message.from, base64, videoOpts, meta).then(
+                  y => console.log('sendMp4AsSticker', y),
+                  n => console.log('sendMp4AsSticker', n)
+                );
+                break;
+              } catch {
+                console.log(`Video is too long. ${videoOpts.endTime} max.`);
+              }
+            }
+          } else if (!filename.endsWith('.webp')) {
+            // Sends as Image sticker
+            console.log('IMAGE Sticker', filename);
+            client.sendImageAsSticker(message.from, base64, meta).then(
+              y => console.log('sendImageAsSticker', y),
+              n => console.log('sendImageAsSticker', n)
             );
-            break;
-          } catch {
-            console.log(`Video is too long. ${videoOpts.endTime} max.`);
           }
-        }
-      } else if (!filename.endsWith('.webp')) {
-        // Sends as Image sticker
-        console.log('IMAGE Sticker', filename);
-        client.sendImageAsSticker(message.from, base64, meta).then(
-          y => console.log(y),
-          n => console.log(n)
-        );
-      }
+        },
+        error => console.log(error)
+      );
     }
   });
 
   onMsg.then(
-    y => console.log(y),
-    n => console.log(n)
+    y => console.log('onMessage', y),
+    n => console.log('onMessage', n)
   );
 
   // Click "Use Here" when another WhatsApp Web page is open
   client.onStateChanged(state => {
     if(state === "CONFLICT" || state === "UNLAUNCHED") {
       client.forceRefocus().then(
-        y => console.log(y),
-        n => console.log(n));
+        y => console.log('forceRefocus', y),
+        n => console.log('forceRefocus', n));
     }
   }).then(
-    y => console.log(y),
-    n => console.log(n)
+    y => console.log('onStateChanged', y),
+    n => console.log('onStateChanged', n)
   );
 };
 
 create(config).then(client => start(client)).then(
-  success => console.log(success),
-  err => console.log(err),
+  y => console.log('create', y),
+  n => console.log('create', n)
 );
