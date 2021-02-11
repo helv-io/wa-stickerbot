@@ -1,5 +1,4 @@
 import { create, Client, decryptMedia, ConfigObject } from '@open-wa/wa-automate';
-import { ChatId } from '@open-wa/wa-automate/dist/api/model/aliases';
 import { Mp4StickerConversionProcessOptions, StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
 import mime from 'mime-types';
 
@@ -61,7 +60,7 @@ function start(client: Client) {
           videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
           try {
             console.log(message.from, videoOpts, meta);
-            await client.sendMp4AsSticker(message.from, base64, videoOpts, meta);
+            await client.sendMp4AsSticker(message.from, base64, videoOpts);
             break;
           } catch {
             console.log(`Video is too long. ${videoOpts.endTime} max.`);
