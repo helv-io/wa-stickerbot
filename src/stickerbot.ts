@@ -35,7 +35,7 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 // Don't change anything starting from here
 
 const start = (client: Client) => {
-  const onMsg = client.onMessage(message => {
+  const onMsg = client.onAnyMessage(message => {
     // Handles Attachments
     if (message.mimetype) {
       const filename = `${message.t}.${mime.extension(message.mimetype) || ''}`;
@@ -55,8 +55,8 @@ const start = (client: Client) => {
               videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
               try {
                 client.sendMp4AsSticker(message.from, base64, videoOpts, meta).then(
-                  y => console.log('sendMp4AsSticker', y),
-                  n => console.log('sendMp4AsSticker', n)
+                  () => console.log('sendMp4AsSticker'),
+                  e => console.log('sendMp4AsSticker', e)
                 );
                 break;
               } catch {
@@ -67,8 +67,8 @@ const start = (client: Client) => {
             // Sends as Image sticker
             console.log('IMAGE Sticker', filename);
             client.sendImageAsSticker(message.from, base64, meta).then(
-              y => console.log('sendImageAsSticker', y),
-              n => console.log('sendImageAsSticker', n)
+              () => console.log('sendImageAsSticker'),
+              e => console.log('sendImageAsSticker', e)
             );
           }
         },
@@ -78,24 +78,24 @@ const start = (client: Client) => {
   });
 
   onMsg.then(
-    y => console.log('onMessage', y),
-    n => console.log('onMessage', n)
+    () => console.log('onAnyMessage'),
+    e => console.log('onAnyMessage', e)
   );
 
   // Click "Use Here" when another WhatsApp Web page is open
   client.onStateChanged(state => {
     if(state === "CONFLICT" || state === "UNLAUNCHED") {
       client.forceRefocus().then(
-        y => console.log('forceRefocus', y),
-        n => console.log('forceRefocus', n));
+        () => console.log('forceRefocus'),
+        e => console.log('forceRefocus', e));
     }
   }).then(
-    y => console.log('onStateChanged', y),
-    n => console.log('onStateChanged', n)
+    () => console.log('onStateChanged'),
+    e => console.log('onStateChanged', e)
   );
 };
 
 create(config).then(client => start(client)).then(
-  y => console.log('create', y),
+  () => console.log('create'),
   n => console.log('create', n)
 );
