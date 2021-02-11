@@ -11,7 +11,7 @@ const meta: StickerMetadata = {
   "keepScale": true
 };
 
-const cfg: ConfigObject = {
+const config: ConfigObject = {
   "sessionId": "sticker_bot",
   "authTimeout": 60,
   "blockCrashLogs": true,
@@ -58,6 +58,8 @@ function start(client: Client) {
         {
           videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
           try {
+            // tslint:disable-next-line: no-console
+            console.log(chatId, base64, videoOpts, meta);
             await client.sendMp4AsSticker(chatId, base64, videoOpts, meta);
             break;
           } catch {
@@ -69,7 +71,9 @@ function start(client: Client) {
         // Sends as Image sticker
         // tslint:disable-next-line: no-console
         console.log('IMAGE Sticker', filename);
-        await client.sendImageAsSticker(chatId, base64);
+        // tslint:disable-next-line: no-console
+        console.log(chatId, base64, meta);
+        await client.sendImageAsSticker(chatId, base64, meta);
       }
 
     } else {
@@ -97,4 +101,4 @@ function start(client: Client) {
   });
 };
 
-create(cfg).then(client => start(client));
+create(config).then(client => start(client));
