@@ -42,8 +42,6 @@ function start(client: Client) {
       return;
     }
 
-    await client.reply(message.from, 'Teste', message.id, true);
-
     // Handles Attachments
     if (message.mimetype) {
       const filename = `${message.t}.${mime.extension(message.mimetype)}`;
@@ -51,6 +49,8 @@ function start(client: Client) {
       const base64 = `data:${message.mimetype};base64,${mediaData.toString('base64')}`;
 
       console.log(filename);
+
+      await client.reply(message.from, `${filename}`, message.id, true);
 
       if(filename.endsWith('.mp4')) {
         // Sends as Video Sticker
