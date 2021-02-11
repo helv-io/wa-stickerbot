@@ -37,10 +37,10 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 function start(client: Client) {
   client.onMessage(async message => {
 
-    if(!message.isGroupMsg) {
+    /*if(!message.isGroupMsg) {
       console.log('Private Message. No stickers.')
       return;
-    }
+    }*/
 
     // Handles Attachments
     if (message.mimetype) {
