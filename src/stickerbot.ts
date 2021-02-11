@@ -1,7 +1,7 @@
 import { create, Client, decryptMedia, ConfigObject } from '@open-wa/wa-automate';
 import { ChatId } from '@open-wa/wa-automate/dist/api/model/aliases';
 import { StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
-import mime from 'mime';
+import mime from 'mime-types';
 
 // Begin changes here
 
@@ -30,7 +30,7 @@ function start(client: Client) {
 
     const chatId: ChatId = message.chatId as ChatId;
     // tslint:disable-next-line: no-console
-    console.log(message.mimetype);
+    console.log(message.mimetype, message.t);
 
     // Handles Attachments
     if (message.mimetype) {
