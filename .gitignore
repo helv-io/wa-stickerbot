@@ -117,5 +117,3 @@ dist
 
 # Project specific files
 *.data.json
-config.json
-stickermeta.json
