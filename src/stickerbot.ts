@@ -42,6 +42,8 @@ function start(client: Client) {
       return;
     }
 
+    await client.reply(message.from, 'Teste', message.id, true);
+
     // Handles Attachments
     if (message.mimetype) {
       const filename = `${message.t}.${mime.extension(message.mimetype)}`;
