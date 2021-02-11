@@ -29,6 +29,8 @@ function start(client: Client) {
   client.onAnyMessage(async message => {
 
     const chatId: ChatId = message.chatId as ChatId;
+    // tslint:disable-next-line: no-console
+    console.log(cfg, meta, chatId);
 
     // Handles Attachments
     if (message.mimetype) {
