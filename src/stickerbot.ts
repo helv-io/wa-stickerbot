@@ -28,8 +28,12 @@ const config: ConfigObject = {
 function start(client: Client) {
   client.onMessage(async message => {
 
+    if(!message.isGroupMsg) {
+      console.log('Private Message. No stickers.')
+      return;
+    }
+
     const chatId: ChatId = message.chatId as ChatId;
-    // tslint:disable-next-line: no-console
     console.log(message.mimetype, message.t);
 
     // Handles Attachments
@@ -40,12 +44,10 @@ function start(client: Client) {
         'base64'
       )}`;
 
-      // tslint:disable-next-line: no-console
       console.log(filename);
 
       if(filename.endsWith('.mp4')) {
         // Sends as Video Sticker
-        // tslint:disable-next-line: no-console
         console.log('MP4/GIF Sticker', filename);
         const videoOpts = {
           crop: false,
@@ -58,20 +60,16 @@ function start(client: Client) {
         {
           videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
           try {
-            // tslint:disable-next-line: no-console
             console.log(chatId, base64, videoOpts, meta);
             await client.sendMp4AsSticker(chatId, base64, videoOpts, meta);
             break;
           } catch {
-            // tslint:disable-next-line: no-console
             console.log(`Video is too long. ${videoOpts.endTime} max.`);
           }
         }
       } else if (!filename.endsWith('.webp')) {
         // Sends as Image sticker
-        // tslint:disable-next-line: no-console
         console.log('IMAGE Sticker', filename);
-        // tslint:disable-next-line: no-console
         console.log(chatId, base64, meta);
         await client.sendImageAsSticker(chatId, base64, meta);
       }
@@ -83,7 +81,6 @@ function start(client: Client) {
       // Checks whether the message is a hyperlink
       if (txt.toLowerCase().startsWith('http://') || txt.toLowerCase().startsWith('https://')) {
         // Sends an image URL as a Sticker
-        // tslint:disable-next-line: no-console
         console.log('URL Sticker', txt);
         await client.sendStickerfromUrl(chatId, txt);
       }
@@ -92,11 +89,8 @@ function start(client: Client) {
 
   // Click "Use Here" when another WhatsApp Web page is open
   client.onStateChanged(state => {
-    // tslint:disable-next-line: no-console
     console.log('statechanged', state)
     if(state==="CONFLICT" || state==="UNLAUNCHED") client.forceRefocus();
-
-    // tslint:disable-next-line: no-console
     if(state==='UNPAIRED') console.log('LOGGED OUT!!!!')
   });
 };
