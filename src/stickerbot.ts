@@ -34,7 +34,6 @@ function start(client: Client) {
       return;
     }
 
-    const chatId: ChatId = message.from;
     console.log(message.mimetype, message.t);
 
     // Handles Attachments
@@ -61,8 +60,8 @@ function start(client: Client) {
         {
           videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
           try {
-            console.log(chatId, videoOpts, meta);
-            await client.sendMp4AsSticker(chatId, base64, videoOpts, meta);
+            console.log(message.from, videoOpts, meta);
+            await client.sendMp4AsSticker(message.from, base64, videoOpts, meta);
             break;
           } catch {
             console.log(`Video is too long. ${videoOpts.endTime} max.`);
@@ -71,19 +70,8 @@ function start(client: Client) {
       } else if (!filename.endsWith('.webp')) {
         // Sends as Image sticker
         console.log('IMAGE Sticker', filename);
-        console.log(chatId, meta);
-        await client.sendImageAsSticker(chatId, base64, meta);
-      }
-
-    } else {
-      // Get the content of the message, hopefully a link
-      const txt = message.caption || message.body || message.content;
-
-      // Checks whether the message is a hyperlink
-      if (txt.toLowerCase().startsWith('http://') || txt.toLowerCase().startsWith('https://')) {
-        // Sends an image URL as a Sticker
-        console.log('URL Sticker', txt);
-        await client.sendStickerfromUrl(chatId, txt);
+        console.log(message.from, meta);
+        await client.sendImageAsSticker(message.from, base64, meta);
       }
     }
   });
