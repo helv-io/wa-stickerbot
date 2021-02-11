@@ -30,7 +30,7 @@ function start(client: Client) {
 
     const chatId: ChatId = message.chatId as ChatId;
     // tslint:disable-next-line: no-console
-    console.log(cfg, meta, chatId);
+    console.log(message.mimetype);
 
     // Handles Attachments
     if (message.mimetype) {
@@ -39,6 +39,9 @@ function start(client: Client) {
       const base64 = `data:${message.mimetype};base64,${mediaData.toString(
         'base64'
       )}`;
+
+      // tslint:disable-next-line: no-console
+      console.log(filename);
 
       if(filename.endsWith('.mp4')) {
         // Sends as Video Sticker
