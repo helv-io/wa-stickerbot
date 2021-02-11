@@ -14,13 +14,14 @@ const meta: StickerMetadata = {
 const config: ConfigObject = {
   "sessionId": "sticker_bot",
   "authTimeout": 60,
-  "blockCrashLogs": true,
+  "blockCrashLogs": false,
   "disableSpins": true,
   "headless": true,
   "logConsole": true,
   "logConsoleErrors": true,
   "popup": true,
-  "qrTimeout": 0
+  "qrTimeout": 0,
+  "bypassCSP": true
 };
 
 // Don't change anything starting from here
