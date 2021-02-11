@@ -35,7 +35,7 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 // Don't change anything starting from here
 
 function start(client: Client) {
-  client.onMessage(async message => {
+  client.onAnyMessage(async message => {
 
     if(!message.isGroupMsg) {
       console.log('Private Message. No stickers.')
@@ -47,8 +47,6 @@ function start(client: Client) {
       const filename = `${message.t}.${mime.extension(message.mimetype)}`;
       const mediaData = await decryptMedia(message);
       const base64 = `data:${message.mimetype};base64,${mediaData.toString('base64')}`;
-
-      await client.reply(message.from, `${filename}`, message.id, true);
 
       if(filename.endsWith('.mp4')) {
         // Sends as Video Sticker
