@@ -35,7 +35,7 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 // Don't change anything starting from here
 
 function start(client: Client) {
-  client.onAnyMessage(async message => {
+  client.onMessage(async message => {
 
     if(!message.isGroupMsg) {
       console.log('Private Message. No stickers.')
