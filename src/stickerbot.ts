@@ -26,7 +26,7 @@ const cfg: ConfigObject = {
 // Don't change anything starting from here
 
 function start(client: Client) {
-  client.onAnyMessage(async message => {
+  client.onMessage(async message => {
 
     const chatId: ChatId = message.chatId as ChatId;
     // tslint:disable-next-line: no-console
