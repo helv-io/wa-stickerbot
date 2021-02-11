@@ -1,28 +1,22 @@
-import { create, Client, ConfigObject, decryptMedia } from '@open-wa/wa-automate';
+import { create, Client, decryptMedia, ConfigObject } from '@open-wa/wa-automate';
+import { ChatId } from '@open-wa/wa-automate/dist/api/model/aliases';
+import { StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
 import mime from 'mime';
 
 import config from '../config.json';
+import stickermeta from '../stickermeta.json';
 
-/*
-const config: ConfigObject = {
-  sessionId: "sticker_bot",
-  authTimeout: 60,
-  blockCrashLogs: true,
-  disableSpins: true,
-  headless: true,
-  logConsole: true,
-  logConsoleErrors: true,
-  popup: true,
-  qrTimeout: 0
-};
-*/
+const meta: StickerMetadata = stickermeta;
+const cfg: ConfigObject = config;
 
 function start(client: Client) {
   client.onAnyMessage(async message => {
 
+    const chatId: ChatId = message.chatId as ChatId;
+
     // Handles Attachments
     if (message.mimetype) {
-      const filename = `${message.t}.${mime.getExtension(message.mimetype)}`;
+      const filename = `${message.t}.${mime.extension(message.mimetype)}`;
       const mediaData = await decryptMedia(message);
       const base64 = `data:${message.mimetype};base64,${mediaData.toString(
         'base64'
@@ -43,7 +37,7 @@ function start(client: Client) {
         {
           videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
           try {
-            await client.sendMp4AsSticker(message.chatId, base64, videoOpts);
+            await client.sendMp4AsSticker(chatId, base64, videoOpts, meta);
             break;
           } catch {
             // tslint:disable-next-line: no-console
@@ -54,7 +48,7 @@ function start(client: Client) {
         // Sends as Image sticker
         // tslint:disable-next-line: no-console
         console.log('IMAGE Sticker', filename);
-        await client.sendImageAsSticker(message.chatId, base64);
+        await client.sendImageAsSticker(chatId, base64);
       }
 
     } else {
@@ -66,7 +60,7 @@ function start(client: Client) {
         // Sends an image URL as a Sticker
         // tslint:disable-next-line: no-console
         console.log('URL Sticker', txt);
-        await client.sendStickerfromUrl(message.chatId, txt);
+        await client.sendStickerfromUrl(chatId, txt);
       }
     }
   });
@@ -82,4 +76,4 @@ function start(client: Client) {
   });
 };
 
-create(config).then(client => start(client));
+create(cfg).then(client => start(client));
