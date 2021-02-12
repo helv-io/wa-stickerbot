@@ -80,4 +80,4 @@ var start = function (client) {
 wa_automate_1.create(config).then(function (client) { return start(client); }).then(function () { return console.log('create'); }, function (n) { return console.log('create', n); });
 var app = express_1.default();
 app.get('/', function (req, res) { return res.send('Hello World'); });
-app.listen(443);
+app.listen(8080);
