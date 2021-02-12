@@ -49,7 +49,7 @@ var start = function (client) {
                     for (var i = 15; i > 0; i--) {
                         videoOpts.endTime = "00:00:" + i.toString().padStart(2, '0') + ".0";
                         try {
-                            client.sendMp4AsSticker(message.from, dataURL, videoOpts).then(function (s) { return console.log('sendMp4AsSticker', s); }, function (e) { return console.log('sendMp4AsSticker', e); });
+                            client.sendMp4AsSticker(message.from, dataURL, videoOpts, meta).then(function (s) { return console.log('sendMp4AsSticker', s); }, function (e) { return console.log('sendMp4AsSticker', e); });
                             break;
                         }
                         catch (_a) {
