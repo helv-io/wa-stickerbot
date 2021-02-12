@@ -16,7 +16,7 @@ const config: ConfigObject = {
   blockCrashLogs: false,
   disableSpins: true,
   headless: true,
-  logConsole: true,
+  logConsole: false,
   logConsoleErrors: true,
   popup: true,
   qrTimeout: 0,
