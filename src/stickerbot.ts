@@ -56,7 +56,7 @@ const start = (client: Client) => {
               videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
               try {
                 client.sendMp4AsSticker(message.from, base64, videoOpts, meta).then(
-                  () => console.log('sendMp4AsSticker'),
+                  s => console.log('sendMp4AsSticker', s),
                   e => console.log('sendMp4AsSticker', e)
                 );
                 break;
@@ -68,7 +68,7 @@ const start = (client: Client) => {
             // Sends as Image sticker
             console.log('IMAGE Sticker', filename);
             client.sendImageAsSticker(message.from, base64, meta).then(
-              () => console.log('sendImageAsSticker'),
+              s => console.log('sendImageAsSticker', s),
               e => console.log('sendImageAsSticker', e)
             );
           }
