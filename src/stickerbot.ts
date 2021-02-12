@@ -44,7 +44,8 @@ const start = (client: Client) => {
       decryptMedia(message).then(
         responseBuffer => {
           mediaData = responseBuffer;
-          const base64 = `data:${message.mimetype || ''};base64,${mediaData.toString('base64')}`;
+          const dataURL = `data:${message.mimetype || ''};base64,${mediaData.toString('base64')}`;
+          console.log(dataURL);
 
           if(filename.endsWith('.mp4')) {
             // Sends as Video Sticker
@@ -55,7 +56,7 @@ const start = (client: Client) => {
             {
               videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
               try {
-                client.sendMp4AsSticker(message.from, base64, videoOpts).then(
+                client.sendMp4AsSticker(message.from, dataURL, videoOpts).then(
                   s => console.log('sendMp4AsSticker', s),
                   e => console.log('sendMp4AsSticker', e)
                 );
@@ -67,7 +68,7 @@ const start = (client: Client) => {
           } else if (!filename.endsWith('.webp')) {
             // Sends as Image sticker
             console.log('IMAGE Sticker', filename);
-            client.sendImageAsSticker(message.from, base64).then(
+            client.sendImageAsSticker(message.from, dataURL).then(
               s => console.log('sendImageAsSticker', s),
               e => console.log('sendImageAsSticker', e)
             );
