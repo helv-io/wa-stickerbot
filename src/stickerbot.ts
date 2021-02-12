@@ -55,7 +55,7 @@ const start = (client: Client) => {
             {
               videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
               try {
-                client.sendMp4AsSticker(message.from, base64, videoOpts, meta).then(
+                client.sendMp4AsSticker(message.from, base64, videoOpts).then(
                   s => console.log('sendMp4AsSticker', s),
                   e => console.log('sendMp4AsSticker', e)
                 );
@@ -67,7 +67,7 @@ const start = (client: Client) => {
           } else if (!filename.endsWith('.webp')) {
             // Sends as Image sticker
             console.log('IMAGE Sticker', filename);
-            client.sendImageAsSticker(message.from, base64, meta).then(
+            client.sendImageAsSticker(message.from, base64).then(
               s => console.log('sendImageAsSticker', s),
               e => console.log('sendImageAsSticker', e)
             );
@@ -82,8 +82,8 @@ const start = (client: Client) => {
   const onMsg = client.onMessage(m);
 
   onMsg.then(
-    () => console.log('onAnyMessage'),
-    e => console.log('onAnyMessage', e)
+    () => console.log('onMessage'),
+    e => console.log('onMessage', e)
   );
 
   onAnyMsg.then(
