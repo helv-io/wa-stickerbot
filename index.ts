@@ -39,6 +39,11 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 const start = (client: Client) => {
 
   const m = (message: Message) => {
+    // Skips personal chats
+    if(!message.isGroupMsg) {
+      return;
+    }
+
     // Handles Attachments
     if (message.mimetype) {
       const filename = `${message.t}.${mime.extension(message.mimetype) || ''}`;
@@ -58,7 +63,7 @@ const start = (client: Client) => {
               videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
               try {
                 client.sendMp4AsSticker(message.from, dataURL, videoOpts, meta).then(
-                  s => console.log('+sendMp4AsSticker', s),
+                  () => console.log('+sendMp4AsSticker'),
                   e => console.log('-sendMp4AsSticker', e)
                 );
                 break;
@@ -70,7 +75,7 @@ const start = (client: Client) => {
             // Sends as Image sticker
             console.log('IMAGE Sticker', filename);
             client.sendImageAsSticker(message.from, dataURL, meta).then(
-              s => console.log('+sendImageAsSticker', s),
+              () => console.log('+sendImageAsSticker'),
               e => console.log('-sendImageAsSticker', e)
             );
           }

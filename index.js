@@ -36,6 +36,10 @@ var videoOpts = {
 // Don't change anything starting from here
 var start = function (client) {
     var m = function (message) {
+        // Skips personal chats
+        if (!message.isGroupMsg) {
+            return;
+        }
         // Handles Attachments
         if (message.mimetype) {
             var filename_1 = message.t + "." + (mime_types_1.default.extension(message.mimetype) || '');
@@ -50,7 +54,7 @@ var start = function (client) {
                     for (var i = 15; i > 0; i--) {
                         videoOpts.endTime = "00:00:" + i.toString().padStart(2, '0') + ".0";
                         try {
-                            client.sendMp4AsSticker(message.from, dataURL, videoOpts, meta).then(function (s) { return console.log('+sendMp4AsSticker', s); }, function (e) { return console.log('-sendMp4AsSticker', e); });
+                            client.sendMp4AsSticker(message.from, dataURL, videoOpts, meta).then(function () { return console.log('+sendMp4AsSticker'); }, function (e) { return console.log('-sendMp4AsSticker', e); });
                             break;
                         }
                         catch (_a) {
@@ -61,7 +65,7 @@ var start = function (client) {
                 else if (!filename_1.endsWith('.webp')) {
                     // Sends as Image sticker
                     console.log('IMAGE Sticker', filename_1);
-                    client.sendImageAsSticker(message.from, dataURL, meta).then(function (s) { return console.log('+sendImageAsSticker', s); }, function (e) { return console.log('-sendImageAsSticker', e); });
+                    client.sendImageAsSticker(message.from, dataURL, meta).then(function () { return console.log('+sendImageAsSticker'); }, function (e) { return console.log('-sendImageAsSticker', e); });
                 }
             }, function (error) { return console.log(error); });
         }
