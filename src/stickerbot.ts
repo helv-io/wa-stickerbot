@@ -1,4 +1,4 @@
-import { create, Client, decryptMedia, ConfigObject } from '@open-wa/wa-automate';
+import { create, Client, decryptMedia, ConfigObject, Message } from '@open-wa/wa-automate';
 import { Mp4StickerConversionProcessOptions, StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
 import mime from 'mime-types';
 
@@ -35,7 +35,8 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 // Don't change anything starting from here
 
 const start = (client: Client) => {
-  const onMsg = client.onAnyMessage(message => {
+
+  const m = (message: Message) => {
     // Handles Attachments
     if (message.mimetype) {
       const filename = `${message.t}.${mime.extension(message.mimetype) || ''}`;
@@ -75,9 +76,17 @@ const start = (client: Client) => {
         error => console.log(error)
       );
     }
-  });
+  }
+
+  const onAnyMsg = client.onAnyMessage(m);
+  const onMsg = client.onMessage(m);
 
   onMsg.then(
+    () => console.log('onAnyMessage'),
+    e => console.log('onAnyMessage', e)
+  );
+
+  onAnyMsg.then(
     () => console.log('onAnyMessage'),
     e => console.log('onAnyMessage', e)
   );
