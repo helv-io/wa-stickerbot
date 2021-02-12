@@ -56,7 +56,7 @@ const start = (client: Client) => {
             {
               videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
               try {
-                client.sendMp4AsSticker(message.from, dataURL, videoOpts).then(
+                client.sendMp4AsSticker(message.from, dataURL, videoOpts, meta).then(
                   s => console.log('sendMp4AsSticker', s),
                   e => console.log('sendMp4AsSticker', e)
                 );
