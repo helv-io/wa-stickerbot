@@ -22,7 +22,8 @@ const config: ConfigObject = {
   popup: true,
   qrTimeout: 0,
   bypassCSP: true,
-  chromiumArgs: ['--no-sandbox']
+  chromiumArgs: ['--no-sandbox'],
+  sessionData: process.env.SESSION_DATA
 };
 
 const videoOpts: Mp4StickerConversionProcessOptions = {
