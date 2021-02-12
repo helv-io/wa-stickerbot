@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var wa_automate_1 = require("@open-wa/wa-automate");
 var mime_types_1 = __importDefault(require("mime-types"));
+var express_1 = __importDefault(require("express"));
 // Begin changes here
 var meta = {
     author: 'Helvio',
@@ -77,3 +78,6 @@ var start = function (client) {
     }).then(function () { return console.log('onStateChanged'); }, function (e) { return console.log('onStateChanged', e); });
 };
 wa_automate_1.create(config).then(function (client) { return start(client); }).then(function () { return console.log('create'); }, function (n) { return console.log('create', n); });
+var app = express_1.default();
+app.get('/', function (req, res) { return res.send('Hello World'); });
+app.listen(443);
