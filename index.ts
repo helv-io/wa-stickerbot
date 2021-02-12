@@ -20,7 +20,8 @@ const config: ConfigObject = {
   logConsoleErrors: true,
   popup: true,
   qrTimeout: 0,
-  bypassCSP: true
+  bypassCSP: true,
+  chromiumArgs: ['--no-sandbox']
 };
 
 const videoOpts: Mp4StickerConversionProcessOptions = {
