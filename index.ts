@@ -1,6 +1,7 @@
 import { create, Client, decryptMedia, ConfigObject, Message } from '@open-wa/wa-automate';
 import { Mp4StickerConversionProcessOptions, StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
 import mime from 'mime-types';
+import express from 'express';
 
 // Begin changes here
 
@@ -109,3 +110,8 @@ create(config).then(client => start(client)).then(
   () => console.log('create'),
   n => console.log('create', n)
 );
+
+const app = express();
+app.get('/', (req, res) => res.send('Hello World'));
+
+app.listen(443);
