@@ -69,7 +69,7 @@ const start = (client: Client) => {
           } else if (!filename.endsWith('.webp')) {
             // Sends as Image sticker
             console.log('IMAGE Sticker', filename);
-            client.sendImageAsSticker(message.from, dataURL).then(
+            client.sendImageAsSticker(message.from, dataURL, meta).then(
               s => console.log('+sendImageAsSticker', s),
               e => console.log('-sendImageAsSticker', e)
             );
