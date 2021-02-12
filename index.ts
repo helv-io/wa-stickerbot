@@ -26,7 +26,7 @@ const config: ConfigObject = {
 };
 
 const videoOpts: Mp4StickerConversionProcessOptions = {
-  crop: false,
+  crop: true,
   fps: 10,
   loop: 0,
   log: true,
