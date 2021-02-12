@@ -2,9 +2,9 @@
   "name": "wa-stickerbot",
   "version": "1.0.0",
   "description": "WhatsApp Sticker Bot",
-  "main": "dist/stickerbot.js",
+  "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/stickerbot.js",
+    "start": "tsc && node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
