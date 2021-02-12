@@ -21,7 +21,8 @@ var config = {
     logConsoleErrors: true,
     popup: true,
     qrTimeout: 0,
-    bypassCSP: true
+    bypassCSP: true,
+    chromiumArgs: ['--no-sandbox']
 };
 var videoOpts = {
     crop: false,
