@@ -81,13 +81,6 @@ const start = (client: Client) => {
   }
 
   const onAnyMsg = client.onAnyMessage(m);
-  const onMsg = client.onMessage(m);
-
-  onMsg.then(
-    () => console.log('+onMessage'),
-    e => console.log('-onMessage', e)
-  );
-
   onAnyMsg.then(
     () => console.log('+onAnyMessage'),
     e => console.log('-onAnyMessage', e)
