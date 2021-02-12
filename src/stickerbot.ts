@@ -45,7 +45,6 @@ const start = (client: Client) => {
         responseBuffer => {
           mediaData = responseBuffer;
           const dataURL = `data:${message.mimetype || ''};base64,${mediaData.toString('base64')}`;
-          console.log(dataURL);
 
           if(filename.endsWith('.mp4')) {
             // Sends as Video Sticker
