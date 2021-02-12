@@ -1,4 +1,4 @@
-import { create, Client, decryptMedia, ConfigObject, Message } from '@open-wa/wa-automate';
+import { create, Client, decryptMedia, ConfigObject } from '@open-wa/wa-automate';
 import { Mp4StickerConversionProcessOptions, StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
 import mime from 'mime-types';
 
@@ -38,7 +38,8 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 
 const start = (client: Client) => {
 
-  const m = (message: Message) => {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  void client.onAnyMessage(async message => {
     // Skips personal chats
     if(!message.isGroupMsg) {
       return;
@@ -47,64 +48,38 @@ const start = (client: Client) => {
     // Handles Attachments
     if (message.mimetype) {
       const filename = `${message.t}.${mime.extension(message.mimetype) || ''}`;
-      let mediaData: Buffer;
-      decryptMedia(message).then(
-        responseBuffer => {
-          mediaData = responseBuffer;
-          const dataURL = `data:${message.mimetype || ''};base64,${mediaData.toString('base64')}`;
+      const mediaData = await decryptMedia(message);
+      const dataURL = `data:${message.mimetype};base64,${mediaData.toString('base64')}`;
 
-          if(filename.endsWith('.mp4')) {
-            // Sends as Video Sticker
-            console.log('MP4/GIF Sticker', filename);
-            videoOpts.endTime = '00:00:15.0';
+      if(filename.endsWith('.mp4')) {
+        // Sends as Video Sticker
+        console.log('MP4/GIF Sticker', filename);
+        videoOpts.endTime = '00:00:15.0';
 
-            for(let i = 15; i > 0; i--)
-            {
-              videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
-              try {
-                client.sendMp4AsSticker(message.from, dataURL, videoOpts, meta).then(
-                  () => console.log('+sendMp4AsSticker'),
-                  e => console.log('-sendMp4AsSticker', e)
-                );
-                break;
-              } catch {
-                console.log(`Video is too long. ${videoOpts.endTime} max.`);
-              }
-            }
-          } else if (!filename.endsWith('.webp')) {
-            // Sends as Image sticker
-            console.log('IMAGE Sticker', filename);
-            client.sendImageAsSticker(message.from, dataURL, meta).then(
-              () => console.log('+sendImageAsSticker'),
-              e => console.log('-sendImageAsSticker', e)
-            );
+        for(let i = 15; i > 0; i--)
+        {
+          videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
+          try {
+            void await client.sendMp4AsSticker(message.from, dataURL, videoOpts, meta);
+            break;
+          } catch {
+            console.log(`Video is too long. ${videoOpts.endTime} max.`);
           }
-        },
-        error => console.log(error)
-      );
+        }
+      } else if (!filename.endsWith('.webp')) {
+        // Sends as Image sticker
+        console.log('IMAGE Sticker', filename);
+        void await client.sendImageAsSticker(message.from, dataURL, meta);
+      }
     }
-  }
-
-  const onAnyMsg = client.onAnyMessage(m);
-  onAnyMsg.then(
-    () => console.log('+onAnyMessage'),
-    e => console.log('-onAnyMessage', e)
-  );
+  });
 
   // Click "Use Here" when another WhatsApp Web page is open
-  client.onStateChanged(state => {
+  void client.onStateChanged(state => {
     if(state === "CONFLICT" || state === "UNLAUNCHED") {
-      client.forceRefocus().then(
-        () => console.log('+forceRefocus'),
-        e => console.log('-forceRefocus', e));
+      void client.forceRefocus();
     }
-  }).then(
-    () => console.log('+onStateChanged'),
-    e => console.log('-onStateChanged', e)
-  );
+  });
 };
 
-create(config).then(client => start(client)).then(
-  () => console.log('+create'),
-  n => console.log('-create', n)
-);
+void create(config).then(client => start(client));
