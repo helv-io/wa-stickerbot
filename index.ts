@@ -100,10 +100,14 @@ const start = (client: Client) => {
             const size = gif.images.original.webp_size;
             const altUrl = gif.images.fixed_width.webp.replace(/media[0-9]/, 'i');
             const altSize = gif.images.fixed_width.webp_size;
-            if(parseInt(size, 10) <= 1500000) {
-              client.sendStickerfromUrl(message.from, url);
-            } else if(parseInt(altSize, 10) <= 1500000) {
-              client.sendStickerfromUrl(message.from, altUrl);
+            try {
+              if(parseInt(size, 10) <= 1500000) {
+                client.sendStickerfromUrl(message.from, url);
+              } else if(parseInt(altSize, 10) <= 1500000) {
+                client.sendStickerfromUrl(message.from, altUrl);
+              }
+            } catch {
+              // Fail silently. Sticker too large. Shit happens.
             }
           });
         });
