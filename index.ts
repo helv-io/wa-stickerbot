@@ -103,10 +103,11 @@ const start = (client: Client) => {
         videoOpts.crop = false;
 
         console.log('Searching for', giphySearch.q);
-        await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
+
+        // GIPHY GIFs
+        // await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
         ['gifs', 'stickers'].forEach(async (type: string) => {
           const giphys = await (await axios.get(`https://api.giphy.com/v1/${type}/search`, { params: giphySearch })).data;
-          const tenors = await (await axios.get('https://g.tenor.com/v1/search', {params: tenorSearch})).data;
 
           await giphys.data.forEach((giphy: any) => {
             const url = giphy.images.original.webp.replace(/media[0-9]/, 'i');
@@ -126,25 +127,28 @@ const start = (client: Client) => {
               console.log('Sticker too big:', size, altSize);
             }
           });
+        });
 
-          await tenors.results.forEach((tenor: any) => {
-            const url = tenor.media[0].gif.url;
-            const size = tenor.media[0].gif.size;
-            const altUrl = tenor.media[0].tinygif.url;
-            const altSize = tenor.media[0].tinygif.size;
+        // Tenor GIFs
+        const tenors = await (await axios.get('https://g.tenor.com/v1/search', {params: tenorSearch})).data;
 
-            try {
-              if(size <= 1400000) {
-                console.log(size, url);
-                client.sendStickerfromUrl(message.from, url);
-              } else if(altSize <= 1400000) {
-                console.log(altSize, altUrl);
-                client.sendStickerfromUrl(message.from, altUrl);
-              }
-            } catch {
-              console.log('Sticker too big:', size, altSize);
+        await tenors.results.forEach((tenor: any) => {
+          const url = tenor.media[0].gif.url;
+          const size = tenor.media[0].gif.size;
+          const altUrl = tenor.media[0].tinygif.url;
+          const altSize = tenor.media[0].tinygif.size;
+
+          try {
+            if(size <= 1400000) {
+              console.log(size, url);
+              client.sendStickerfromUrl(message.from, url);
+            } else if(altSize <= 1400000) {
+              console.log(altSize, altUrl);
+              client.sendStickerfromUrl(message.from, altUrl);
             }
-          });
+          } catch {
+            console.log('Sticker too big:', size, altSize);
+          }
         });
       }
     }
