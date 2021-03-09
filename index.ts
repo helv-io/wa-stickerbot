@@ -105,8 +105,8 @@ const start = (client: Client) => {
         console.log('Searching for', giphySearch.q);
 
         // Attributions
-        await client.sendImageAsSticker(message.from, 'attributions/giphy.gif');
-        await client.sendImageAsSticker(message.from, 'attributions/tenor.png');
+        await client.sendImageAsSticker(message.from, 'attributions/giphy.gif', meta);
+        await client.sendImageAsSticker(message.from, 'attributions/tenor.png', meta);
 
         // GIPHY GIFs
         ['gifs', 'stickers'].forEach(async (type: string) => {
@@ -121,10 +121,10 @@ const start = (client: Client) => {
             try {
               if(size <= 1400000) {
                 console.log(size, url);
-                client.sendStickerfromUrl(message.from, url);
+                client.sendStickerfromUrl(message.from, url, undefined, meta);
               } else if(altSize <= 1400000) {
                 console.log(altSize, altUrl);
-                client.sendStickerfromUrl(message.from, altUrl);
+                client.sendStickerfromUrl(message.from, altUrl, undefined, meta);
               }
             } catch {
               console.log('Sticker too big:', size, altSize);
@@ -144,10 +144,10 @@ const start = (client: Client) => {
           try {
             if(size <= 1400000) {
               console.log(size, url);
-              client.sendStickerfromUrl(message.from, url);
+              client.sendStickerfromUrl(message.from, url, undefined, meta);
             } else if(altSize <= 1400000) {
               console.log(altSize, altUrl);
-              client.sendStickerfromUrl(message.from, altUrl);
+              client.sendStickerfromUrl(message.from, altUrl, undefined, meta);
             }
           } catch {
             console.log('Sticker too big:', size, altSize);
