@@ -40,7 +40,8 @@ const giphySearch: any = {
   api_key: 'xV08BBGGwayvb8RsgiYLUfgKU3mMaDxp',
   lang: 'pt',
   limit: 1,
-  q: 'placeholder'
+  q: 'placeholder',
+  type: 'gif'
 };
 
 // Don't change anything starting from here
@@ -81,14 +82,17 @@ const start = (client: Client) => {
         void await client.sendImageAsSticker(message.from, dataURL, meta);
       }
     } else {
-      const keywords = message.body.match(/sticker(s?) d[a|e|o]s? (.*)/i);
-      if(keywords !== null) {
-        giphySearch.limit = keywords[1] === 's' ? 10 : 1;
-        giphySearch.q = keywords[2];
-        videoOpts.crop = false;
-        console.log('Searching for', giphySearch.q);
+      // Handles REGEXes
+      const keywords = message.body.match(/(sticker|figurinha)(s?) d[a|e|o]s? (.*)/i);
 
-        const gifs = await (await axios.get('https://api.giphy.com/v1/gifs/search', { params: giphySearch })).data;
+      if(keywords !== null) {
+        giphySearch.type = keywords[1].toLowerCase() === 'figurinha' ? 'stickers' : 'gifs';
+        giphySearch.limit = keywords[2] === 's' ? 10 : 1;
+        giphySearch.q = keywords[3];
+        videoOpts.crop = false;
+
+        console.log('Searching for', giphySearch.q);
+        const gifs = await (await axios.get(`https://api.giphy.com/v1/${giphySearch.type}/search`, { params: giphySearch })).data;
 
         await gifs.data.forEach((gif: any) => {
           client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
@@ -101,7 +105,7 @@ const start = (client: Client) => {
               console.log(`Video is too long. ${videoOpts.endTime} max.`);
             }
           }
-        }
+        });
       }
     }
   });
