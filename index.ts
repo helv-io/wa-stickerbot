@@ -97,8 +97,8 @@ const start = (client: Client) => {
         await gifs.data.forEach((gif: any) => {
           console.log(gif.images.original.webp.replace('media1', 'i'));
           axios.get(gif.images.original.webp.replace('media1', 'i')).then((result: any) => {
-            console.log(result);
-            client.sendRawWebpAsSticker(message.from, result)
+            console.log(result.data);
+            client.sendRawWebpAsSticker(message.from, result.data)
           });
           /*for(let i = 15; i > 0; i--) {
             videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
