@@ -100,6 +100,8 @@ const start = (client: Client) => {
             const size = gif.images.original.webp_size;
             const altUrl = gif.images.fixed_width.webp.replace(/media[0-9]/, 'i');
             const altSize = gif.images.fixed_width.webp_size;
+
+            console.log(url, size, altSize);
             try {
               if(parseInt(size, 10) <= 1500000) {
                 client.sendStickerfromUrl(message.from, url);
