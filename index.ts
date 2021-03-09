@@ -80,11 +80,10 @@ const start = (client: Client) => {
         void await client.sendImageAsSticker(message.from, dataURL, meta);
       }
     } else {
-      console.log('Text Message', message.body);
       console.log(message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/));
-      const keyword = message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/);
-      if(keyword[1]) {
-        const { data: gifs }  = await giphy.search(keyword![1], giphyOptions);
+      const keyword: string[] = message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/);
+      if(keyword !== null) {
+        const { data: gifs }  = await giphy.search(keyword[1], giphyOptions);
         console.log(gifs);
       }
     }
