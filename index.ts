@@ -86,13 +86,12 @@ const start = (client: Client) => {
       const keywords = message.body.match(/(sticker|figurinha)(s?) d[a|e|o]s? (.*)/i);
 
       if(keywords !== null) {
-        giphySearch.type = keywords[1].toLowerCase() === 'figurinha' ? 'stickers' : 'gifs';
         giphySearch.limit = keywords[2] === 's' ? 10 : 1;
         giphySearch.q = keywords[3];
         videoOpts.crop = false;
 
         console.log('Searching for', giphySearch.q);
-        const gifs = await (await axios.get(`https://api.giphy.com/v1/${giphySearch.type}/search`, { params: giphySearch })).data;
+        const gifs = await (await axios.get(`https://api.giphy.com/v1/gifs/search`, { params: giphySearch })).data;
         client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
 
         await gifs.data.forEach((gif: any) => {
