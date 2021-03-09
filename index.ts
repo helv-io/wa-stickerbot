@@ -44,6 +44,15 @@ const giphySearch: any = {
   type: 'gif'
 };
 
+const tenorSearch: any = {
+  key: 'SNS0GPOLUFOQ',
+  locale: 'pt_BR',
+  media_filter: 'minimal',
+  limit: 1,
+  q: 'placeholder',
+  type: 'gif'
+};
+
 // Don't change anything starting from here
 
 const start = (client: Client) => {
@@ -88,18 +97,41 @@ const start = (client: Client) => {
       if(keywords !== null) {
         giphySearch.limit = keywords[2] === 's' ? 10 : 1;
         giphySearch.q = keywords[3];
+        tenorSearch.limit = giphySearch.limit;
+        tenorSearch.q = giphySearch.q;
+
         videoOpts.crop = false;
 
         console.log('Searching for', giphySearch.q);
         await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
         ['gifs', 'stickers'].forEach(async (type: string) => {
-          const gifs = await (await axios.get(`https://api.giphy.com/v1/${type}/search`, { params: giphySearch })).data;
+          const giphys = await (await axios.get(`https://api.giphy.com/v1/${type}/search`, { params: giphySearch })).data;
+          const tenors = await (await axios.get('https://g.tenor.com/v1/search', {params: tenorSearch})).data;
 
-          await gifs.data.forEach((gif: any) => {
-            const url = gif.images.original.webp.replace(/media[0-9]/, 'i');
-            const size = gif.images.original.webp_size;
-            const altUrl = gif.images.fixed_width.webp.replace(/media[0-9]/, 'i');
-            const altSize = gif.images.fixed_width.webp_size;
+          await giphys.data.forEach((giphy: any) => {
+            const url = giphy.images.original.webp.replace(/media[0-9]/, 'i');
+            const size = giphy.images.original.webp_size;
+            const altUrl = giphy.images.fixed_width.webp.replace(/media[0-9]/, 'i');
+            const altSize = giphy.images.fixed_width.webp_size;
+
+            try {
+              if(size <= 1400000) {
+                console.log(size, url);
+                client.sendStickerfromUrl(message.from, url);
+              } else if(altSize <= 1400000) {
+                console.log(altSize, altUrl);
+                client.sendStickerfromUrl(message.from, altUrl);
+              }
+            } catch {
+              console.log('Sticker too big:', size, altSize);
+            }
+          });
+
+          await tenors.results.forEach((tenor: any) => {
+            const url = tenor.media[0].gif.url;
+            const size = tenor.media[0].gif.size;
+            const altUrl = tenor.media[0].tinygif.url;
+            const altSize = tenor.media[0].tinygif.size;
 
             try {
               if(size <= 1400000) {
