@@ -39,7 +39,9 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 };
 
 const giphyOptions: any = {
-  lang: 'pt'
+  lang: 'pt',
+  limit: 10,
+  type: 'stickers'
 };
 
 // Don't change anything starting from here
@@ -83,8 +85,10 @@ const start = (client: Client) => {
       console.log(message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/));
       const keyword = message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/);
       if(keyword !== null) {
-        const { data: gifs }  = await giphy.search(keyword[1], giphyOptions);
+        const { data: gifs } = await giphy.search(keyword[1], giphyOptions);
+        const gifs2 = await giphy.search(keyword[1], giphyOptions);
         console.log(gifs);
+        console.log(gifs2);
       }
     }
   });
