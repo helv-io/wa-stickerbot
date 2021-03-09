@@ -1,6 +1,10 @@
-import { create, Client, decryptMedia, ConfigObject } from '@open-wa/wa-automate';
+import { create, Client, decryptMedia } from '@open-wa/wa-automate';
 import { Mp4StickerConversionProcessOptions, StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
+import { GiphyFetch } from '@giphy/js-fetch-api'
 import mime from 'mime-types';
+import { MessageTypes } from '@open-wa/wa-automate/dist/api/model';
+
+const giphy = new GiphyFetch('xV08BBGGwayvb8RsgiYLUfgKU3mMaDxp');
 
 // Begin changes here
 
@@ -10,7 +14,7 @@ const meta: StickerMetadata = {
   keepScale: true
 };
 
-const config: ConfigObject = {
+const config: any = {
   sessionId: "sticker_bot",
   authTimeout: 60,
   blockCrashLogs: false,
@@ -32,7 +36,11 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
   log: true,
   startTime: '00:00:00.0',
   endTime: '00:00:15.0'
-}
+};
+
+const giphyOptions: any = {
+  lang: 'pt'
+};
 
 // Don't change anything starting from here
 
@@ -45,8 +53,8 @@ const start = (client: Client) => {
       return;
     }
 
-    // Handles Attachments
-    if (message.mimetype) {
+    // Handles Media
+    if (message.type === MessageTypes.IMAGE || message.type === MessageTypes.VIDEO) {
       const filename = `${message.t}.${mime.extension(message.mimetype) || ''}`;
       const mediaData = await decryptMedia(message);
       const dataURL = `data:${message.mimetype};base64,${mediaData.toString('base64')}`;
@@ -66,10 +74,16 @@ const start = (client: Client) => {
             console.log(`Video is too long. ${videoOpts.endTime} max.`);
           }
         }
-      } else if (!filename.endsWith('.webp')) {
+      } else {
         // Sends as Image sticker
         console.log('IMAGE Sticker', filename);
         void await client.sendImageAsSticker(message.from, dataURL, meta);
+      }
+    } else {
+      const keyword = message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/);
+      if(keyword) {
+        const { data: gifs }  = await giphy.search(keyword[1], giphyOptions);
+        console.log(gifs);
       }
     }
   });
