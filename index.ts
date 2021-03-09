@@ -89,6 +89,7 @@ const start = (client: Client) => {
         const gifs = await (await axios.get('https://api.giphy.com/v1/gifs/search', { params: giphySearch })).data;
         await gifs.data.forEach((gif: any) => {
           videoOpts.crop = false;
+          client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
           for(let i = 15; i > 0; i--)
           {
             videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
@@ -99,8 +100,7 @@ const start = (client: Client) => {
               console.log(`Video is too long. ${videoOpts.endTime} max.`);
             }
           }
-        },
-        client.sendImageAsSticker(message.from, 'giphy/poweredby.gif'));
+        }
       }
     }
   });
