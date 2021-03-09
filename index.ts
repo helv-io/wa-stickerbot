@@ -81,17 +81,18 @@ const start = (client: Client) => {
         void await client.sendImageAsSticker(message.from, dataURL, meta);
       }
     } else {
-      const keywords = message.body.toLowerCase().match(/sticker(s?) d[a|e|o]s? (.*)/);
+      const keywords = message.body.match(/sticker(s?) d[a|e|o]s? (.*)/i);
       if(keywords !== null) {
         giphySearch.limit = keywords[1] === 's' ? 10 : 1;
         giphySearch.q = keywords[2];
+        videoOpts.crop = false;
         console.log('Searching for', giphySearch.q);
+
         const gifs = await (await axios.get('https://api.giphy.com/v1/gifs/search', { params: giphySearch })).data;
+
         await gifs.data.forEach((gif: any) => {
-          videoOpts.crop = false;
           client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
-          for(let i = 15; i > 0; i--)
-          {
+          for(let i = 15; i > 0; i--) {
             videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
             try {
               void client.sendMp4AsSticker(message.from, gif.images.original.mp4, videoOpts);
@@ -113,4 +114,4 @@ const start = (client: Client) => {
   });
 };
 
-void create(config).then(client => start(client));
+void create(config).then((client: Client) => start(client));
