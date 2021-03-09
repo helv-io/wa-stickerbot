@@ -95,8 +95,11 @@ const start = (client: Client) => {
         await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
 
         await gifs.data.forEach((gif: any) => {
-          console.log(gif.images.original.webp.replace('media1', 'i'));
-          client.sendStickerfromUrl(message.from, gif.images.original.webp.replace('media1', 'i'));
+          const url = gif.images.original.webp.replace(/media[0-9]/, 'i');
+          const size = gif.images.original.webp_size;
+          if(parseInt(size, 10) <= 1500000) {
+            client.sendStickerfromUrl(message.from, url);
+          }
           /*for(let i = 15; i > 0; i--) {
             videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
             try {
