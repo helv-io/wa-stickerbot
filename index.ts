@@ -3,6 +3,11 @@ import { Mp4StickerConversionProcessOptions, StickerMetadata } from '@open-wa/wa
 import { MessageTypes } from '@open-wa/wa-automate/dist/api/model';
 import mime from 'mime-types';
 import axios from 'axios'
+import qs from 'qs';
+
+const ps = (p: any) => {
+  return qs.stringify(p, {arrayFormat: 'brackets'})
+}
 
 // Begin changes here
 
@@ -37,7 +42,7 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 };
 
 const giphySearch: any = {
-  api_key: 'xV08BBGGwayvb8RsgiYLUfgKU3mMaDxp',
+  api_key: process.env.GIPHY_API,
   lang: 'pt',
   limit: 1,
   q: 'placeholder',
@@ -45,13 +50,22 @@ const giphySearch: any = {
 };
 
 const tenorSearch: any = {
-  key: 'SNS0GPOLUFOQ',
+  key: process.env.TENOR_API,
   locale: 'pt_BR',
   media_filter: 'minimal',
   limit: 1,
   q: 'placeholder',
   type: 'gif'
 };
+
+const imgflip: any = {
+  template_id: '',
+  boxes: [],
+  username: process.env.IMGFLIP_USERNAME,
+  password: process.env.IMGFLIP_PASSWORD
+};
+
+console.log(process.env.IMGFLIP_USERNAME);
 
 // Don't change anything starting from here
 
@@ -153,6 +167,32 @@ const start = (client: Client) => {
             console.log('Sticker too big:', size, altSize);
           }
         });
+      }
+
+      // imgflip Meme maker
+      const maker = message.body.split('\n');
+      if(maker[0].toLowerCase().includes('meme ')) {
+        const memes: any[] = await (await axios.get('https://api.imgflip.com/get_memes')).data.data.memes;
+        const meme = memes.find(m => {
+          const name: string = m.name;
+          return name.toLowerCase().includes(maker[0].toLowerCase().replace('meme ', ''));
+        });
+
+        if(meme.box_count <= maker.length - 1) {
+          imgflip.template_id = meme.id;
+          imgflip.boxes = [];
+          for(let i = 1; i < maker.length; i++) {
+            imgflip.boxes.push({text: maker[i]});
+          }
+
+          console.log(meme.name, meme.boxes);
+
+          const p = ps(imgflip);
+          const url = await (await axios.get(`https://api.imgflip.com/caption_image?${p}`)).data.data.url;
+          console.log(url);
+          await void client.sendStickerfromUrl(message.from, url, undefined, meta);
+          await void client.sendImage(message.from, url, maker[0], url);
+        }
       }
     }
   });
