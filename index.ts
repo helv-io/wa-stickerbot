@@ -81,6 +81,7 @@ const start = (client: Client) => {
       }
     } else {
       console.log('Text Message', message.body);
+      console.log(message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/));
       const keyword = message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/);
       if(keyword) {
         const { data: gifs }  = await giphy.search(keyword[1], giphyOptions);
