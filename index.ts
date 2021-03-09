@@ -87,7 +87,7 @@ const start = (client: Client) => {
         giphySearch.q = keywords[2];
         console.log('Searching for', giphySearch);
         const gifs = await (await axios.get('https://api.giphy.com/v1/gifs/search', { params: giphySearch })).data;
-        gifs.data.forEach((gif: any) => {
+        await gifs.data.forEach((gif: any) => {
           for(let i = 15; i > 0; i--)
           {
             videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
