@@ -95,7 +95,8 @@ const start = (client: Client) => {
         await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
 
         await gifs.data.forEach((gif: any) => {
-          for(let i = 15; i > 0; i--) {
+          axios.get(gif.images.original.webp.replace('media1', 'i')).then((webp: any) => client.sendRawWebpAsSticker(message.from, webp));
+          /*for(let i = 15; i > 0; i--) {
             videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
             try {
               void client.sendMp4AsSticker(message.from, gif.images.original.mp4, videoOpts);
@@ -103,7 +104,7 @@ const start = (client: Client) => {
             } catch {
               console.log(`Video is too long. ${videoOpts.endTime} max.`);
             }
-          }
+          }*/
         });
       }
     }
