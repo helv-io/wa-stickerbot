@@ -86,7 +86,8 @@ const start = (client: Client) => {
       if(keyword !== null) {
         giphySearch.q = keyword[1];
         console.log('Searching for', giphySearch);
-        axios.get('https://api.giphy.com/v1/gifs/search', { params: giphySearch }).then(data => console.log(data));
+        const gifs = await axios.get('https://api.giphy.com/v1/gifs/search', { params: giphySearch });
+        console.log(gifs);
       }
     }
   });
