@@ -81,14 +81,15 @@ const start = (client: Client) => {
         void await client.sendImageAsSticker(message.from, dataURL, meta);
       }
     } else {
-      console.log(message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/));
-      const keyword = message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/);
-      if(keyword !== null) {
-        giphySearch.q = keyword[1];
+      const keywords = message.body.toLowerCase().match(/sticker(s?) d[a|e|o]s? (.*)/);
+      if(keywords !== null) {
+        giphySearch.limit = keywords[1] === 's' ? 10 : 1;
+        giphySearch.q = keywords[2];
         console.log('Searching for', giphySearch);
         const gifs = await (await axios.get('https://api.giphy.com/v1/gifs/search', { params: giphySearch })).data;
-        console.log(gifs.data[0]);
-        void await client.sendMp4AsSticker(message.from, gifs.data[0].images.original.mp4, videoOpts);
+        gifs.data.forEach((gif: any) => {
+          void client.sendMp4AsSticker(message.from, gif.images.original.mp4, videoOpts);
+        });
       }
     }
   });
