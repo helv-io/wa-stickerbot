@@ -91,7 +91,7 @@ const start = (client: Client) => {
         videoOpts.crop = false;
 
         console.log('Searching for', giphySearch.q);
-        const gifs = await (await axios.get(`https://api.giphy.com/v1/gifs/search`, { params: giphySearch })).data;
+        const gifs = await (await axios.get(`https://api.giphy.com/v1/stickers/search`, { params: giphySearch })).data;
         await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
 
         await gifs.data.forEach((gif: any) => {
