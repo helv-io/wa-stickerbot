@@ -25,6 +25,7 @@
     "@giphy/js-fetch-api": "^2.4.0",
     "@open-wa/wa-automate": "^3.9.1",
     "fluent-ffmpeg": "^2.1.2",
+    "giphy": "^0.0.4",
     "mime-types": "^2.1.29",
     "sharp": "^0.27.2"
   },
