@@ -55,7 +55,7 @@ const start = (client: Client) => {
 
     // Handles Media
     if (message.type === MessageTypes.IMAGE || message.type === MessageTypes.VIDEO) {
-      const filename = `${message.t}.${mime.extension(message.mimetype) || ''}`;
+      const filename = `${message.t}.${mime.extension(message.mimetype || '') || ''}`;
       const mediaData = await decryptMedia(message);
       const dataURL = `data:${message.mimetype};base64,${mediaData.toString('base64')}`;
 
