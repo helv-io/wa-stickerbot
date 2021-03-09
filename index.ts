@@ -1,10 +1,10 @@
 import { create, Client, decryptMedia, ConfigObject } from '@open-wa/wa-automate';
 import { Mp4StickerConversionProcessOptions, StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
 import mime from 'mime-types';
-import Giphy from 'giphy';
+import { GiphyFetch } from '@giphy/js-fetch-api'
 import { MessageTypes } from '@open-wa/wa-automate/dist/api/model';
 
-const giphy = new Giphy('xV08BBGGwayvb8RsgiYLUfgKU3mMaDxp');
+const gf = new GiphyFetch('xV08BBGGwayvb8RsgiYLUfgKU3mMaDxp')
 
 // Begin changes here
 
@@ -40,8 +40,7 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 
 const giphySearch: any = {
   lang: 'pt',
-  limit: 10,
-  q: 'placeholder'
+  limit: 10
 };
 
 // Don't change anything starting from here
@@ -86,8 +85,7 @@ const start = (client: Client) => {
       const keyword = message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/);
       if(keyword !== null) {
         console.log('Searching for', keyword[1]);
-        giphySearch.q = keyword[1];
-        giphy.search(giphySearch, (err: any, data: any, res: any) => console.log(err, data, res));
+        console.log(await gf.search(keyword[1], giphySearch));
       }
     }
   });
