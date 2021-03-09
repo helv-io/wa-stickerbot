@@ -95,7 +95,7 @@ const start = (client: Client) => {
       const keywords = message.body.match(/(sticker|figurinha)(s?) d[a|e|o]s? (.*)/i);
 
       if(keywords !== null) {
-        giphySearch.limit = keywords[2] === 's' ? 10 : 1;
+        giphySearch.limit = keywords[2].toLowerCase() === 's' ? 10 : 1;
         giphySearch.q = keywords[3];
         tenorSearch.limit = giphySearch.limit;
         tenorSearch.q = giphySearch.q;
