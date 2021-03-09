@@ -92,7 +92,7 @@ const start = (client: Client) => {
 
         console.log('Searching for', giphySearch.q);
         const gifs = await (await axios.get(`https://api.giphy.com/v1/gifs/search`, { params: giphySearch })).data;
-        client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
+        await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
 
         await gifs.data.forEach((gif: any) => {
           for(let i = 15; i > 0; i--) {
