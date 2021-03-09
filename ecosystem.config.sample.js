@@ -5,10 +5,10 @@ module.exports = {
           script: "./index.ts",
           watch: true,
           env: {
-            "IMGFLIP_USERNAME": "YOUR_IMGFLIP_USERNAME",
-            "IMGFLIP_PASSWORD": "YOUR_IMGFLIP_PASSWORD",
-            "TENOR_API": "YOUR_TENOR_API_KEY",
-            "GIPHY_API": "YOUR_GIPHY_API_KEY",
+            "IMGFLIP_USERNAME": "",
+            "IMGFLIP_PASSWORD": "",
+            "TENOR_API": "",
+            "GIPHY_API": "",
             "NODE_ENV": "production"
           }
         }
