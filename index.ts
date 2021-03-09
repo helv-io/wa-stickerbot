@@ -1,10 +1,8 @@
 import { create, Client, decryptMedia, ConfigObject } from '@open-wa/wa-automate';
 import { Mp4StickerConversionProcessOptions, StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
-import mime from 'mime-types';
-import { GiphyFetch } from '@giphy/js-fetch-api'
 import { MessageTypes } from '@open-wa/wa-automate/dist/api/model';
-
-const gf = new GiphyFetch('xV08BBGGwayvb8RsgiYLUfgKU3mMaDxp')
+import mime from 'mime-types';
+import axios from 'axios'
 
 // Begin changes here
 
@@ -39,8 +37,10 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 };
 
 const giphySearch: any = {
+  api_key: 'xV08BBGGwayvb8RsgiYLUfgKU3mMaDxp',
   lang: 'pt',
-  limit: 10
+  limit: 10,
+  q: 'placeholder'
 };
 
 // Don't change anything starting from here
@@ -85,7 +85,8 @@ const start = (client: Client) => {
       const keyword = message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/);
       if(keyword !== null) {
         console.log('Searching for', keyword[1]);
-        const { data: gifs } = await gf.trending({ limit: 10 })
+        giphySearch.q = keyword[1];
+        const gifs = await axios.get('api.giphy.com/v1/gifs/search', { params: giphySearch });
         console.log(gifs);
       }
     }
