@@ -1,4 +1,4 @@
-import { create, Client, decryptMedia } from '@open-wa/wa-automate';
+import { create, Client, decryptMedia, ConfigObject } from '@open-wa/wa-automate';
 import { Mp4StickerConversionProcessOptions, StickerMetadata } from '@open-wa/wa-automate/dist/api/model/media';
 import { GiphyFetch } from '@giphy/js-fetch-api'
 import mime from 'mime-types';
@@ -14,7 +14,7 @@ const meta: StickerMetadata = {
   keepScale: true
 };
 
-const config: any = {
+const config: ConfigObject  = {
   sessionId: "sticker_bot",
   authTimeout: 60,
   blockCrashLogs: false,
