@@ -91,27 +91,21 @@ const start = (client: Client) => {
         videoOpts.crop = false;
 
         console.log('Searching for', giphySearch.q);
-        const gifs = await (await axios.get(`https://api.giphy.com/v1/stickers/search`, { params: giphySearch })).data;
-        await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
+        ['gifs', 'stickers'].forEach(async (type: string) => {
+          const gifs = await (await axios.get(`https://api.giphy.com/v1/${type}/search`, { params: giphySearch })).data;
+          await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
 
-        await gifs.data.forEach((gif: any) => {
-          const url = gif.images.original.webp.replace(/media[0-9]/, 'i');
-          const size = gif.images.original.webp_size;
-          if(parseInt(size, 10) <= 1500000) {
-            console.log(size, url);
-            client.sendStickerfromUrl(message.from, url);
-          } else {
-            console.log(url, 'too big.', size);
-          }
-          /*for(let i = 15; i > 0; i--) {
-            videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
-            try {
-              void client.sendMp4AsSticker(message.from, gif.images.original.mp4, videoOpts);
-              break;
-            } catch {
-              console.log(`Video is too long. ${videoOpts.endTime} max.`);
+          await gifs.data.forEach((gif: any) => {
+            const url = gif.images.original.webp.replace(/media[0-9]/, 'i');
+            const size = gif.images.original.webp_size;
+            const altUrl = gif.images.fixed_width.webp.replace(/media[0-9]/, 'i');
+            const altSize = gif.images.fixed_width.webp_size;
+            if(parseInt(size, 10) <= 1500000) {
+              client.sendStickerfromUrl(message.from, url);
+            } else if(parseInt(altSize, 10) <= 1500000) {
+              client.sendStickerfromUrl(message.from, altUrl);
             }
-          }*/
+          });
         });
       }
     }
