@@ -102,10 +102,10 @@ const start = (client: Client) => {
             const altSize = gif.images.fixed_width.webp_size;
 
             try {
-              if(size <= 1500000) {
+              if(size <= 1400000) {
                 console.log(size, url);
                 client.sendStickerfromUrl(message.from, url);
-              } else if(altSize <= 1500000) {
+              } else if(altSize <= 1400000) {
                 console.log(altSize, altUrl);
                 client.sendStickerfromUrl(message.from, altUrl);
               }
