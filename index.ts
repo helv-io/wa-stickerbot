@@ -91,6 +91,7 @@ const start = (client: Client) => {
           for(let i = 15; i > 0; i--)
           {
             videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
+            videoOpts.crop = false;
             try {
               void client.sendMp4AsSticker(message.from, gif.images.original.mp4, videoOpts);
               break;
