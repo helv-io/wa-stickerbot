@@ -39,7 +39,7 @@ const videoOpts: Mp4StickerConversionProcessOptions = {
 const giphySearch: any = {
   api_key: 'xV08BBGGwayvb8RsgiYLUfgKU3mMaDxp',
   lang: 'pt',
-  limit: 10,
+  limit: 1,
   q: 'placeholder'
 };
 
@@ -87,7 +87,7 @@ const start = (client: Client) => {
         giphySearch.q = keyword[1];
         console.log('Searching for', giphySearch);
         const gifs = await (await axios.get('https://api.giphy.com/v1/gifs/search', { params: giphySearch })).data;
-        console.log(gifs.data.data[0].id);
+        console.log(gifs);
         void await client.sendGiphyAsSticker(message.from, gifs.data[0].id);
       }
     }
