@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/Helvio88/wa-stickerbot#readme",
   "dependencies": {
-    "@giphy/js-fetch-api": "^2.4.0",
     "@open-wa/wa-automate": "^3.9.1",
     "axios": "^0.21.1",
     "fluent-ffmpeg": "^2.1.2",
