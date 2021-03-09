@@ -98,7 +98,10 @@ const start = (client: Client) => {
           const url = gif.images.original.webp.replace(/media[0-9]/, 'i');
           const size = gif.images.original.webp_size;
           if(parseInt(size, 10) <= 1500000) {
+            console.log(size, url);
             client.sendStickerfromUrl(message.from, url);
+          } else {
+            console.log(url, 'too big.', size);
           }
           /*for(let i = 15; i > 0; i--) {
             videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
