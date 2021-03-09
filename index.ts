@@ -91,9 +91,9 @@ const start = (client: Client) => {
         videoOpts.crop = false;
 
         console.log('Searching for', giphySearch.q);
+        await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
         ['gifs', 'stickers'].forEach(async (type: string) => {
           const gifs = await (await axios.get(`https://api.giphy.com/v1/${type}/search`, { params: giphySearch })).data;
-          await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
 
           await gifs.data.forEach((gif: any) => {
             const url = gif.images.original.webp.replace(/media[0-9]/, 'i');
