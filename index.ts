@@ -100,6 +100,7 @@ const start = (client: Client) => {
             }
           }
         });
+        await void client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
       }
     }
   });
