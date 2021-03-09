@@ -65,8 +65,6 @@ const imgflip: any = {
   password: process.env.IMGFLIP_PASSWORD
 };
 
-console.log(process.env.IMGFLIP_USERNAME);
-
 // Don't change anything starting from here
 
 const start = (client: Client) => {
