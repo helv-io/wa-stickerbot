@@ -84,8 +84,8 @@ const start = (client: Client) => {
       console.log(message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/));
       const keyword = message.body.toLowerCase().match(/sticker d[a|e|o]s? (.*)/);
       if(keyword !== null) {
-        console.log('Searching for', keyword[1]);
         giphySearch.q = keyword[1];
+        console.log('Searching for', giphySearch);
         const gifs = await axios.get('api.giphy.com/v1/gifs/search', { params: giphySearch });
         console.log(gifs);
       }
