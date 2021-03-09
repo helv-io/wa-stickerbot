@@ -95,9 +95,11 @@ const start = (client: Client) => {
         await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
 
         await gifs.data.forEach((gif: any) => {
-          console.log(gif.images.original.webp);
           console.log(gif.images.original.webp.replace('media1', 'i'));
-          axios.get(gif.images.original.webp).then((webp: any) => client.sendRawWebpAsSticker(message.from, webp));
+          axios.get(gif.images.original.webp.replace('media1', 'i')).then((result: any) => {
+            console.log(result);
+            client.sendRawWebpAsSticker(message.from, result)
+          });
           /*for(let i = 15; i > 0; i--) {
             videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
             try {
