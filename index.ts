@@ -99,8 +99,8 @@ const start = (client: Client) => {
               console.log(`Video is too long. ${videoOpts.endTime} max.`);
             }
           }
+          void client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
         });
-        await void client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
       }
     }
   });
