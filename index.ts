@@ -104,8 +104,11 @@ const start = (client: Client) => {
 
         console.log('Searching for', giphySearch.q);
 
+        // Attributions
+        await client.sendImageAsSticker(message.from, 'attributions/giphy.gif');
+        await client.sendImageAsSticker(message.from, 'attributions/tenor.png');
+
         // GIPHY GIFs
-        // await client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
         ['gifs', 'stickers'].forEach(async (type: string) => {
           const giphys = await (await axios.get(`https://api.giphy.com/v1/${type}/search`, { params: giphySearch })).data;
 
