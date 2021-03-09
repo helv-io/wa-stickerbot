@@ -87,8 +87,8 @@ const start = (client: Client) => {
         giphySearch.q = keyword[1];
         console.log('Searching for', giphySearch);
         const gifs = await (await axios.get('https://api.giphy.com/v1/gifs/search', { params: giphySearch })).data;
-        console.log(gifs.data[0].id);
-        void await client.sendGiphyAsSticker(message.from, gifs.data[0].id);
+        console.log(gifs.data[0]);
+        void await client.sendStickerfromUrl(message.from, gifs.data[0].url);
       }
     }
   });
