@@ -103,13 +103,13 @@ const start = (client: Client) => {
 
             console.log(url, size, altSize);
             try {
-              if(parseInt(size, 10) <= 1500000) {
+              if(size <= 1500000) {
                 client.sendStickerfromUrl(message.from, url);
-              } else if(parseInt(altSize, 10) <= 1500000) {
+              } else if(altSize <= 1500000) {
                 client.sendStickerfromUrl(message.from, altUrl);
               }
             } catch {
-              // Fail silently. Sticker too large. Shit happens.
+              console.log('Sticker too big:', size, altSize);
             }
           });
         });
