@@ -85,13 +85,13 @@ const start = (client: Client) => {
       if(keywords !== null) {
         giphySearch.limit = keywords[1] === 's' ? 10 : 1;
         giphySearch.q = keywords[2];
-        console.log('Searching for', giphySearch);
+        console.log('Searching for', giphySearch.q);
         const gifs = await (await axios.get('https://api.giphy.com/v1/gifs/search', { params: giphySearch })).data;
         await gifs.data.forEach((gif: any) => {
+          videoOpts.crop = false;
           for(let i = 15; i > 0; i--)
           {
             videoOpts.endTime = `00:00:${i.toString().padStart(2, '0')}.0`;
-            videoOpts.crop = false;
             try {
               void client.sendMp4AsSticker(message.from, gif.images.original.mp4, videoOpts);
               break;
@@ -99,8 +99,8 @@ const start = (client: Client) => {
               console.log(`Video is too long. ${videoOpts.endTime} max.`);
             }
           }
-          void client.sendImageAsSticker(message.from, 'giphy/poweredby.gif');
-        });
+        },
+        client.sendImageAsSticker(message.from, 'giphy/poweredby.gif'));
       }
     }
   });
