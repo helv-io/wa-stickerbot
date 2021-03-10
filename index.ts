@@ -167,7 +167,7 @@ const start = (client: Client) => {
 
           const stickers = (
             await axios.get<GiphyResponse>(
-              `https://api.giphy.com/v1/gifs/search`,
+              `https://api.giphy.com/v1/stickers/search`,
               {
                 params: giphySearch,
               }
