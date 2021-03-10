@@ -121,14 +121,40 @@ const start = (client: Client) => {
         await client.sendImageAsSticker(message.from, 'attributions/tenor.png', meta);
 
         // GIPHY GIFs
-        ['gifs', 'stickers'].forEach(async (type: string) => {
-          const giphys = await (await axios.get(`https://api.giphy.com/v1/${type}/search`, { params: giphySearch })).data;
+        if(giphySearch.api_key) {
+          ['gifs', 'stickers'].forEach(async (type: string) => {
+            const giphys = await (await axios.get(`https://api.giphy.com/v1/${type}/search`, { params: giphySearch })).data;
 
-          await giphys.data.forEach((giphy: any) => {
-            const url = giphy.images.original.webp.replace(/media[0-9]/, 'i');
-            const size = giphy.images.original.webp_size;
-            const altUrl = giphy.images.fixed_width.webp.replace(/media[0-9]/, 'i');
-            const altSize = giphy.images.fixed_width.webp_size;
+            await giphys.data.forEach((giphy: any) => {
+              const url = giphy.images.original.webp.replace(/media[0-9]/, 'i');
+              const size = giphy.images.original.webp_size;
+              const altUrl = giphy.images.fixed_width.webp.replace(/media[0-9]/, 'i');
+              const altSize = giphy.images.fixed_width.webp_size;
+
+              try {
+                if(size <= 1400000) {
+                  console.log(size, url);
+                  client.sendStickerfromUrl(message.from, url, undefined, meta);
+                } else if(altSize <= 1400000) {
+                  console.log(altSize, altUrl);
+                  client.sendStickerfromUrl(message.from, altUrl, undefined, meta);
+                }
+              } catch {
+                console.log('Sticker too big:', size, altSize);
+              }
+            });
+          });
+        }
+
+        // Tenor GIFs
+        if(tenorSearch.key) {
+          const tenors = await (await axios.get('https://g.tenor.com/v1/search', {params: tenorSearch})).data;
+
+          await tenors.results.forEach((tenor: any) => {
+            const url = tenor.media[0].gif.url;
+            const size = tenor.media[0].gif.size;
+            const altUrl = tenor.media[0].tinygif.url;
+            const altSize = tenor.media[0].tinygif.size;
 
             try {
               if(size <= 1400000) {
@@ -142,34 +168,12 @@ const start = (client: Client) => {
               console.log('Sticker too big:', size, altSize);
             }
           });
-        });
-
-        // Tenor GIFs
-        const tenors = await (await axios.get('https://g.tenor.com/v1/search', {params: tenorSearch})).data;
-
-        await tenors.results.forEach((tenor: any) => {
-          const url = tenor.media[0].gif.url;
-          const size = tenor.media[0].gif.size;
-          const altUrl = tenor.media[0].tinygif.url;
-          const altSize = tenor.media[0].tinygif.size;
-
-          try {
-            if(size <= 1400000) {
-              console.log(size, url);
-              client.sendStickerfromUrl(message.from, url, undefined, meta);
-            } else if(altSize <= 1400000) {
-              console.log(altSize, altUrl);
-              client.sendStickerfromUrl(message.from, altUrl, undefined, meta);
-            }
-          } catch {
-            console.log('Sticker too big:', size, altSize);
-          }
-        });
+        }
       }
 
       // imgflip Meme maker
       const maker = message.body.split('\n');
-      if(maker[0].toLowerCase().includes('meme ')) {
+      if(maker[0].toLowerCase().includes('meme ') && imgflip.username) {
         const memes: any[] = await (await axios.get('https://api.imgflip.com/get_memes')).data.data.memes;
         const meme = memes.find(m => {
           const name: string = m.name;
@@ -191,6 +195,14 @@ const start = (client: Client) => {
           await void client.sendStickerfromUrl(message.from, url, undefined, meta);
           await void client.sendImage(message.from, url, maker[0], url);
         }
+      }
+
+      // imgFlip List Memes
+      if(message.body.toLowerCase() === 'memes') {
+        const memes: any[] = await (await axios.get('https://api.imgflip.com/get_memes')).data.data.memes;
+        let response = '';
+        memes.forEach(meme => response += `${meme.name} (${meme.box_count})\n`);
+        await void client.sendText(message.from, response);
       }
     }
   });
