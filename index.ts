@@ -303,7 +303,7 @@ deixar o bot fazer tudo
             imgflip.boxes.push({ text: maker[i] });
           }
 
-          console.log(meme.name, meme.box_count);
+          console.log(meme.name, `(${maker.join(') (')})`);
 
           const p = paramSerializer(imgflip);
           const url =
