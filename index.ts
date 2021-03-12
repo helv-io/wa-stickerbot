@@ -10,7 +10,7 @@ import {
   Mp4StickerConversionProcessOptions,
   StickerMetadata,
 } from '@open-wa/wa-automate/dist/api/model/media';
-import { MessageTypes } from '@open-wa/wa-automate/dist/api/model';
+import { ChatId, MessageTypes } from '@open-wa/wa-automate/dist/api/model';
 import mime from 'mime-types';
 import axios from 'axios';
 import qs from 'qs';
@@ -18,6 +18,7 @@ import { GiphyGif, GiphyResponse, GiphySearch } from './types/Giphy';
 import { TenorResponse, TenorSearch } from './types/Tenor';
 import { ImgFlip, ImgFlipMeme, ImgFlipResponse } from './types/ImgFlip';
 import { normalizeSync } from 'normalize-diacritics';
+import { groupChangeEvent } from '@open-wa/wa-automate/dist/api/model/group-metadata';
 
 const paramSerializer = (p: any) => {
   return qs.stringify(p, { arrayFormat: 'brackets' });
@@ -85,11 +86,15 @@ const imgflip: ImgFlip = {
 const start = (client: Client) => {
   // Log all participant changes
   void client.getAllGroups().then((groups) => {
-    console.log(JSON.stringify(groups, null, 4));
     groups.forEach((group) => {
       const groupId = (group.id as unknown) as `${number}-${number}@g.us`;
       void client.onParticipantsChanged(groupId, (event) => {
-        console.log(JSON.stringify(event, null, 4));
+        if (event.action === groupChangeEvent.remove) {
+          void client.sendText(
+            (event.who as unknown) as ChatId,
+            'Saiu pq n tranza'
+          );
+        }
       });
     });
   });
