@@ -87,7 +87,8 @@ const start = (client: Client) => {
   void client.getAllGroups().then((groups) => {
     console.log(JSON.stringify(groups, null, 4));
     groups.forEach((group) => {
-      void client.onParticipantsChanged(group.groupMetadata.id, (event) => {
+      const groupId = (group.id as unknown) as `${number}-${number}@g.us`;
+      void client.onParticipantsChanged(groupId, (event) => {
         console.log(JSON.stringify(event, null, 4));
       });
     });
