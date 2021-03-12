@@ -135,16 +135,12 @@ const start = (client: Client) => {
       if (normalizeSync(message.body.toLowerCase()) === 'instrucoes') {
         const response = `
 *Como falar com o  Bot*
-
 1️⃣ "STICKER(S)/FIGURINHA(S) DE ________"
 _o bot vai mandar 3 stickers do tema pedido quando sticker/figurinha estiver no singular e 30 no plural_
-
 2️⃣ “MEMES"
 _o bot vai enviar a lista de memes disponíveis para serem feitos_
-
 3️⃣ “meme ________"
 _para fazer o meme, é preciso que você digite na primeira linha "meme + nome do meme" e nas próximas linhas, dando enter, o número de frases pelo qual o meme é composto_
-
 EX:
 meme drake hotline bling
 fazer stickers sozinho
