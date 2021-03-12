@@ -83,6 +83,10 @@ const imgflip: ImgFlip = {
 // Don't change anything starting from here
 
 const start = (client: Client) => {
+  void client.getAllGroups().then((groups) => {
+    console.log(JSON.stringify(groups));
+  });
+
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   void client.onMessage(async (message) => {
     // Skips personal chats
