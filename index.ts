@@ -82,7 +82,7 @@ const imgflip: ImgFlip = {
 
 const start = (client: Client) => {
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  void client.onAnyMessage(async (message) => {
+  void client.onMessage(async (message) => {
     // Skips personal chats
     if (!message.isGroupMsg) {
       return;
