@@ -17,7 +17,7 @@ import { TenorResponse, TenorSearch } from './types/Tenor';
 import { ImgFlip, ImgFlipMeme, ImgFlipResponse } from './types/ImgFlip';
 import { normalizeSync } from 'normalize-diacritics';
 
-const ps = (p: any) => {
+const paramSerializer = (p: any) => {
   return qs.stringify(p, { arrayFormat: 'brackets' });
 };
 
@@ -130,6 +130,42 @@ const start = (client: Client) => {
       const keywords = /(sticker|figurinha)(s?) d[a|e|o]s? (.*)/i.exec(
         message.body
       );
+
+      // Send Usage Instructions
+      if (normalizeSync(message.body.toLowerCase()) === 'instrucoes') {
+        const response = `
+*Como falar com o  Bot*
+
+1️⃣ "STICKER(S)/FIGURINHA(S) DE ________"
+_o bot vai mandar 3 stickers do tema pedido quando sticker/figurinha estiver no singular e 30 no plural_
+
+2️⃣ “MEMES"
+_o bot vai enviar a lista de memes disponíveis para serem feitos_
+
+3️⃣ “meme ________"
+_para fazer o meme, é preciso que você digite na primeira linha "meme + nome do meme" e nas próximas linhas, dando enter, o número de frases pelo qual o meme é composto_
+
+EX:
+meme drake hotline bling
+fazer stickers sozinho
+deixar o bot fazer tudo
+`;
+        void client.sendText(message.from, response);
+        return;
+      }
+
+      // imgFlip List Memes
+      if (message.body.toLowerCase() === 'memes') {
+        const memes: ImgFlipMeme[] = (
+          await axios.get<ImgFlipResponse>('https://api.imgflip.com/get_memes')
+        ).data.data.memes;
+        let response = '';
+        memes.forEach(
+          (meme) => (response += `${meme.name} (${meme.box_count})\n`)
+        );
+        void client.sendText(message.from, response);
+        return;
+      }
 
       if (keywords !== null) {
         giphySearch.limit = keywords[2].toLowerCase() === 's' ? 10 : 1;
@@ -269,7 +305,7 @@ const start = (client: Client) => {
 
           console.log(meme.name, meme.box_count);
 
-          const p = ps(imgflip);
+          const p = paramSerializer(imgflip);
           const url =
             (
               await axios.get<ImgFlipResponse>(
@@ -280,18 +316,6 @@ const start = (client: Client) => {
           void client.sendStickerfromUrl(message.from, url, undefined, meta);
           void client.sendImage(message.from, url, maker[0], url);
         }
-      }
-
-      // imgFlip List Memes
-      if (message.body.toLowerCase() === 'memes') {
-        const memes: ImgFlipMeme[] = (
-          await axios.get<ImgFlipResponse>('https://api.imgflip.com/get_memes')
-        ).data.data.memes;
-        let response = '';
-        memes.forEach(
-          (meme) => (response += `${meme.name} (${meme.box_count})\n`)
-        );
-        void client.sendText(message.from, response);
       }
     }
   });
