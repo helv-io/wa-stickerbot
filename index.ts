@@ -83,11 +83,12 @@ const imgflip: ImgFlip = {
 
 const start = (client: Client) => {
   void client.getAllGroups().then((groups) => {
-    groups.forEach((group) => {
+    console.log(JSON.stringify(groups, null, 4));
+    /* groups.forEach((group) => {
       void client.onParticipantsChanged(group.groupMetadata.id, (event) => {
         console.log(JSON.stringify(event, null, 4));
       });
-    });
+    }); */
   });
 
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
