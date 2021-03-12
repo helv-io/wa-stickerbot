@@ -39,7 +39,7 @@ const config: ConfigObject = {
   qrTimeout: 0,
   bypassCSP: true,
   chromiumArgs: ['--no-sandbox'],
-  sessionData: process.env.SESSION_DATA || '',
+  sessionData: process.env.SESSION_DATA,
 };
 
 const videoOpts: Mp4StickerConversionProcessOptions = {
