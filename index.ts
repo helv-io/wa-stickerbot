@@ -16,7 +16,6 @@ import { GiphyGif, GiphyResponse, GiphySearch } from './types/Giphy';
 import { TenorResponse, TenorSearch } from './types/Tenor';
 import { ImgFlip, ImgFlipMeme, ImgFlipResponse } from './types/ImgFlip';
 import { normalizeSync } from 'normalize-diacritics';
-import { groupChangeEvent } from '@open-wa/wa-automate/dist/api/model/group-metadata';
 
 const paramSerializer = (p: any) => {
   return qs.stringify(p, { arrayFormat: 'brackets' });
