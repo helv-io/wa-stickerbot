@@ -16,6 +16,7 @@ import { GiphyGif, GiphyResponse, GiphySearch } from './types/Giphy';
 import { TenorResponse, TenorSearch } from './types/Tenor';
 import { ImgFlip, ImgFlipMeme, ImgFlipResponse } from './types/ImgFlip';
 import { normalizeSync } from 'normalize-diacritics';
+import { groupChangeEvent } from '@open-wa/wa-automate/dist/api/model/group-metadata';
 
 const paramSerializer = (p: any) => {
   return qs.stringify(p, { arrayFormat: 'brackets' });
@@ -80,7 +81,13 @@ const imgflip: ImgFlip = {
 
 // Don't change anything starting from here
 
-const start = (client: Client) => {
+const start = async (client: Client) => {
+  const groups = await client.getAllGroups();
+  groups.forEach((group) => {
+    void client.onParticipantsChanged(group.groupMetadata.id, (event) => {
+      console.log(JSON.stringify(event, null, 4));
+    });
+  });
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   void client.onMessage(async (message) => {
     // Skips personal chats
