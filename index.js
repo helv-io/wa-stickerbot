@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var __awaiter =
   (this && this.__awaiter) ||
   function (thisArg, _arguments, P, generator) {
@@ -19,7 +19,7 @@ var __awaiter =
       }
       function rejected(value) {
         try {
-          step(generator["throw"](value));
+          step(generator['throw'](value));
         } catch (e) {
           reject(e);
         }
@@ -50,7 +50,7 @@ var __generator =
       g;
     return (
       (g = { next: verb(0), throw: verb(1), return: verb(2) }),
-      typeof Symbol === "function" &&
+      typeof Symbol === 'function' &&
         (g[Symbol.iterator] = function () {
           return this;
         }),
@@ -62,7 +62,7 @@ var __generator =
       };
     }
     function step(op) {
-      if (f) throw new TypeError("Generator is already executing.");
+      if (f) throw new TypeError('Generator is already executing.');
       while (_)
         try {
           if (
@@ -70,9 +70,9 @@ var __generator =
             y &&
               (t =
                 op[0] & 2
-                  ? y["return"]
+                  ? y['return']
                   : op[0]
-                  ? y["throw"] || ((t = y["return"]) && t.call(y), 0)
+                  ? y['throw'] || ((t = y['return']) && t.call(y), 0)
                   : y.next) &&
               !(t = t.call(y, op[1])).done)
           )
@@ -137,17 +137,17 @@ var __importDefault =
   function (mod) {
     return mod && mod.__esModule ? mod : { default: mod };
   };
-Object.defineProperty(exports, "__esModule", { value: true });
-var wa_automate_1 = require("@open-wa/wa-automate");
-var mime_types_1 = __importDefault(require("mime-types"));
+Object.defineProperty(exports, '__esModule', { value: true });
+var wa_automate_1 = require('@open-wa/wa-automate');
+var mime_types_1 = __importDefault(require('mime-types'));
 // Begin changes here
 var meta = {
-  author: "Helvio",
-  pack: "Sticker Bot",
+  author: 'Helvio',
+  pack: 'Sticker Bot',
   keepScale: true,
 };
 var config = {
-  sessionId: "sticker_bot",
+  sessionId: 'sticker_bot',
   authTimeout: 60,
   blockCrashLogs: false,
   disableSpins: true,
@@ -157,7 +157,7 @@ var config = {
   popup: true,
   qrTimeout: 0,
   bypassCSP: true,
-  chromiumArgs: ["--no-sandbox"],
+  chromiumArgs: ['--no-sandbox'],
   sessionData: process.env.SESSION_DATA,
 };
 var videoOpts = {
@@ -165,8 +165,8 @@ var videoOpts = {
   fps: 10,
   loop: 0,
   log: true,
-  startTime: "00:00:00.0",
-  endTime: "00:00:15.0",
+  startTime: '00:00:00.0',
+  endTime: '00:00:15.0',
 };
 // Don't change anything starting from here
 var start = function (client) {
@@ -184,25 +184,25 @@ var start = function (client) {
             if (!message.mimetype) return [3 /*break*/, 10];
             filename =
               message.t +
-              "." +
-              (mime_types_1.default.extension(message.mimetype) || "");
+              '.' +
+              (mime_types_1.default.extension(message.mimetype) || '');
             return [4 /*yield*/, wa_automate_1.decryptMedia(message)];
           case 1:
             mediaData = _b.sent();
             dataURL =
-              "data:" +
+              'data:' +
               message.mimetype +
-              ";base64," +
-              mediaData.toString("base64");
-            if (!filename.endsWith(".mp4")) return [3 /*break*/, 8];
+              ';base64,' +
+              mediaData.toString('base64');
+            if (!filename.endsWith('.mp4')) return [3 /*break*/, 8];
             // Sends as Video Sticker
-            console.log("MP4/GIF Sticker", filename);
-            videoOpts.endTime = "00:00:15.0";
+            console.log('MP4/GIF Sticker', filename);
+            videoOpts.endTime = '00:00:15.0';
             i = 15;
             _b.label = 2;
           case 2:
             if (!(i > 0)) return [3 /*break*/, 7];
-            videoOpts.endTime = "00:00:" + i.toString().padStart(2, "0") + ".0";
+            videoOpts.endTime = '00:00:' + i.toString().padStart(2, '0') + '.0';
             _b.label = 3;
           case 3:
             _b.trys.push([3, 5, , 6]);
@@ -215,7 +215,7 @@ var start = function (client) {
             return [3 /*break*/, 7];
           case 5:
             _a = _b.sent();
-            console.log("Video is too long. " + videoOpts.endTime + " max.");
+            console.log('Video is too long. ' + videoOpts.endTime + ' max.');
             return [3 /*break*/, 6];
           case 6:
             i--;
@@ -223,9 +223,9 @@ var start = function (client) {
           case 7:
             return [3 /*break*/, 10];
           case 8:
-            if (!!filename.endsWith(".webp")) return [3 /*break*/, 10];
+            if (!!filename.endsWith('.webp')) return [3 /*break*/, 10];
             // Sends as Image sticker
-            console.log("IMAGE Sticker", filename);
+            console.log('IMAGE Sticker', filename);
             return [
               4 /*yield*/,
               client.sendImageAsSticker(message.from, dataURL, meta),
@@ -241,7 +241,7 @@ var start = function (client) {
   });
   // Click "Use Here" when another WhatsApp Web page is open
   void client.onStateChanged(function (state) {
-    if (state === "CONFLICT" || state === "UNLAUNCHED") {
+    if (state === 'CONFLICT' || state === 'UNLAUNCHED') {
       void client.forceRefocus();
     }
   });
