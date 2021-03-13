@@ -41,6 +41,7 @@ const start = (client: Client) => {
                 '',
                 `Divirta-se, ${event.who}`
               )
+              client.sendText(groupId, botOptions.instructions)
               break
             }
           }
