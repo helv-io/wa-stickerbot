@@ -31,18 +31,20 @@ const start = (client: Client) => {
           switch (event.action) {
             case groupChangeEvent.remove: {
               console.log('Removed', event.who)
-              client.sendImageAsSticker(
+              client.sendImage(
                 groupId,
                 await getImgflipImage(`${botOptions.outMessage}${event.who}`),
-                stickerMeta
+                '',
+                'Adeus virgem'
               )
             }
             case groupChangeEvent.add: {
               console.log('Added', event.who)
-              client.sendImageAsSticker(
+              client.sendImage(
                 groupId,
                 await getImgflipImage(`${botOptions.inMessage}${event.who}`),
-                stickerMeta
+                '',
+                'Divirta-se!'
               )
             }
           }
