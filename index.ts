@@ -37,6 +37,7 @@ const start = (client: Client) => {
                 '',
                 'Adeus virgem'
               )
+              break
             }
             case groupChangeEvent.add: {
               console.log('Added', event.who)
@@ -46,6 +47,7 @@ const start = (client: Client) => {
                 '',
                 'Divirta-se!'
               )
+              break
             }
           }
         })
@@ -98,11 +100,13 @@ const start = (client: Client) => {
       case actions.INSTRUCTIONS: {
         console.log('Sending instructions')
         client.sendText(message.from, botOptions.instructions)
+        break
       }
 
       case actions.MEME_LIST: {
         console.log('Sending meme list')
         client.sendText(message.from, await getImgflipList())
+        break
       }
 
       case actions.MEME: {
@@ -110,6 +114,7 @@ const start = (client: Client) => {
         const url = await getImgflipImage(message.body)
         client.sendImage(message.from, url, 'imgflip', url)
         client.sendStickerfromUrl(message.from, url, undefined, stickerMeta)
+        break
       }
 
       case actions.STICKER: {
@@ -137,6 +142,7 @@ const start = (client: Client) => {
           .forEach((url) =>
             client.sendStickerfromUrl(message.from, url, undefined, stickerMeta)
           )
+        break
       }
     }
   })
