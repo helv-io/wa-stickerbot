@@ -1,13 +1,4 @@
-import axios from 'axios'
-import {
-  giphySearch,
-  tenorSearch,
-  mp4StickerConversionOptions,
-  stickerMeta,
-  botOptions
-} from 'config'
-import { GiphyResponse, GiphyGif } from 'types/Giphy'
-import { TenorResponse } from 'types/Tenor'
+import { giphySearch, tenorSearch, botOptions } from 'config'
 import { stickerRegExp } from './textHandler'
 
 export const getStickerSearches = (message: string) => {

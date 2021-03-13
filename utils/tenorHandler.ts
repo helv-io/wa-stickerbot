@@ -1,13 +1,12 @@
 import axios from 'axios'
-import { GiphyResponse } from 'types/Giphy'
 import { TenorResponse, TenorSearch } from 'types/Tenor'
 
-const tenorBaseUrl = 'https://g.tenor.com/v1/search'
+const tenorURL = 'https://g.tenor.com/v1/search'
 
 export const getTenors = async (search: TenorSearch) => {
   if (!search.key) return []
   const tenors = (
-    await axios.get<TenorResponse>('https://g.tenor.com/v1/search', {
+    await axios.get<TenorResponse>(tenorURL, {
       params: search
     })
   ).data.results
