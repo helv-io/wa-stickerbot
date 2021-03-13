@@ -1,13 +1,7 @@
 #!/usr/bin/env ts-node
 
 import { groupChangeEvent } from '@open-wa/wa-automate/dist/api/model/group-metadata'
-import {
-  create,
-  Client,
-  MessageTypes,
-  Message,
-  ChatId
-} from '@open-wa/wa-automate'
+import { create, Client, MessageTypes } from '@open-wa/wa-automate'
 
 import { botOptions, clientConfig, stickerMeta } from './config'
 import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
