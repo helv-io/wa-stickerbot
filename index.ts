@@ -1,7 +1,13 @@
 #!/usr/bin/env ts-node
 
 import { groupChangeEvent } from '@open-wa/wa-automate/dist/api/model/group-metadata'
-import { create, Client, MessageTypes, Message } from '@open-wa/wa-automate'
+import {
+  create,
+  Client,
+  MessageTypes,
+  Message,
+  ChatId
+} from '@open-wa/wa-automate'
 
 import { botOptions, clientConfig, stickerMeta } from './config'
 import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
@@ -20,7 +26,7 @@ const start = (client: Client) => {
   if (botOptions.interactIn || botOptions.interactOut) {
     void client.getAllGroups().then((groups) => {
       groups.forEach((group) => {
-        const groupId = group.groupMetadata.id
+        const groupId = (group.id as unknown) as `${number}-${number}@g.us`
         void client.onParticipantsChanged(groupId, async (event) => {
           switch (event.action) {
             case groupChangeEvent.remove: {
