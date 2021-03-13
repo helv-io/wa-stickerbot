@@ -27,7 +27,7 @@ const start = (client: Client) => {
               console.log('Removed', event.who)
               client.sendImage(
                 groupId,
-                await getImgflipImage(`${botOptions.outMessage}${event.who}`),
+                await getImgflipImage(botOptions.outMessage),
                 '',
                 'Adeus virgem'
               )
@@ -37,7 +37,7 @@ const start = (client: Client) => {
               console.log('Added', event.who)
               client.sendImage(
                 groupId,
-                await getImgflipImage(`${botOptions.inMessage}${event.who}`),
+                await getImgflipImage(botOptions.inMessage),
                 '',
                 'Divirta-se!'
               )
