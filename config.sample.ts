@@ -3,9 +3,9 @@ import {
   Mp4StickerConversionProcessOptions,
   StickerMetadata
 } from '@open-wa/wa-automate'
-import { GiphySearch } from 'types/Giphy'
-import { Imgflip } from 'types/Imgflip'
-import { TenorSearch } from 'types/Tenor'
+import { GiphySearch } from './types/Giphy'
+import { Imgflip } from './types/Imgflip'
+import { TenorSearch } from './types/Tenor'
 
 // Begin changes here
 
