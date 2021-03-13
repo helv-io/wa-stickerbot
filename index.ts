@@ -1,19 +1,19 @@
 #!/usr/bin/env ts-node
 
 import { groupChangeEvent } from '@open-wa/wa-automate/dist/api/model/group-metadata'
-import { create, Client, MessageTypes } from '@open-wa/wa-automate'
+import { create, Client, MessageTypes, Message } from '@open-wa/wa-automate'
 
 import { botOptions, clientConfig, stickerMeta } from './config'
+import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
+import { getStickerSearches } from './utils/stickerHandler'
+import { getGiphys } from './utils/giphyHandler'
+import { getTenors } from './utils/tenorHandler'
 import {
   getConversionOptions,
   getMedia,
   WhatsappMedia
-} from 'utils/mediaHandler'
-import { actions, getTextAction } from 'utils/textHandler'
-import { getImgflipList, getImgflipImage } from 'utils/imgflipHandler'
-import { getStickerSearches } from 'utils/stickerHandler'
-import { getGiphys } from 'utils/giphyHandler'
-import { getTenors } from 'utils/tenorHandler'
+} from './utils/mediaHandler'
+import { actions, getTextAction } from './utils/textHandler'
 
 const start = (client: Client) => {
   // Interact with Entering / Exiting Participants
