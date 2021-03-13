@@ -15,7 +15,7 @@ export const getImgflipImage = async (body: string) => {
   const memes = await getImgflipMemes()
   const meme = memes.find((m) => m.name.toLowerCase().includes(memeTitle))
 
-  if (meme && meme.box_count <= memeMeta.length) {
+  if (meme) {
     imgflip.template_id = meme.id
     imgflip.boxes = []
     for (let i = 1; i < memeMeta.length; i++) {
