@@ -11,7 +11,10 @@ export const getImgflipImage = async (body: string) => {
   if (!imgflip.username) return ''
 
   const memeMeta = body.split('\n')
-  const memeTitle = (memeMeta.shift() || '').toLowerCase().replace('meme ', '')
+  const memeTitle = (memeMeta.shift() || '')
+    .toLowerCase()
+    .replace('meme ', '')
+    .trim()
   const memes = await getImgflipMemes()
   const meme = memes.find((m) => m.name.toLowerCase().includes(memeTitle))
 
