@@ -44,9 +44,6 @@ const start = (client: Client) => {
               )
             }
           }
-          if (event.action === groupChangeEvent.remove) {
-            void client.sendText(groupId, 'Saiu pq n tranza')
-          }
         })
       })
     })
