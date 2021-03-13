@@ -39,13 +39,14 @@ export const botOptions = {
   groupsOnly: true,
   interactIn: true,
   interactOut: true,
-  inMessage: `meme woman
-OLHA QUEM CHEGOU
-`,
+  inMessage: `meme epic
+MEMES
+NOOB
+BOT`,
   outMessage: `meme Left Exit
 MEMES STICKERS TRANSAR
 CROSSFIT E SOLIDÃO
-`,
+TROUXA QUE SAIU`,
   instructions: `
 *Como falar com o  Bot*
 1️⃣ "STICKER(S)/FIGURINHA(S) DE ________"
