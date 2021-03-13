@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GiphyResponse, GiphySearch } from 'types/Giphy'
+import { GiphyResponse, GiphySearch } from '../types/Giphy'
 
 const giphyBaseUrl = 'https://api.giphy.com/v1'
 
