@@ -51,7 +51,7 @@ const start = (client: Client) => {
 
   void client.onMessage(async (message) => {
     // Skips personal chats unless specified
-    if (message.isGroupMsg && botOptions.groupsOnly) return
+    if (message.isGroupMsg || !botOptions.groupsOnly) return
 
     // Handles Media
     if (
