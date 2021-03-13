@@ -18,7 +18,7 @@ export const getImgflipImage = async (body: string) => {
   if (meme) {
     imgflip.template_id = meme.id
     imgflip.boxes = []
-    for (let i = 1; i < memeMeta.length; i++) {
+    for (let i = 0; i < memeMeta.length; i++) {
       imgflip.boxes.push({ text: memeMeta[i] })
     }
     return (
