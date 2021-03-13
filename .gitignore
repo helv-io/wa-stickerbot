@@ -118,3 +118,4 @@ dist
 # Project specific files
 *.data.json
 ecosystem.config.js
+config.ts
