@@ -1,6 +1,7 @@
 # wa-stickerbot
 
 WhatsApp Sticker Bot. Any images, GIFs or Videos you receive will be converted to a Sticker!
+Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create memes from Imgflip.
 
 ### Pre Requisites
 

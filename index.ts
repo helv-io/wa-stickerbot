@@ -29,17 +29,18 @@ const start = (client: Client) => {
                 groupId,
                 await getImgflipImage(botOptions.outMessage),
                 '',
-                `Adeus ${event.who}`
+                `Adeus +${event.who.toString().split('@')[0]}, vai tarde!`
               )
               break
             }
+
             case groupChangeEvent.add: {
               console.log('Added', event.who)
               client.sendImage(
                 groupId,
                 await getImgflipImage(botOptions.inMessage),
                 '',
-                `Divirta-se, ${event.who}`
+                `Divirta-se, +${event.who.toString().split('@')[0]}!`
               )
               client.sendText(groupId, botOptions.instructions)
               break
