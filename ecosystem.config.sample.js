@@ -10,8 +10,8 @@ module.exports = {
         IMGFLIP_PASSWORD: '',
         TENOR_API: '',
         GIPHY_API: '',
-        NODE_ENV: 'production',
-      },
-    },
-  ],
-};
+        NODE_ENV: 'production'
+      }
+    }
+  ]
+}

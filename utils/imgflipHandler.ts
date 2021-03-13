@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { imgflip } from 'config'
-import { ImgflipResponse } from 'types/ImgFlip'
+import { ImgflipResponse } from 'types/Imgflip'
 import { paramSerializer } from './utils'
 
 const imgflipBaseURL = 'https://api.imgflip.com'
