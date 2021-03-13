@@ -17,6 +17,7 @@ import { actions, getTextAction } from './utils/textHandler'
 
 const start = (client: Client) => {
   // Interact with Entering / Exiting Participants
+  /*
   if (botOptions.interactIn || botOptions.interactOut) {
     void client.getAllGroups().then((groups) => {
       groups.forEach((group) => {
@@ -50,6 +51,35 @@ const start = (client: Client) => {
       })
     })
   }
+*/
+
+  client.onGlobalParticipantsChanged(async (event) => {
+    const groupId = (event.chat as unknown) as `${number}-${number}@g.us`
+    switch (event.action) {
+      case groupChangeEvent.remove: {
+        console.log('Removed', event.who)
+        client.sendImage(
+          groupId,
+          await getImgflipImage(botOptions.outMessage),
+          '',
+          `Adeus +${event.who.toString().split('@')[0]}, vai tarde!`
+        )
+        break
+      }
+
+      case groupChangeEvent.add: {
+        console.log('Added', event.who)
+        client.sendImage(
+          groupId,
+          await getImgflipImage(botOptions.inMessage),
+          '',
+          `Divirta-se, +${event.who.toString().split('@')[0]}!`
+        )
+        client.sendText(groupId, botOptions.instructions)
+        break
+      }
+    }
+  })
 
   void client.onMessage(async (message) => {
     // Skips personal chats unless specified
@@ -96,6 +126,16 @@ const start = (client: Client) => {
       case actions.INSTRUCTIONS: {
         console.log('Sending instructions')
         client.sendText(message.from, botOptions.instructions)
+        break
+      }
+
+      case actions.LINK: {
+        if (!message.isGroupMsg) return
+        console.log('Sending Link')
+        client.sendText(
+          message.from,
+          await client.getGroupInviteLink(message.from)
+        )
         break
       }
 
