@@ -1,21 +1,9 @@
 #!/usr/bin/env ts-node
 
 import { groupChangeEvent } from '@open-wa/wa-automate/dist/api/model/group-metadata'
-import { create, Client, ChatId, MessageTypes } from '@open-wa/wa-automate'
-import axios from 'axios'
+import { create, Client, MessageTypes } from '@open-wa/wa-automate'
 
-import { GiphyGif, GiphyResponse } from './types/Giphy'
-import { TenorResponse } from './types/Tenor'
-
-import {
-  botOptions,
-  clientConfig,
-  giphySearch,
-  imgflip,
-  mp4StickerConversionOptions,
-  stickerMeta,
-  tenorSearch
-} from './config'
+import { botOptions, clientConfig, stickerMeta } from './config'
 import {
   getConversionOptions,
   getMedia,
