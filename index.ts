@@ -30,6 +30,7 @@ const start = (client: Client) => {
         void client.onParticipantsChanged(groupId, async (event) => {
           switch (event.action) {
             case groupChangeEvent.remove: {
+              console.log('Removed', event.who)
               client.sendImageAsSticker(
                 groupId,
                 await getImgflipImage(`${botOptions.outMessage}${event.who}`),
@@ -37,6 +38,7 @@ const start = (client: Client) => {
               )
             }
             case groupChangeEvent.add: {
+              console.log('Added', event.who)
               client.sendImageAsSticker(
                 groupId,
                 await getImgflipImage(`${botOptions.inMessage}${event.who}`),
