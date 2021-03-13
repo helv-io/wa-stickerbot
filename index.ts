@@ -106,7 +106,7 @@ const start = (client: Client) => {
       }
 
       case actions.MEME: {
-        console.log(`Sending meme for (${message.body.split(')(')})`)
+        console.log(`Sending (${message.body.split('\n').join(')(')})`)
         const url = await getImgflipImage(message.body)
         client.sendImage(message.from, url, 'imgflip', url)
         client.sendStickerfromUrl(message.from, url, undefined, stickerMeta)
