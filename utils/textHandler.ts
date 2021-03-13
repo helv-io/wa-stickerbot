@@ -7,7 +7,8 @@ export const getTextAction = async (message: string) => {
 
   if (message === 'memes') return actions.MEME_LIST
   if (message === 'link') return actions.LINK
-  if (message === 'instrucoes') return actions.INSTRUCTIONS
+  if (message === 'instrucoes' || message === 'rtfm')
+    return actions.INSTRUCTIONS
   if (stickerRegExp.exec(message)) return actions.STICKER
   if (message.startsWith('meme ')) return actions.MEME
   return null
