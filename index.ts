@@ -54,7 +54,7 @@ const start = (client: Client) => {
 
   void client.onMessage(async (message) => {
     // Skips personal chats unless specified
-    if (!message.isGroupMsg || !botOptions.groupsOnly) return
+    if (message.isGroupMsg && botOptions.groupsOnly) return
 
     // Handles Media
     if (
@@ -94,13 +94,18 @@ const start = (client: Client) => {
 
     // Handles Text Messages
     switch (await getTextAction(message.body)) {
-      case actions.INSTRUCTIONS:
+      case actions.INSTRUCTIONS: {
+        console.log('Sending instructions')
         client.sendText(message.from, botOptions.instructions)
+      }
 
-      case actions.MEME_LIST:
+      case actions.MEME_LIST: {
+        console.log('Sending meme list')
         client.sendText(message.from, await getImgflipList())
+      }
 
       case actions.MEME: {
+        console.log(`Sending meme for (${message.body.split(')(')})`)
         const url = await getImgflipImage(message.body)
         client.sendImage(message.from, url, 'imgflip', url)
         client.sendStickerfromUrl(message.from, url, undefined, stickerMeta)
@@ -108,6 +113,7 @@ const start = (client: Client) => {
 
       case actions.STICKER: {
         const searches = getStickerSearches(message.body)
+        console.log('Sending Stickers for', searches.giphySearch.q)
         const giphyURLs = await getGiphys(searches.giphySearch)
         const tenorURLs = await getTenors(searches.tenorSearch)
 
