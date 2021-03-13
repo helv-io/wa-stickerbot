@@ -29,7 +29,7 @@ const start = (client: Client) => {
                 groupId,
                 await getImgflipImage(botOptions.outMessage),
                 '',
-                'Adeus virgem'
+                `Adeus ${event.who}`
               )
               break
             }
@@ -39,7 +39,7 @@ const start = (client: Client) => {
                 groupId,
                 await getImgflipImage(botOptions.inMessage),
                 '',
-                'Divirta-se!'
+                `Divirta-se, ${event.who}`
               )
               break
             }
