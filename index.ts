@@ -89,76 +89,78 @@ const start = (client: Client) => {
     }
 
     // Handles Text Messages
-    switch (await getTextAction(message.body)) {
-      case actions.INSTRUCTIONS: {
-        console.log('Sending instructions')
-        await client.sendText(message.from, botOptions.instructions)
-        break
-      }
-
-      case actions.LINK: {
-        if (!message.isGroupMsg) return
-        console.log('Sending Link')
-        await client.sendText(
-          message.from,
-          await client.getGroupInviteLink(message.from)
-        )
-        break
-      }
-
-      case actions.MEME_LIST: {
-        console.log('Sending meme list')
-        await client.sendText(message.from, await getImgflipList())
-        break
-      }
-
-      case actions.MEME: {
-        console.log(`Sending (${message.body.split('\n').join(')(')})`)
-        const url = await getImgflipImage(message.body)
-        await client.sendImage(message.from, url, 'imgflip', url)
-        await client.sendStickerfromUrl(
-          message.from,
-          url,
-          undefined,
-          stickerMeta
-        )
-        break
-      }
-
-      case actions.STICKER: {
-        const searches = getStickerSearches(message.body)
-        console.log('Sending Stickers for', searches.giphySearch.q)
-        const giphyURLs = await getGiphys(searches.giphySearch)
-        const tenorURLs = await getTenors(searches.tenorSearch)
-
-        if (giphyURLs)
-          await client.sendImageAsSticker(
-            message.from,
-            'attributions/giphy.gif',
-            stickerMeta
-          )
-        if (tenorURLs) {
-          await client.sendImageAsSticker(
-            message.from,
-            'attributions/tenor.png',
-            stickerMeta
-          )
+    try {
+      switch (await getTextAction(message.body)) {
+        case actions.INSTRUCTIONS: {
+          console.log('Sending instructions')
+          await client.sendText(message.from, botOptions.instructions)
+          break
         }
 
-        giphyURLs
-          .concat(tenorURLs)
-          .forEach(
-            async (url) =>
-              await client.sendStickerfromUrl(
-                message.from,
-                url,
-                undefined,
-                stickerMeta
-              )
+        case actions.LINK: {
+          if (!message.isGroupMsg) return
+          console.log('Sending Link')
+          await client.sendText(
+            message.from,
+            await client.getGroupInviteLink(message.from)
           )
-        break
+          break
+        }
+
+        case actions.MEME_LIST: {
+          console.log('Sending meme list')
+          await client.sendText(message.from, await getImgflipList())
+          break
+        }
+
+        case actions.MEME: {
+          console.log(`Sending (${message.body.split('\n').join(')(')})`)
+          const url = await getImgflipImage(message.body)
+          await client.sendImage(message.from, url, 'imgflip', url)
+          await client.sendStickerfromUrl(
+            message.from,
+            url,
+            undefined,
+            stickerMeta
+          )
+          break
+        }
+
+        case actions.STICKER: {
+          const searches = getStickerSearches(message.body)
+          console.log('Sending Stickers for', searches.giphySearch.q)
+          const giphyURLs = await getGiphys(searches.giphySearch)
+          const tenorURLs = await getTenors(searches.tenorSearch)
+
+          if (giphyURLs)
+            await client.sendImageAsSticker(
+              message.from,
+              'attributions/giphy.gif',
+              stickerMeta
+            )
+          if (tenorURLs) {
+            await client.sendImageAsSticker(
+              message.from,
+              'attributions/tenor.png',
+              stickerMeta
+            )
+          }
+
+          giphyURLs
+            .concat(tenorURLs)
+            .forEach(
+              async (url) =>
+                await client.sendStickerfromUrl(
+                  message.from,
+                  url,
+                  undefined,
+                  stickerMeta
+                )
+            )
+          break
+        }
       }
-    }
+    } catch {}
 
     // Stop typing
     await client.simulateTyping(message.from, false)
