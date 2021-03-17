@@ -49,6 +49,9 @@ const start = (client: Client) => {
     // Skips personal chats unless specified
     if (!message.isGroupMsg && botOptions.groupsOnly) return
 
+    // Start typing
+    await client.simulateTyping(message.from, true)
+
     // Handles Media
     if (
       message.type === MessageTypes.IMAGE ||
@@ -89,14 +92,14 @@ const start = (client: Client) => {
     switch (await getTextAction(message.body)) {
       case actions.INSTRUCTIONS: {
         console.log('Sending instructions')
-        client.sendText(message.from, botOptions.instructions)
+        await client.sendText(message.from, botOptions.instructions)
         break
       }
 
       case actions.LINK: {
         if (!message.isGroupMsg) return
         console.log('Sending Link')
-        client.sendText(
+        await client.sendText(
           message.from,
           await client.getGroupInviteLink(message.from)
         )
@@ -105,15 +108,20 @@ const start = (client: Client) => {
 
       case actions.MEME_LIST: {
         console.log('Sending meme list')
-        client.sendText(message.from, await getImgflipList())
+        await client.sendText(message.from, await getImgflipList())
         break
       }
 
       case actions.MEME: {
         console.log(`Sending (${message.body.split('\n').join(')(')})`)
         const url = await getImgflipImage(message.body)
-        client.sendImage(message.from, url, 'imgflip', url)
-        client.sendStickerfromUrl(message.from, url, undefined, stickerMeta)
+        await client.sendImage(message.from, url, 'imgflip', url)
+        await client.sendStickerfromUrl(
+          message.from,
+          url,
+          undefined,
+          stickerMeta
+        )
         break
       }
 
@@ -124,13 +132,13 @@ const start = (client: Client) => {
         const tenorURLs = await getTenors(searches.tenorSearch)
 
         if (giphyURLs)
-          client.sendImageAsSticker(
+          await client.sendImageAsSticker(
             message.from,
             'attributions/giphy.gif',
             stickerMeta
           )
         if (tenorURLs) {
-          client.sendImageAsSticker(
+          await client.sendImageAsSticker(
             message.from,
             'attributions/tenor.png',
             stickerMeta
@@ -139,12 +147,21 @@ const start = (client: Client) => {
 
         giphyURLs
           .concat(tenorURLs)
-          .forEach((url) =>
-            client.sendStickerfromUrl(message.from, url, undefined, stickerMeta)
+          .forEach(
+            async (url) =>
+              await client.sendStickerfromUrl(
+                message.from,
+                url,
+                undefined,
+                stickerMeta
+              )
           )
         break
       }
     }
+
+    // Stop typing
+    await client.simulateTyping(message.from, false)
   })
 
   // Click "Use Here" when another WhatsApp Web page is open
