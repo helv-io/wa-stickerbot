@@ -22,12 +22,12 @@
   },
   "homepage": "https://github.com/Helvio88/wa-stickerbot#readme",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.9.6",
+    "@open-wa/wa-automate": "^3.9.13",
     "axios": "^0.21.1",
     "fluent-ffmpeg": "^2.1.2",
     "mime-types": "^2.1.29",
     "normalize-diacritics": "^2.13.2",
-    "qs": "^6.9.6",
+    "qs": "^6.10.0",
     "sharp": "^0.27.2"
   },
   "devDependencies": {
