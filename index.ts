@@ -71,6 +71,16 @@ const start = (client: Client) => {
               getConversionOptions(i),
               stickerMeta
             )
+
+            const circleMeta = stickerMeta
+            circleMeta.circle = true
+
+            await client.sendMp4AsSticker(
+              message.from,
+              media.dataURL,
+              getConversionOptions(i),
+              circleMeta
+            )
             break
           } catch {
             console.log(`Video is too long. Reducing length.`)
