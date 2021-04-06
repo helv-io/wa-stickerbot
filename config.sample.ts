@@ -16,6 +16,13 @@ export const stickerMeta: StickerMetadata = {
   keepScale: true
 }
 
+export const circleMeta: StickerMetadata = {
+  author: 'Helvio',
+  pack: 'Sticker Bot',
+  keepScale: true,
+  circle: true
+}
+
 // https://docs.openwa.dev/interfaces/api_model.configobject.html
 export const clientConfig: ConfigObject = {
   sessionId: 'sticker_bot',
