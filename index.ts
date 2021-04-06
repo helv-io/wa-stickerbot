@@ -3,7 +3,7 @@
 import { groupChangeEvent } from '@open-wa/wa-automate/dist/api/model/group-metadata'
 import { create, Client, MessageTypes } from '@open-wa/wa-automate'
 
-import { botOptions, clientConfig, stickerMeta } from './config'
+import { botOptions, clientConfig, stickerMeta, circleMeta } from './config'
 import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
 import { getStickerSearches } from './utils/stickerHandler'
 import { getGiphys } from './utils/giphyHandler'
@@ -72,9 +72,6 @@ const start = (client: Client) => {
               stickerMeta
             )
 
-            const circleMeta = stickerMeta
-            circleMeta.circle = true
-
             await client.sendMp4AsSticker(
               message.from,
               media.dataURL,
@@ -94,8 +91,6 @@ const start = (client: Client) => {
           media.dataURL,
           stickerMeta
         )
-        const circleMeta = stickerMeta
-        circleMeta.circle = true
         await client.sendImageAsSticker(message.from, media.dataURL, circleMeta)
       }
       return
