@@ -84,6 +84,9 @@ const start = (client: Client) => {
           media.dataURL,
           stickerMeta
         )
+        const circleMeta = stickerMeta
+        circleMeta.circle = true
+        await client.sendImageAsSticker(message.from, media.dataURL, circleMeta)
       }
       return
     }
