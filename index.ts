@@ -46,7 +46,7 @@ const start = (client: Client) => {
   })
 
   void client.onMessage(async (message) => {
-    const groupId = (message.chat as unknown) as `${number}-${number}@g.us`
+    const groupId = (message.chatId as unknown) as `${number}-${number}@g.us`
 
     // Skips personal chats unless specified
     if (!message.isGroupMsg && botOptions.groupsOnly) return
