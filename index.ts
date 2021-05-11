@@ -46,6 +46,8 @@ const start = (client: Client) => {
   })
 
   void client.onMessage(async (message) => {
+    const groupId = (message.chat as unknown) as `${number}-${number}@g.us`
+
     // Skips personal chats unless specified
     if (!message.isGroupMsg && botOptions.groupsOnly) return
 
@@ -100,6 +102,8 @@ const start = (client: Client) => {
     switch (await getTextAction(message.body)) {
       case actions.INSTRUCTIONS: {
         console.log('Sending instructions')
+        const gi = await client.getGroupInfo(groupId)
+        console.log(gi)
         await client.sendText(message.from, botOptions.instructions)
         break
       }
