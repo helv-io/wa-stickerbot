@@ -103,8 +103,7 @@ const start = (client: Client) => {
       case actions.INSTRUCTIONS: {
         console.log('Sending instructions')
         const gi = await client.getGroupInfo(groupId)
-        console.log(gi)
-        await client.sendText(message.from, botOptions.instructions)
+        await client.sendText(message.from, gi.description)
         break
       }
 
