@@ -39,7 +39,8 @@ const start = (client: Client) => {
           '',
           `Divirta-se, +${event.who.toString().split('@')[0]}!`
         )
-        client.sendText(groupId, botOptions.instructions)
+        const groupInfo = await client.getGroupInfo(groupId)
+        client.sendText(groupId, groupInfo.description)
         break
       }
     }
@@ -102,8 +103,8 @@ const start = (client: Client) => {
     switch (await getTextAction(message.body)) {
       case actions.INSTRUCTIONS: {
         console.log('Sending instructions')
-        const gi = await client.getGroupInfo(groupId)
-        await client.sendText(message.from, gi.description)
+        const groupInfo = await client.getGroupInfo(groupId)
+        await client.sendText(message.from, groupInfo.description)
         break
       }
 
