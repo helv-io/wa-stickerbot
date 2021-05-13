@@ -17,6 +17,7 @@ import {
   WhatsappMedia
 } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
+import { registerParticipantsListener } from './utils/utils'
 
 const start = (client: Client) => {
   const ioImages = io.counter({
@@ -37,41 +38,6 @@ const start = (client: Client) => {
   const ioSticker = io.counter({
     name: 'Stickers',
     id: 'sticker'
-  })
-
-  // Interact with Entering / Exiting Participants
-  client.onGlobalParticipantsChanged(async (event) => {
-    const groupId = event.chat as unknown as `${number}-${number}@g.us`
-
-    switch (event.action) {
-      case 'remove': {
-        console.log('Removed', event.who)
-        if (botOptions.interactOut) {
-          client.sendImage(
-            groupId,
-            await getImgflipImage(botOptions.outMessage),
-            '',
-            `Adeus +${event.who.toString().split('@')[0]}, vai tarde!`
-          )
-        }
-        break
-      }
-
-      case 'add': {
-        console.log('Added', event.who)
-        if (botOptions.interactOut) {
-          client.sendImage(
-            groupId,
-            await getImgflipImage(botOptions.inMessage),
-            '',
-            `Divirta-se, +${event.who.toString().split('@')[0]}!`
-          )
-          const groupInfo = await client.getGroupInfo(groupId)
-          client.sendText(groupId, groupInfo.description)
-        }
-        break
-      }
-    }
   })
 
   void client.onMessage(async (message) => {
@@ -219,25 +185,35 @@ const start = (client: Client) => {
     await client.simulateTyping(message.from, false)
   })
 
+  registerParticipantsListener(client)
+
   // Click "Use Here" when another WhatsApp Web page is open
   void client.onStateChanged((state) => {
     if (state === 'CONFLICT' || state === 'UNLAUNCHED') {
       void client.forceRefocus()
     }
   })
+
+  http
+    .createServer((req, res) => {
+      res.writeHead(200, { 'Content-Type': 'text/plain' })
+      const url = req.url?.toLowerCase()
+
+      switch (url) {
+        case '/restart': {
+          pm2.restart('wa-stickerbot', () => {})
+          res.end('Restarting wa-stickerbot...')
+          break
+        }
+        case '/refresh': {
+          client.refresh()
+          break
+        }
+        default:
+          res.end('Running')
+      }
+    })
+    .listen(6001)
 }
 
 create(clientConfig).then((client: Client) => start(client))
-
-http
-  .createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' })
-
-    if (req.url?.toLowerCase() === '/restart') {
-      pm2.restart('wa-stickerbot', () => {})
-      res.end('Restarting wa-stickerbot...')
-    } else {
-      res.end('Running')
-    }
-  })
-  .listen(6001)
