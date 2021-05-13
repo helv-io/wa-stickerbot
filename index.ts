@@ -4,6 +4,7 @@ import { create, Client, MessageTypes } from '@open-wa/wa-automate'
 
 import http from 'http'
 import io from '@pm2/io'
+import ChildProcess from 'child_process'
 
 import { botOptions, clientConfig, stickerMeta, circleMeta } from './config'
 import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
@@ -231,6 +232,11 @@ create(clientConfig).then((client: Client) => start(client))
 http
   .createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' })
-    res.end('Running')
+
+    if (!req.url || req.url.toLowerCase() === '/status') res.end('Running')
+    if (req.url?.toLowerCase() === '/restart') {
+      res.end('Restarting wa-stickerbot...')
+      ChildProcess.exec('pm2 restart wa-stickerbot')
+    }
   })
   .listen(6001)
