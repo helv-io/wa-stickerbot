@@ -1,6 +1,5 @@
 #!/usr/bin/env ts-node
 
-import { groupChangeEvent } from '@open-wa/wa-automate/dist/api/model/group-metadata'
 import { create, Client, MessageTypes } from '@open-wa/wa-automate'
 
 import { botOptions, clientConfig, stickerMeta, circleMeta } from './config'
@@ -18,10 +17,10 @@ import { actions, getTextAction } from './utils/textHandler'
 const start = (client: Client) => {
   // Interact with Entering / Exiting Participants
   client.onGlobalParticipantsChanged(async (event) => {
-    const groupId = (event.chat as unknown) as `${number}-${number}@g.us`
+    const groupId = event.chat as unknown as `${number}-${number}@g.us`
 
     switch (event.action) {
-      case groupChangeEvent.remove: {
+      case 'remove': {
         console.log('Removed', event.who)
         if (botOptions.interactOut) {
           client.sendImage(
@@ -34,7 +33,7 @@ const start = (client: Client) => {
         break
       }
 
-      case groupChangeEvent.add: {
+      case 'add': {
         console.log('Added', event.who)
         if (botOptions.interactOut) {
           client.sendImage(
@@ -52,7 +51,7 @@ const start = (client: Client) => {
   })
 
   void client.onMessage(async (message) => {
-    const groupId = (message.chatId as unknown) as `${number}-${number}@g.us`
+    const groupId = message.chatId as unknown as `${number}-${number}@g.us`
 
     // Skips personal chats unless specified
     if (!message.isGroupMsg && botOptions.groupsOnly) return
