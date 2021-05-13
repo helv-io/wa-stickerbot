@@ -195,7 +195,7 @@ const start = (client: Client) => {
   })
 
   http
-    .createServer((req, res) => {
+    .createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/plain' })
       const url = req.url?.toLowerCase()
 
@@ -206,7 +206,8 @@ const start = (client: Client) => {
           break
         }
         case '/refresh': {
-          client.refresh()
+          await client.refresh()
+          registerParticipantsListener(client)
           break
         }
         default:
