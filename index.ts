@@ -233,10 +233,11 @@ http
   .createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' })
 
-    if (!req.url || req.url.toLowerCase() === '/status') res.end('Running')
     if (req.url?.toLowerCase() === '/restart') {
       pm2.restart('wa-stickerbot', () => {})
       res.end('Restarting wa-stickerbot...')
+    } else {
+      res.end('Running')
     }
   })
   .listen(6001)
