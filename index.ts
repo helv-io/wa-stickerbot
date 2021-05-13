@@ -20,13 +20,14 @@ import { actions, getTextAction } from './utils/textHandler'
 import { registerParticipantsListener } from './utils/utils'
 
 const start = (client: Client) => {
+  // Usage Counters
   const ioImages = io.counter({
     name: 'Images',
     id: 'images'
   })
 
   const ioVideos = io.counter({
-    name: 'Videos',
+    name: 'GIFs and Videos',
     id: 'videos'
   })
 
@@ -40,6 +41,7 @@ const start = (client: Client) => {
     id: 'sticker'
   })
 
+  // Message Handlers
   void client.onMessage(async (message) => {
     const groupId = message.chatId as unknown as `${number}-${number}@g.us`
 
@@ -106,8 +108,12 @@ const start = (client: Client) => {
         case actions.INSTRUCTIONS: {
           console.log('Sending instructions')
 
-          const groupInfo = await client.getGroupInfo(groupId)
-          await client.sendText(message.from, groupInfo.description)
+          if (message.isGroupMsg) {
+            const groupInfo = await client.getGroupInfo(groupId)
+            await client.sendText(message.from, groupInfo.description)
+          } else {
+            await client.sendText(message.from, 'No Group Instructions.')
+          }
           break
         }
 
@@ -130,7 +136,23 @@ const start = (client: Client) => {
         }
 
         case actions.STATS: {
-          const stats = `*Current Usage*:\n\nImages: ${ioImages.val()}\n GIFs/Videos: ${ioVideos.val()}\nMemes: ${ioMemes.val()}\nStickers: ${ioStickers.val()}\n\nNumbers are Reset on Bot Reboot or Update!`
+          // Build stats text
+          let stats = `*Current Usage*\n\n`
+
+          stats += `Images\n`
+          stats += `${ioImages.val()}\n\n`
+
+          stats += `GIFs and Videos\n`
+          stats += `${ioVideos.val()}\n\n`
+
+          stats += `Memes\n`
+          stats += `${ioMemes.val()}\n\n`
+
+          stats += `Stickers\n`
+          stats += `${ioStickers.val()}\n\n`
+
+          stats += `Numbers are Reset on Bot Reboot or Update!`
+
           await client.sendText(message.from, stats)
           break
         }
@@ -197,6 +219,7 @@ const start = (client: Client) => {
     await client.simulateTyping(message.from, false)
   })
 
+  // Participants Handler
   registerParticipantsListener(client)
 
   // Click "Use Here" when another WhatsApp Web page is open
@@ -206,6 +229,7 @@ const start = (client: Client) => {
     }
   })
 
+  // Status / Reload / Restart Web Server
   http
     .createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/plain' })
