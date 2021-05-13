@@ -34,8 +34,8 @@ const start = (client: Client) => {
   })
 
   const ioSticker = io.counter({
-    name: 'Giphy',
-    id: 'giphy'
+    name: 'Stickers',
+    id: 'sticker'
   })
 
   // Interact with Entering / Exiting Participants
