@@ -41,6 +41,11 @@ const start = (client: Client) => {
     id: 'sticker'
   })
 
+  const ioRefreshes = io.counter({
+    name: 'Refreshes',
+    id: 'refreshes'
+  })
+
   // Message Handlers
   void client.onMessage(async (message) => {
     const groupId = message.chatId as unknown as `${number}-${number}@g.us`
@@ -151,7 +156,10 @@ const start = (client: Client) => {
           stats += `Stickers\n`
           stats += `${ioStickers.val()}\n\n`
 
-          stats += `Numbers are Reset on Bot Reboot or Update!`
+          stats += `Refreshes\n`
+          stats += `${ioRefreshes.val()}\n\n`
+
+          stats += `Reset on Bot Reboot or Update`
 
           await client.sendText(message.from, stats)
           break
@@ -244,6 +252,7 @@ const start = (client: Client) => {
         }
         case '/refresh': {
           await client.refresh()
+          ioRefreshes.inc()
           registerParticipantsListener(client)
           console.log('Refreshed wa-stickerbot')
           res.end('Refreshed wa-stickerbot')
