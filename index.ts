@@ -130,7 +130,7 @@ const start = (client: Client) => {
         }
 
         case actions.STATS: {
-          const stats = `*Current Usage*:\n\nImages: ${ioImages.val()}\n GIFs/Videos: ${ioVideos.val()}\nMemes: ${ioMemes.val()}\nStickers: ${ioStickers.val()}\n\nNumbers are Reset on Server Reboot!`
+          const stats = `*Current Usage*:\n\nImages: ${ioImages.val()}\n GIFs/Videos: ${ioVideos.val()}\nMemes: ${ioMemes.val()}\nStickers: ${ioStickers.val()}\n\nNumbers are Reset on Bot Reboot or Update!`
           await client.sendText(message.from, stats)
           break
         }
