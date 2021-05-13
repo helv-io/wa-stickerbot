@@ -35,7 +35,7 @@ const start = (client: Client) => {
     id: 'memes'
   })
 
-  const ioSticker = io.counter({
+  const ioStickers = io.counter({
     name: 'Stickers',
     id: 'sticker'
   })
@@ -46,14 +46,14 @@ const start = (client: Client) => {
     // Skips personal chats unless specified
     if (!message.isGroupMsg && botOptions.groupsOnly) return
 
-    // Start typing
-    await client.simulateTyping(message.from, true)
-
     // Handles Media
     if (
       message.type === MessageTypes.IMAGE ||
       message.type === MessageTypes.VIDEO
     ) {
+      // Start typing
+      await client.simulateTyping(message.from, true)
+
       const media: WhatsappMedia = await getMedia(message)
 
       if (media.filename.endsWith('.mp4')) {
@@ -97,87 +97,99 @@ const start = (client: Client) => {
     }
 
     // Handles Text Messages
-    switch (await getTextAction(message.body)) {
-      case actions.INSTRUCTIONS: {
-        console.log('Sending instructions')
+    const action = await getTextAction(message.body)
+    if (action) {
+      // Start typing
+      await client.simulateTyping(message.from, true)
 
-        const groupInfo = await client.getGroupInfo(groupId)
-        await client.sendText(message.from, groupInfo.description)
-        break
-      }
+      switch (action) {
+        case actions.INSTRUCTIONS: {
+          console.log('Sending instructions')
 
-      case actions.LINK: {
-        if (!message.isGroupMsg) return
-        console.log('Sending Link')
-
-        await client.sendText(
-          message.from,
-          await client.getGroupInviteLink(message.from)
-        )
-        break
-      }
-
-      case actions.MEME_LIST: {
-        console.log('Sending meme list')
-
-        await client.sendText(message.from, await getImgflipList())
-        break
-      }
-
-      case actions.MEME: {
-        console.log(`Sending (${message.body.split('\n').join(')(')})`)
-        ioMemes.inc()
-
-        const url = await getImgflipImage(message.body)
-        await client.sendImage(message.from, url, 'imgflip', url)
-        await client.sendStickerfromUrl(
-          message.from,
-          url,
-          undefined,
-          stickerMeta
-        )
-        break
-      }
-
-      case actions.STICKER: {
-        const searches = getStickerSearches(message.body)
-
-        console.log('Sending Stickers for', searches.giphySearch.q)
-
-        const giphyURLs = await getGiphys(searches.giphySearch)
-        const tenorURLs = await getTenors(searches.tenorSearch)
-
-        if (giphyURLs) {
-          try {
-            await client.sendImageAsSticker(
-              message.from,
-              'attributions/giphy.gif',
-              stickerMeta
-            )
-          } catch {}
-        }
-        if (tenorURLs) {
-          try {
-            await client.sendImageAsSticker(
-              message.from,
-              'attributions/tenor.png',
-              stickerMeta
-            )
-          } catch {}
+          const groupInfo = await client.getGroupInfo(groupId)
+          await client.sendText(message.from, groupInfo.description)
+          break
         }
 
-        giphyURLs.concat(tenorURLs).forEach(async (url) => {
-          try {
-            await client.sendStickerfromUrl(
-              message.from,
-              url,
-              undefined,
-              stickerMeta
-            )
-            ioSticker.inc()
-          } catch {}
-        })
-        break
+        case actions.LINK: {
+          if (!message.isGroupMsg) return
+          console.log('Sending Link')
+
+          await client.sendText(
+            message.from,
+            await client.getGroupInviteLink(message.from)
+          )
+          break
+        }
+
+        case actions.MEME_LIST: {
+          console.log('Sending meme list')
+
+          await client.sendText(message.from, await getImgflipList())
+          break
+        }
+
+        case actions.STATS: {
+          const stats = `*Current Usage*:\n\nImages: ${ioImages.val()}\n GIFs/Videos: ${ioVideos.val()}\nMemes: ${ioMemes.val()}\nStickers: ${ioStickers.val()}\n\nNumbers are Reset on Server Reboot!`
+          await client.sendText(message.from, stats)
+          break
+        }
+
+        case actions.MEME: {
+          console.log(`Sending (${message.body.split('\n').join(')(')})`)
+          ioMemes.inc()
+
+          const url = await getImgflipImage(message.body)
+          await client.sendImage(message.from, url, 'imgflip', url)
+          await client.sendStickerfromUrl(
+            message.from,
+            url,
+            undefined,
+            stickerMeta
+          )
+          break
+        }
+
+        case actions.STICKER: {
+          const searches = getStickerSearches(message.body)
+
+          console.log('Sending Stickers for', searches.giphySearch.q)
+
+          const giphyURLs = await getGiphys(searches.giphySearch)
+          const tenorURLs = await getTenors(searches.tenorSearch)
+
+          if (giphyURLs) {
+            try {
+              await client.sendImageAsSticker(
+                message.from,
+                'attributions/giphy.gif',
+                stickerMeta
+              )
+            } catch {}
+          }
+          if (tenorURLs) {
+            try {
+              await client.sendImageAsSticker(
+                message.from,
+                'attributions/tenor.png',
+                stickerMeta
+              )
+            } catch {}
+          }
+
+          giphyURLs.concat(tenorURLs).forEach(async (url) => {
+            try {
+              await client.sendStickerfromUrl(
+                message.from,
+                url,
+                undefined,
+                stickerMeta
+              )
+              ioStickers.inc()
+            } catch {}
+          })
+          break
+        }
       }
     }
 
@@ -202,12 +214,14 @@ const start = (client: Client) => {
       switch (url) {
         case '/restart': {
           pm2.restart('wa-stickerbot', () => {})
+          console.log('Restarting wa-stickerbot...')
           res.end('Restarting wa-stickerbot...')
           break
         }
         case '/refresh': {
           await client.refresh()
           registerParticipantsListener(client)
+          console.log('Refreshed wa-stickerbot')
           res.end('Refreshed wa-stickerbot')
           break
         }

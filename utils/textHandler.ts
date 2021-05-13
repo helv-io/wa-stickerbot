@@ -6,6 +6,7 @@ export const getTextAction = async (message: string) => {
   if (message) {
     message = await normalize(message.toLowerCase())
 
+    if (message === 'stats') return actions.STATS
     if (message === 'memes') return actions.MEME_LIST
     if (message === 'link') return actions.LINK
     if (message === 'instrucoes' || message === 'rtfm')
@@ -16,9 +17,10 @@ export const getTextAction = async (message: string) => {
 }
 
 export enum actions {
-  MEME_LIST,
+  MEME_LIST = 1,
   MEME,
   INSTRUCTIONS,
   STICKER,
-  LINK
+  LINK,
+  STATS
 }
