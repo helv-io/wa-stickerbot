@@ -226,6 +226,11 @@ const start = (client: Client) => {
   })
 }
 
-void create(clientConfig).then((client: Client) => start(client))
+create(clientConfig).then((client: Client) => start(client))
 
-http.createServer((req, res) => {}).listen(6001)
+http
+  .createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' })
+    res.end('Running')
+  })
+  .listen(6001)
