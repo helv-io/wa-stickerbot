@@ -19,28 +19,33 @@ const start = (client: Client) => {
   // Interact with Entering / Exiting Participants
   client.onGlobalParticipantsChanged(async (event) => {
     const groupId = (event.chat as unknown) as `${number}-${number}@g.us`
+
     switch (event.action) {
       case groupChangeEvent.remove: {
         console.log('Removed', event.who)
-        client.sendImage(
-          groupId,
-          await getImgflipImage(botOptions.outMessage),
-          '',
-          `Adeus +${event.who.toString().split('@')[0]}, vai tarde!`
-        )
+        if (botOptions.interactOut) {
+          client.sendImage(
+            groupId,
+            await getImgflipImage(botOptions.outMessage),
+            '',
+            `Adeus +${event.who.toString().split('@')[0]}, vai tarde!`
+          )
+        }
         break
       }
 
       case groupChangeEvent.add: {
         console.log('Added', event.who)
-        client.sendImage(
-          groupId,
-          await getImgflipImage(botOptions.inMessage),
-          '',
-          `Divirta-se, +${event.who.toString().split('@')[0]}!`
-        )
-        const groupInfo = await client.getGroupInfo(groupId)
-        client.sendText(groupId, groupInfo.description)
+        if (botOptions.interactOut) {
+          client.sendImage(
+            groupId,
+            await getImgflipImage(botOptions.inMessage),
+            '',
+            `Divirta-se, +${event.who.toString().split('@')[0]}!`
+          )
+          const groupInfo = await client.getGroupInfo(groupId)
+          client.sendText(groupId, groupInfo.description)
+        }
         break
       }
     }
