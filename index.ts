@@ -208,6 +208,7 @@ const start = (client: Client) => {
         case '/refresh': {
           await client.refresh()
           registerParticipantsListener(client)
+          res.end('Refreshed wa-stickerbot')
           break
         }
         default:
