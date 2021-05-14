@@ -253,7 +253,6 @@ const start = (client: Client) => {
         case '/refresh': {
           await client.refresh()
           ioRefreshes.inc()
-          registerParticipantsListener(client)
           console.log('Refreshed wa-stickerbot')
           res.end('Refreshed wa-stickerbot')
           break
