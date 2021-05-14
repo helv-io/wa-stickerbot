@@ -87,6 +87,7 @@ dist
 # Project specific files
 *.data.json
 ecosystem.config.js
+.ecosystem.config..swp
 config.ts
 # managed by open-wa. see: https://github.com/open-wa/wa-automate-nodejs/issues/1632
 **.data.json
