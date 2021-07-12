@@ -179,14 +179,20 @@ const start = (client: Client) => {
 
         case actions.TEXT:
           const text = message.body.slice(6)
-          const textUrl = `https://api.xteam.xyz/attp?text=${encodeURIComponent(
+          const textUrlA = `https://api.xteam.xyz/attp?text=${encodeURIComponent(
             text
           )}`
-          console.log(`Sending (${text}) - ${textUrl}`)
+          const textUrlS = `https://api.xteam.xyz/ttp?text=${encodeURIComponent(
+            text
+          )}`
+          console.log(`Sending (${text})`)
           ioStickers.inc()
 
-          const b64 = (await axios.get(textUrl)).data.result
-          await client.sendImageAsSticker(message.from, b64, stickerMeta)
+          const b64a = (await axios.get(textUrlA)).data.result
+          const b64s = (await axios.get(textUrlS)).data.result
+
+          await client.sendImageAsSticker(message.from, b64a, stickerMeta)
+          await client.sendImageAsSticker(message.from, b64s, stickerMeta)
           break
 
         case actions.STICKER:
