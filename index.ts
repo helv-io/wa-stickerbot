@@ -110,7 +110,7 @@ const start = (client: Client) => {
       await client.simulateTyping(message.from, true)
 
       switch (action) {
-        case actions.INSTRUCTIONS: {
+        case actions.INSTRUCTIONS:
           console.log('Sending instructions')
 
           if (message.isGroupMsg) {
@@ -120,9 +120,8 @@ const start = (client: Client) => {
             await client.sendText(message.from, 'No Group Instructions.')
           }
           break
-        }
 
-        case actions.LINK: {
+        case actions.LINK:
           if (!message.isGroupMsg) return
           console.log('Sending Link')
 
@@ -131,16 +130,14 @@ const start = (client: Client) => {
             await client.getGroupInviteLink(message.from)
           )
           break
-        }
 
-        case actions.MEME_LIST: {
+        case actions.MEME_LIST:
           console.log('Sending meme list')
 
           await client.sendText(message.from, await getImgflipList())
           break
-        }
 
-        case actions.STATS: {
+        case actions.STATS:
           // Build stats text
           let stats = `*Current Usage*\n\n`
 
@@ -163,9 +160,8 @@ const start = (client: Client) => {
 
           await client.sendText(message.from, stats)
           break
-        }
 
-        case actions.MEME: {
+        case actions.MEME:
           console.log(`Sending (${message.body.split('\n').join(')(')})`)
           ioMemes.inc()
 
@@ -178,9 +174,8 @@ const start = (client: Client) => {
             stickerMeta
           )
           break
-        }
 
-        case actions.TEXT: {
+        case actions.TEXT:
           const text = message.body.slice(6)
           console.log(`Sending (${text})`)
           const url = `https://api.xteam.xyz/attp?file&text=${encodeURIComponent(
@@ -188,11 +183,15 @@ const start = (client: Client) => {
           )}`
           ioStickers.inc()
 
-          client.sendStickerfromUrl(message.from, url, undefined, stickerMeta)
+          await client.sendStickerfromUrl(
+            message.from,
+            url,
+            undefined,
+            stickerMeta
+          )
           break
-        }
 
-        case actions.STICKER: {
+        case actions.STICKER:
           const searches = getStickerSearches(message.body)
 
           console.log('Sending Stickers for', searches.giphySearch.q)
@@ -231,7 +230,6 @@ const start = (client: Client) => {
             } catch {}
           })
           break
-        }
       }
     }
 
