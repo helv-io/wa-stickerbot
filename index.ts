@@ -18,6 +18,8 @@ import {
 } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
 import { registerParticipantsListener } from './utils/utils'
+import { HttpMetricsConfig } from '@pm2/io/build/main/metrics/httpMetrics'
+import axios from 'axios'
 
 const start = (client: Client) => {
   // Usage Counters
@@ -177,18 +179,14 @@ const start = (client: Client) => {
 
         case actions.TEXT:
           const text = message.body.slice(6)
-          const textUrl = `https://api.xteam.xyz/attp?file&text=${encodeURIComponent(
+          const textUrl = `https://api.xteam.xyz/attp?text=${encodeURIComponent(
             text
           )}`
           console.log(`Sending (${text}) - ${textUrl}`)
           ioStickers.inc()
 
-          await client.sendStickerfromUrl(
-            message.from,
-            textUrl,
-            undefined,
-            stickerMeta
-          )
+          const b64 = (await axios.get(textUrl)).data.response
+          await client.sendImageAsSticker(message.from, b64, stickerMeta)
           break
 
         case actions.STICKER:
