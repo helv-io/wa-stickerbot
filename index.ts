@@ -48,7 +48,7 @@ const start = (client: Client) => {
 
   // Message Handlers
   void client.onMessage(async (message) => {
-    const groupId = message.chatId as unknown as `${number}-${number}@g.us`
+    const groupId = (message.chatId as unknown) as `${number}-${number}@g.us`
 
     // Skips personal chats unless specified
     if (!message.isGroupMsg && botOptions.groupsOnly) return
@@ -105,7 +105,6 @@ const start = (client: Client) => {
 
     // Handles Text Messages
     const action = await getTextAction(message.body)
-    console.log(`Action: ${action}`);
     if (action) {
       // Start typing
       await client.simulateTyping(message.from, true)
@@ -180,15 +179,16 @@ const start = (client: Client) => {
           )
           break
         }
-          
+
         case actions.TEXT: {
-          const text = message.body.slice(6);
-          console.log(`Sending (${text}`)
+          const text = message.body.slice(6)
+          const url = `https://api.xteam.xyz/attp?file&text=${text}`
+          console.log(`Sending (${text}) - ${url}`)
           ioStickers.inc()
 
           await client.sendStickerfromUrl(
             message.from,
-            `https://api.xteam.xyz/attp?file&text=${text}`,
+            url,
             undefined,
             stickerMeta
           )
