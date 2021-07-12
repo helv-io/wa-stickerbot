@@ -13,6 +13,7 @@ export const getTextAction = async (message: string) => {
       return actions.INSTRUCTIONS
     if (stickerRegExp.exec(message)) return actions.STICKER
     if (message.startsWith('meme ')) return actions.MEME
+    if (message.startsWith('texto ')) return actions.TEXT
   }
 }
 
@@ -22,5 +23,6 @@ export enum actions {
   INSTRUCTIONS,
   STICKER,
   LINK,
-  STATS
+  STATS,
+  TEXT
 }
