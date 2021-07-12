@@ -185,7 +185,7 @@ const start = (client: Client) => {
           console.log(`Sending (${text}) - ${textUrl}`)
           ioStickers.inc()
 
-          const b64 = (await axios.get(textUrl)).data.response
+          const b64 = (await axios.get(textUrl)).data.result
           await client.sendImageAsSticker(message.from, b64, stickerMeta)
           break
 
