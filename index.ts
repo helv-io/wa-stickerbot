@@ -178,14 +178,14 @@ const start = (client: Client) => {
         case actions.TEXT:
           const text = message.body.slice(6)
           console.log(`Sending (${text})`)
-          const url = `https://api.xteam.xyz/attp?file&text=${encodeURIComponent(
+          const textUrl = `https://api.xteam.xyz/attp?file&text=${encodeURIComponent(
             text
           )}`
           ioStickers.inc()
 
           await client.sendStickerfromUrl(
             message.from,
-            url,
+            textUrl,
             undefined,
             stickerMeta
           )
