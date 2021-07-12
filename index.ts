@@ -182,7 +182,9 @@ const start = (client: Client) => {
 
         case actions.TEXT: {
           const text = message.body.slice(6)
-          const url = `https://api.xteam.xyz/attp?file&text=${text}`
+          const url = `https://api.xteam.xyz/attp?file&text=${encodeURIComponent(
+            text
+          )}`
           console.log(`Sending (${text}) - ${url}`)
           ioStickers.inc()
 
