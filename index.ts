@@ -179,6 +179,20 @@ const start = (client: Client) => {
           )
           break
         }
+          
+        case actions.TEXT: {
+          const text = message.body.slice(6);
+          console.log(`Sending (${text}`)
+          ioStickers.inc()
+
+          await client.sendStickerfromUrl(
+            message.from,
+            `https://api.xteam.xyz/attp?file&text=${text}`,
+            undefined,
+            stickerMeta
+          )
+          break
+        }
 
         case actions.STICKER: {
           const searches = getStickerSearches(message.body)
