@@ -105,6 +105,7 @@ const start = (client: Client) => {
 
     // Handles Text Messages
     const action = await getTextAction(message.body)
+    console.log(`Action: ${action}`);
     if (action) {
       // Start typing
       await client.simulateTyping(message.from, true)
