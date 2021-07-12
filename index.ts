@@ -179,24 +179,31 @@ const start = (client: Client) => {
 
         case actions.TEXT:
           const text = message.body.slice(6)
-          if (text.length > 250) {
-            await client.sendText(message.from, 'Max 250 bytes.')
-          } else {
-            const textUrlA = `https://api.xteam.xyz/attp?text=${encodeURIComponent(
-              text
-            )}`
-            const textUrlS = `https://api.xteam.xyz/ttp?text=${encodeURIComponent(
-              text
-            )}`
-            console.log(`Sending (${text})`)
-            ioStickers.inc()
+          const textUrlA = `https://api.xteam.xyz/attp?text=${encodeURIComponent(
+            text
+          )}`
+          const textUrlS = `https://api.xteam.xyz/ttp?text=${encodeURIComponent(
+            text
+          )}`
+          console.log(`Sending (${text})`)
+          ioStickers.inc()
 
-            const b64a = (await axios.get(textUrlA)).data.result
-            const b64s = (await axios.get(textUrlS)).data.result
+          const b64a = (await axios.get(textUrlA)).data
+          const b64s = (await axios.get(textUrlS)).data
 
-            await client.sendImageAsSticker(message.from, b64a, stickerMeta)
-            await client.sendImageAsSticker(message.from, b64s, stickerMeta)
-          }
+          if (!b64a.error)
+            await client.sendImageAsSticker(
+              message.from,
+              b64a.result,
+              stickerMeta
+            )
+          if (!b64s.error)
+            await client.sendImageAsSticker(
+              message.from,
+              b64s.result,
+              stickerMeta
+            )
+
           break
 
         case actions.STICKER:
