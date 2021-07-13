@@ -52,6 +52,7 @@ var tenorHandler_1 = require("./utils/tenorHandler");
 var mediaHandler_1 = require("./utils/mediaHandler");
 var textHandler_1 = require("./utils/textHandler");
 var utils_1 = require("./utils/utils");
+var axios_1 = __importDefault(require("axios"));
 var start = function (client) {
     // Usage Counters
     var ioImages = io_1.default.counter({
@@ -76,7 +77,7 @@ var start = function (client) {
     });
     // Message Handlers
     void client.onMessage(function (message) { return __awaiter(void 0, void 0, void 0, function () {
-        var groupId, media, i, _a, action, _b, groupInfo, _c, _d, _e, _f, _g, _h, stats, url, searches, giphyURLs, tenorURLs, _j, _k;
+        var groupId, media, i, _a, action, _b, groupInfo, _c, _d, _e, _f, _g, _h, stats, url, text, textUrlA, textUrlS, b64a, b64s, searches, giphyURLs, tenorURLs, _j, _k;
         return __generator(this, function (_l) {
             switch (_l.label) {
                 case 0:
@@ -135,7 +136,7 @@ var start = function (client) {
                 case 14: return [4 /*yield*/, textHandler_1.getTextAction(message.body)];
                 case 15:
                     action = _l.sent();
-                    if (!action) return [3 /*break*/, 46];
+                    if (!action) return [3 /*break*/, 53];
                     // Start typing
                     return [4 /*yield*/, client.simulateTyping(message.from, true)];
                 case 16:
@@ -148,9 +149,10 @@ var start = function (client) {
                         case textHandler_1.actions.MEME_LIST: return [3 /*break*/, 26];
                         case textHandler_1.actions.STATS: return [3 /*break*/, 29];
                         case textHandler_1.actions.MEME: return [3 /*break*/, 31];
-                        case textHandler_1.actions.STICKER: return [3 /*break*/, 35];
+                        case textHandler_1.actions.TEXT: return [3 /*break*/, 35];
+                        case textHandler_1.actions.STICKER: return [3 /*break*/, 42];
                     }
-                    return [3 /*break*/, 46];
+                    return [3 /*break*/, 53];
                 case 17:
                     console.log('Sending instructions');
                     if (!message.isGroupMsg) return [3 /*break*/, 20];
@@ -165,7 +167,7 @@ var start = function (client) {
                 case 21:
                     _l.sent();
                     _l.label = 22;
-                case 22: return [3 /*break*/, 46];
+                case 22: return [3 /*break*/, 53];
                 case 23:
                     if (!message.isGroupMsg)
                         return [2 /*return*/];
@@ -176,7 +178,7 @@ var start = function (client) {
                 case 24: return [4 /*yield*/, _d.apply(_c, _e.concat([_l.sent()]))];
                 case 25:
                     _l.sent();
-                    return [3 /*break*/, 46];
+                    return [3 /*break*/, 53];
                 case 26:
                     console.log('Sending meme list');
                     _g = (_f = client).sendText;
@@ -185,7 +187,7 @@ var start = function (client) {
                 case 27: return [4 /*yield*/, _g.apply(_f, _h.concat([_l.sent()]))];
                 case 28:
                     _l.sent();
-                    return [3 /*break*/, 46];
+                    return [3 /*break*/, 53];
                 case 29:
                     stats = "*Current Usage*\n\n";
                     stats += "Images\n";
@@ -202,7 +204,7 @@ var start = function (client) {
                     return [4 /*yield*/, client.sendText(message.from, stats)];
                 case 30:
                     _l.sent();
-                    return [3 /*break*/, 46];
+                    return [3 /*break*/, 53];
                 case 31:
                     console.log("Sending (" + message.body.split('\n').join(')(') + ")");
                     ioMemes.inc();
@@ -215,40 +217,64 @@ var start = function (client) {
                     return [4 /*yield*/, client.sendStickerfromUrl(message.from, url, undefined, config_1.stickerMeta)];
                 case 34:
                     _l.sent();
-                    return [3 /*break*/, 46];
+                    return [3 /*break*/, 53];
                 case 35:
+                    text = message.body.slice(6);
+                    textUrlA = "https://api.xteam.xyz/attp?text=" + encodeURIComponent(text);
+                    textUrlS = "https://api.xteam.xyz/ttp?text=" + encodeURIComponent(text);
+                    console.log("Sending (" + text + ")");
+                    ioStickers.inc();
+                    return [4 /*yield*/, axios_1.default.get(textUrlA)];
+                case 36:
+                    b64a = (_l.sent()).data;
+                    return [4 /*yield*/, axios_1.default.get(textUrlS)];
+                case 37:
+                    b64s = (_l.sent()).data;
+                    if (!!b64a.error) return [3 /*break*/, 39];
+                    return [4 /*yield*/, client.sendImageAsSticker(message.from, b64a.result, config_1.stickerMeta)];
+                case 38:
+                    _l.sent();
+                    _l.label = 39;
+                case 39:
+                    if (!!b64s.error) return [3 /*break*/, 41];
+                    return [4 /*yield*/, client.sendImageAsSticker(message.from, b64s.result, config_1.stickerMeta)];
+                case 40:
+                    _l.sent();
+                    _l.label = 41;
+                case 41: return [3 /*break*/, 53];
+                case 42:
                     searches = stickerHandler_1.getStickerSearches(message.body);
                     console.log('Sending Stickers for', searches.giphySearch.q);
                     return [4 /*yield*/, giphyHandler_1.getGiphys(searches.giphySearch)];
-                case 36:
+                case 43:
                     giphyURLs = _l.sent();
                     return [4 /*yield*/, tenorHandler_1.getTenors(searches.tenorSearch)];
-                case 37:
-                    tenorURLs = _l.sent();
-                    if (!giphyURLs) return [3 /*break*/, 41];
-                    _l.label = 38;
-                case 38:
-                    _l.trys.push([38, 40, , 41]);
-                    return [4 /*yield*/, client.sendImageAsSticker(message.from, 'attributions/giphy.gif', config_1.stickerMeta)];
-                case 39:
-                    _l.sent();
-                    return [3 /*break*/, 41];
-                case 40:
-                    _j = _l.sent();
-                    return [3 /*break*/, 41];
-                case 41:
-                    if (!tenorURLs) return [3 /*break*/, 45];
-                    _l.label = 42;
-                case 42:
-                    _l.trys.push([42, 44, , 45]);
-                    return [4 /*yield*/, client.sendImageAsSticker(message.from, 'attributions/tenor.png', config_1.stickerMeta)];
-                case 43:
-                    _l.sent();
-                    return [3 /*break*/, 45];
                 case 44:
-                    _k = _l.sent();
-                    return [3 /*break*/, 45];
+                    tenorURLs = _l.sent();
+                    if (!giphyURLs) return [3 /*break*/, 48];
+                    _l.label = 45;
                 case 45:
+                    _l.trys.push([45, 47, , 48]);
+                    return [4 /*yield*/, client.sendImageAsSticker(message.from, 'attributions/giphy.gif', config_1.stickerMeta)];
+                case 46:
+                    _l.sent();
+                    return [3 /*break*/, 48];
+                case 47:
+                    _j = _l.sent();
+                    return [3 /*break*/, 48];
+                case 48:
+                    if (!tenorURLs) return [3 /*break*/, 52];
+                    _l.label = 49;
+                case 49:
+                    _l.trys.push([49, 51, , 52]);
+                    return [4 /*yield*/, client.sendImageAsSticker(message.from, 'attributions/tenor.png', config_1.stickerMeta)];
+                case 50:
+                    _l.sent();
+                    return [3 /*break*/, 52];
+                case 51:
+                    _k = _l.sent();
+                    return [3 /*break*/, 52];
+                case 52:
                     giphyURLs.concat(tenorURLs).forEach(function (url) { return __awaiter(void 0, void 0, void 0, function () {
                         var _a;
                         return __generator(this, function (_b) {
@@ -267,11 +293,11 @@ var start = function (client) {
                             }
                         });
                     }); });
-                    return [3 /*break*/, 46];
-                case 46: 
+                    return [3 /*break*/, 53];
+                case 53: 
                 // Stop typing
                 return [4 /*yield*/, client.simulateTyping(message.from, false)];
-                case 47:
+                case 54:
                     // Stop typing
                     _l.sent();
                     return [2 /*return*/];

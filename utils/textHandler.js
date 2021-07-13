@@ -59,6 +59,8 @@ var getTextAction = function (message) { return __awaiter(void 0, void 0, void 0
                     return [2 /*return*/, actions.STICKER];
                 if (message.startsWith('meme '))
                     return [2 /*return*/, actions.MEME];
+                if (message.startsWith('texto '))
+                    return [2 /*return*/, actions.TEXT];
                 _a.label = 2;
             case 2: return [2 /*return*/];
         }
@@ -73,4 +75,5 @@ var actions;
     actions[actions["STICKER"] = 4] = "STICKER";
     actions[actions["LINK"] = 5] = "LINK";
     actions[actions["STATS"] = 6] = "STATS";
+    actions[actions["TEXT"] = 7] = "TEXT";
 })(actions = exports.actions || (exports.actions = {}));
