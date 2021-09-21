@@ -6,7 +6,8 @@ exports.imgflip = exports.tenorSearch = exports.giphySearch = exports.mp4Sticker
 exports.stickerMeta = {
     author: 'Helvio',
     pack: 'Sticker Bot',
-    keepScale: true
+    keepScale: true,
+    circle: false
 };
 exports.circleMeta = {
     author: 'Helvio',
@@ -16,7 +17,7 @@ exports.circleMeta = {
 };
 // https://docs.openwa.dev/interfaces/api_model.configobject.html
 exports.clientConfig = {
-    sessionId: 'stickerbot',
+    sessionId: 'sticker_bot',
     authTimeout: 60,
     blockCrashLogs: false,
     disableSpins: true,
@@ -33,7 +34,7 @@ exports.clientConfig = {
 // Custom Instructions
 exports.botOptions = {
     stickers: 10,
-    groupsOnly: false,
+    groupsOnly: true,
     interactIn: true,
     interactOut: true,
     inMessage: "meme woman\nOLHA QUEM CHEGOU\n",
@@ -46,8 +47,7 @@ exports.mp4StickerConversionOptions = {
     loop: 0,
     log: true,
     startTime: '00:00:00.0',
-    endTime: '00:00:15.0',
-    square: 256
+    endTime: '00:00:15.0'
 };
 // https://developers.giphy.com/docs/api/endpoint#search
 exports.giphySearch = {

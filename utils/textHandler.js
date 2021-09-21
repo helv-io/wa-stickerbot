@@ -1,4 +1,5 @@
 "use strict";
+//import { normalize } from 'normalize-diacritics'
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37,33 +38,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.actions = exports.getTextAction = exports.stickerRegExp = void 0;
-var normalize_diacritics_1 = require("normalize-diacritics");
 exports.stickerRegExp = /(sticker|figurinha)(s?) d[a|e|o]s? (.*)/i;
 var getTextAction = function (message) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                if (!message) return [3 /*break*/, 2];
-                return [4 /*yield*/, normalize_diacritics_1.normalize(message.toLowerCase())];
-            case 1:
-                message = _a.sent();
-                if (message === 'stats')
-                    return [2 /*return*/, actions.STATS];
-                if (message === 'memes')
-                    return [2 /*return*/, actions.MEME_LIST];
-                if (message === 'link')
-                    return [2 /*return*/, actions.LINK];
-                if (message === 'instrucoes' || message === 'rtfm')
-                    return [2 /*return*/, actions.INSTRUCTIONS];
-                if (exports.stickerRegExp.exec(message))
-                    return [2 /*return*/, actions.STICKER];
-                if (message.startsWith('meme '))
-                    return [2 /*return*/, actions.MEME];
-                if (message.startsWith('texto '))
-                    return [2 /*return*/, actions.TEXT];
-                _a.label = 2;
-            case 2: return [2 /*return*/];
+        if (message) {
+            //message = normalize(message.toLowerCase())
+            message = message.toLowerCase();
+            if (message === 'stats')
+                return [2 /*return*/, actions.STATS];
+            if (message === 'memes')
+                return [2 /*return*/, actions.MEME_LIST];
+            if (message === 'link')
+                return [2 /*return*/, actions.LINK];
+            if (message === 'instrucoes' || message === 'rtfm')
+                return [2 /*return*/, actions.INSTRUCTIONS];
+            if (exports.stickerRegExp.exec(message))
+                return [2 /*return*/, actions.STICKER];
+            if (message.startsWith('meme '))
+                return [2 /*return*/, actions.MEME];
+            if (message.startsWith('texto '))
+                return [2 /*return*/, actions.TEXT];
         }
+        return [2 /*return*/];
     });
 }); };
 exports.getTextAction = getTextAction;
