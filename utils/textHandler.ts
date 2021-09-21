@@ -1,10 +1,11 @@
-import { normalize } from 'normalize-diacritics'
+//import { normalize } from 'normalize-diacritics'
 
 export const stickerRegExp = /(sticker|figurinha)(s?) d[a|e|o]s? (.*)/i
 
 export const getTextAction = async (message: string) => {
   if (message) {
-    message = await normalize(message.toLowerCase())
+    //message = normalize(message.toLowerCase())
+    message = message.toLowerCase()
 
     if (message === 'stats') return actions.STATS
     if (message === 'memes') return actions.MEME_LIST
