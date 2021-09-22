@@ -53,6 +53,8 @@ var mediaHandler_1 = require("./utils/mediaHandler");
 var textHandler_1 = require("./utils/textHandler");
 var utils_1 = require("./utils/utils");
 var axios_1 = __importDefault(require("axios"));
+console.log('Environment Variables:');
+console.log(process.env);
 var start = function (client) {
     // Usage Counters
     var ioImages = io_1.default.counter({
