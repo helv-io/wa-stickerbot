@@ -18,8 +18,10 @@ import {
 } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
 import { registerParticipantsListener } from './utils/utils'
-import { HttpMetricsConfig } from '@pm2/io/build/main/metrics/httpMetrics'
 import axios from 'axios'
+
+console.log('Environment Variables:')
+console.log(process.env)
 
 const start = (client: Client) => {
   // Usage Counters
@@ -50,7 +52,7 @@ const start = (client: Client) => {
 
   // Message Handlers
   void client.onMessage(async (message) => {
-    const groupId = (message.chatId as unknown) as `${number}-${number}@g.us`
+    const groupId = message.chatId as unknown as `${number}-${number}@g.us`
 
     // Skips personal chats unless specified
     if (!message.isGroupMsg && botOptions.groupsOnly) return
