@@ -74,14 +74,14 @@ const start = (client: Client) => {
 
         for (let i = 15; i > 0; i--) {
           try {
-            await client.sendMp4AsSticker(
+            client.sendMp4AsSticker(
               message.from,
               media.dataURL,
               getConversionOptions(i),
               stickerMeta
             )
 
-            await client.sendMp4AsSticker(
+            client.sendMp4AsSticker(
               message.from,
               media.dataURL,
               getConversionOptions(i),
@@ -194,13 +194,13 @@ const start = (client: Client) => {
           const b64s = (await axios.get(textUrlS)).data
 
           if (!b64a.error)
-            await client.sendImageAsSticker(
+            client.sendImageAsSticker(
               message.from,
               b64a.result,
               stickerMeta
             )
           if (!b64s.error)
-            await client.sendImageAsSticker(
+            client.sendImageAsSticker(
               message.from,
               b64s.result,
               stickerMeta
@@ -218,33 +218,33 @@ const start = (client: Client) => {
 
           if (giphyURLs) {
             try {
-              await client.sendImageAsSticker(
+              client.sendImageAsSticker(
                 message.from,
                 'attributions/giphy.gif',
                 stickerMeta
               )
-            } catch {}
+            } catch { }
           }
           if (tenorURLs) {
             try {
-              await client.sendImageAsSticker(
+              client.sendImageAsSticker(
                 message.from,
                 'attributions/tenor.png',
                 stickerMeta
               )
-            } catch {}
+            } catch { }
           }
 
           giphyURLs.concat(tenorURLs).forEach(async (url) => {
             try {
-              await client.sendStickerfromUrl(
+              client.sendStickerfromUrl(
                 message.from,
                 url,
                 undefined,
                 stickerMeta
               )
               ioStickers.inc()
-            } catch {}
+            } catch { }
           })
           break
       }
@@ -272,7 +272,7 @@ const start = (client: Client) => {
 
       switch (url) {
         case '/restart': {
-          pm2.restart('wa-stickerbot', () => {})
+          pm2.restart('wa-stickerbot', () => { })
           console.log('Restarting wa-stickerbot...')
           res.end('Restarting wa-stickerbot...')
           break
