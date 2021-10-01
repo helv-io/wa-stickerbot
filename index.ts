@@ -74,14 +74,14 @@ const start = (client: Client) => {
 
         for (let i = 15; i > 0; i--) {
           try {
-            client.sendMp4AsSticker(
+            await client.sendMp4AsSticker(
               message.from,
               media.dataURL,
               getConversionOptions(i),
               stickerMeta
             )
 
-            client.sendMp4AsSticker(
+            await client.sendMp4AsSticker(
               message.from,
               media.dataURL,
               getConversionOptions(i),
@@ -194,13 +194,13 @@ const start = (client: Client) => {
           const b64s = (await axios.get(textUrlS)).data
 
           if (!b64a.error)
-            client.sendImageAsSticker(
+            await client.sendImageAsSticker(
               message.from,
               b64a.result,
               stickerMeta
             )
           if (!b64s.error)
-            client.sendImageAsSticker(
+            await client.sendImageAsSticker(
               message.from,
               b64s.result,
               stickerMeta
@@ -218,7 +218,7 @@ const start = (client: Client) => {
 
           if (giphyURLs) {
             try {
-              client.sendImageAsSticker(
+              await client.sendImageAsSticker(
                 message.from,
                 'attributions/giphy.gif',
                 stickerMeta
@@ -227,7 +227,7 @@ const start = (client: Client) => {
           }
           if (tenorURLs) {
             try {
-              client.sendImageAsSticker(
+              await client.sendImageAsSticker(
                 message.from,
                 'attributions/tenor.png',
                 stickerMeta
@@ -237,7 +237,7 @@ const start = (client: Client) => {
 
           giphyURLs.concat(tenorURLs).forEach(async (url) => {
             try {
-              client.sendStickerfromUrl(
+              await client.sendStickerfromUrl(
                 message.from,
                 url,
                 undefined,
