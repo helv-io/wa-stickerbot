@@ -24,7 +24,7 @@
   "dependencies": {
     "@open-wa/wa-automate": "^4.22.5",
     "@pm2/io": "^5.0.0",
-    "axios": "^0.22.0",
+    "axios": "^0.21.4",
     "mime-types": "^2.1.33",
     "normalize-diacritics": "^3.0.0",
     "pm2": "^5.1.2",
