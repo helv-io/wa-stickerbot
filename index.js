@@ -94,7 +94,7 @@ var start = function (client) {
                 case 1:
                     // Start typing
                     _l.sent();
-                    return [4 /*yield*/, mediaHandler_1.getMedia(message)];
+                    return [4 /*yield*/, (0, mediaHandler_1.getMedia)(message)];
                 case 2:
                     media = _l.sent();
                     if (!media.filename.endsWith('.mp4')) return [3 /*break*/, 10];
@@ -108,10 +108,10 @@ var start = function (client) {
                     _l.label = 4;
                 case 4:
                     _l.trys.push([4, 7, , 8]);
-                    return [4 /*yield*/, client.sendMp4AsSticker(message.from, media.dataURL, mediaHandler_1.getConversionOptions(i), config_1.stickerMeta)];
+                    return [4 /*yield*/, client.sendMp4AsSticker(message.from, media.dataURL, (0, mediaHandler_1.getConversionOptions)(i), config_1.stickerMeta)];
                 case 5:
                     _l.sent();
-                    return [4 /*yield*/, client.sendMp4AsSticker(message.from, media.dataURL, mediaHandler_1.getConversionOptions(i), config_1.circleMeta)];
+                    return [4 /*yield*/, client.sendMp4AsSticker(message.from, media.dataURL, (0, mediaHandler_1.getConversionOptions)(i), config_1.circleMeta)];
                 case 6:
                     _l.sent();
                     return [3 /*break*/, 9];
@@ -135,7 +135,7 @@ var start = function (client) {
                     _l.sent();
                     _l.label = 13;
                 case 13: return [2 /*return*/];
-                case 14: return [4 /*yield*/, textHandler_1.getTextAction(message.body)];
+                case 14: return [4 /*yield*/, (0, textHandler_1.getTextAction)(message.body)];
                 case 15:
                     action = _l.sent();
                     if (!action) return [3 /*break*/, 53];
@@ -185,7 +185,7 @@ var start = function (client) {
                     console.log('Sending meme list');
                     _g = (_f = client).sendText;
                     _h = [message.from];
-                    return [4 /*yield*/, imgflipHandler_1.getImgflipList()];
+                    return [4 /*yield*/, (0, imgflipHandler_1.getImgflipList)()];
                 case 27: return [4 /*yield*/, _g.apply(_f, _h.concat([_l.sent()]))];
                 case 28:
                     _l.sent();
@@ -210,7 +210,7 @@ var start = function (client) {
                 case 31:
                     console.log("Sending (" + message.body.split('\n').join(')(') + ")");
                     ioMemes.inc();
-                    return [4 /*yield*/, imgflipHandler_1.getImgflipImage(message.body)];
+                    return [4 /*yield*/, (0, imgflipHandler_1.getImgflipImage)(message.body)];
                 case 32:
                     url = _l.sent();
                     return [4 /*yield*/, client.sendImage(message.from, url, 'imgflip', url)];
@@ -245,12 +245,12 @@ var start = function (client) {
                     _l.label = 41;
                 case 41: return [3 /*break*/, 53];
                 case 42:
-                    searches = stickerHandler_1.getStickerSearches(message.body);
+                    searches = (0, stickerHandler_1.getStickerSearches)(message.body);
                     console.log('Sending Stickers for', searches.giphySearch.q);
-                    return [4 /*yield*/, giphyHandler_1.getGiphys(searches.giphySearch)];
+                    return [4 /*yield*/, (0, giphyHandler_1.getGiphys)(searches.giphySearch)];
                 case 43:
                     giphyURLs = _l.sent();
-                    return [4 /*yield*/, tenorHandler_1.getTenors(searches.tenorSearch)];
+                    return [4 /*yield*/, (0, tenorHandler_1.getTenors)(searches.tenorSearch)];
                 case 44:
                     tenorURLs = _l.sent();
                     if (!giphyURLs) return [3 /*break*/, 48];
@@ -307,7 +307,7 @@ var start = function (client) {
         });
     }); });
     // Participants Handler
-    utils_1.registerParticipantsListener(client);
+    (0, utils_1.registerParticipantsListener)(client);
     // Click "Use Here" when another WhatsApp Web page is open
     void client.onStateChanged(function (state) {
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') {
@@ -354,4 +354,4 @@ var start = function (client) {
     }); })
         .listen(6001);
 };
-wa_automate_1.create(config_1.clientConfig).then(function (client) { return start(client); });
+(0, wa_automate_1.create)(config_1.clientConfig).then(function (client) { return start(client); });
