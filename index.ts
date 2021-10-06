@@ -18,7 +18,7 @@ import {
 } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
 import { registerParticipantsListener } from './utils/utils'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 console.log('Environment Variables:')
 console.log(process.env)
@@ -74,19 +74,23 @@ const start = (client: Client) => {
 
         for (let i = 15; i > 0; i--) {
           try {
-            await client.sendMp4AsSticker(
-              message.from,
-              media.dataURL,
-              getConversionOptions(i),
-              stickerMeta
-            )
+            try {
+              await client.sendMp4AsSticker(
+                message.from,
+                media.dataURL,
+                getConversionOptions(i),
+                stickerMeta
+              )
+            } catch { }
 
-            await client.sendMp4AsSticker(
-              message.from,
-              media.dataURL,
-              getConversionOptions(i),
-              circleMeta
-            )
+            try {
+              await client.sendMp4AsSticker(
+                message.from,
+                media.dataURL,
+                getConversionOptions(i),
+                circleMeta
+              )
+            } catch { }
             break
           } catch {
             console.log(`Video is too long. Reducing length.`)
@@ -97,12 +101,16 @@ const start = (client: Client) => {
         console.log('IMAGE Sticker', media.filename)
         ioImages.inc()
 
-        await client.sendImageAsSticker(
-          message.from,
-          media.dataURL,
-          stickerMeta
-        )
-        await client.sendImageAsSticker(message.from, media.dataURL, circleMeta)
+        try {
+          await client.sendImageAsSticker(
+            message.from,
+            media.dataURL,
+            stickerMeta
+          )
+        } catch { }
+        try {
+          await client.sendImageAsSticker(message.from, media.dataURL, circleMeta)
+        } catch { }
       }
       return
     }
@@ -190,21 +198,25 @@ const start = (client: Client) => {
           console.log(`Sending (${text})`)
           ioStickers.inc()
 
-          const b64a = (await axios.get(textUrlA)).data
-          const b64s = (await axios.get(textUrlS)).data
+          const b64a: any = (await axios.get(textUrlA))
+          const b64s: any = (await axios.get(textUrlS))
 
-          if (!b64a.error)
-            await client.sendImageAsSticker(
-              message.from,
-              b64a.result,
-              stickerMeta
-            )
-          if (!b64s.error)
-            await client.sendImageAsSticker(
-              message.from,
-              b64s.result,
-              stickerMeta
-            )
+          try {
+            if (b64a.status === 200)
+              await client.sendImageAsSticker(
+                message.from,
+                b64a.data.result,
+                stickerMeta
+              )
+          } catch { }
+          try {
+            if (b64s.status === 200)
+              await client.sendImageAsSticker(
+                message.from,
+                b64s.data.result,
+                stickerMeta
+              )
+          } catch { }
 
           break
 
