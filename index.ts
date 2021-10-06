@@ -303,4 +303,4 @@ const start = (client: Client) => {
     .listen(6001)
 }
 
-create(clientConfig).then((client: Client) => start(client))
+create(clientConfig).then(client => start(client))
