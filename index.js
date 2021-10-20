@@ -97,6 +97,7 @@ var start = function (client) {
                     return [4 /*yield*/, (0, mediaHandler_1.getMedia)(message)];
                 case 2:
                     media = _s.sent();
+                    console.log(media.filename);
                     if (!media.filename.endsWith('.mp4')) return [3 /*break*/, 15];
                     // Sends as Video Sticker
                     console.log('MP4/GIF Sticker', media.filename);

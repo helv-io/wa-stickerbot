@@ -67,6 +67,8 @@ const start = (client: Client) => {
 
       const media: WhatsappMedia = await getMedia(message)
 
+      console.log(media.filename)
+
       if (media.filename.endsWith('.mp4')) {
         // Sends as Video Sticker
         console.log('MP4/GIF Sticker', media.filename)
