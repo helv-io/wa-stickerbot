@@ -89,7 +89,8 @@ var start = function (client) {
                         return [2 /*return*/];
                     if (!(message.type === wa_automate_1.MessageTypes.IMAGE ||
                         message.type === wa_automate_1.MessageTypes.VIDEO ||
-                        message.type === wa_automate_1.MessageTypes.AUDIO)) return [3 /*break*/, 23];
+                        message.type === wa_automate_1.MessageTypes.AUDIO ||
+                        message.type === wa_automate_1.MessageTypes.VOICE)) return [3 /*break*/, 23];
                     // Start typing
                     return [4 /*yield*/, client.simulateTyping(message.from, true)];
                 case 1:
