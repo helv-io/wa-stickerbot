@@ -72,8 +72,10 @@ const start = (client: Client) => {
 
       if (message.type === MessageTypes.STICKER) {
         try {
+          await client.sendVideoAsGif(message.from, media.dataURL, media.filename, media.filename)
+        } catch {
           await client.sendImage(message.from, media.dataURL, media.filename, media.filename)
-        } catch { }
+        }
       } else if (media.filename.endsWith('.mp4')) {
         // Sends as Video Sticker
         console.log('MP4/GIF Sticker', media.filename)
