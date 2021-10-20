@@ -62,14 +62,19 @@ const start = (client: Client) => {
       message.type === MessageTypes.IMAGE ||
       message.type === MessageTypes.VIDEO ||
       message.type === MessageTypes.AUDIO ||
-      message.type === MessageTypes.VOICE
+      message.type === MessageTypes.VOICE ||
+      message.type === MessageTypes.STICKER
     ) {
       // Start typing
       await client.simulateTyping(message.from, true)
 
       const media: WhatsappMedia = await getMedia(message)
 
-      if (media.filename.endsWith('.mp4')) {
+      if (message.type === MessageTypes.STICKER) {
+        try {
+          await client.sendImage(message.from, media.dataURL, media.filename, media.filename)
+        } catch { }
+      } else if (media.filename.endsWith('.mp4')) {
         // Sends as Video Sticker
         console.log('MP4/GIF Sticker', media.filename)
         ioVideos.inc()
