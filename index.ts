@@ -69,8 +69,6 @@ const start = (client: Client) => {
 
       const media: WhatsappMedia = await getMedia(message)
 
-      console.log(media.filename)
-
       if (media.filename.endsWith('.mp4')) {
         // Sends as Video Sticker
         console.log('MP4/GIF Sticker', media.filename)
@@ -100,6 +98,10 @@ const start = (client: Client) => {
             console.log(`Video is too long. Reducing length.`)
           }
         }
+      } else if (media.filename.endsWith('.oga')) {
+        try {
+          await client.sendPtt(message.from, media.dataURL, 'true_0000000000@c.us_JHB2HB23HJ4B234HJB')
+        } catch { }
       } else {
         // Sends as Image sticker
         console.log('IMAGE Sticker', media.filename)
