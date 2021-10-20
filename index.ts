@@ -60,7 +60,8 @@ const start = (client: Client) => {
     // Handles Media
     if (
       message.type === MessageTypes.IMAGE ||
-      message.type === MessageTypes.VIDEO
+      message.type === MessageTypes.VIDEO ||
+      message.type === MessageTypes.AUDIO
     ) {
       // Start typing
       await client.simulateTyping(message.from, true)
