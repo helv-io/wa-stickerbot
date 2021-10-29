@@ -47,7 +47,7 @@ var getMedia = function (message) { return __awaiter(void 0, void 0, void 0, fun
     var mediaData, media;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, wa_automate_1.decryptMedia)(message)];
+            case 0: return [4 /*yield*/, wa_automate_1.decryptMedia(message)];
             case 1:
                 mediaData = _a.sent();
                 media = {

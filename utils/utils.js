@@ -65,9 +65,11 @@ var registerParticipantsListener = function (client) {
                     if (!config_1.botOptions.interactOut) return [3 /*break*/, 3];
                     _c = (_b = client).sendImage;
                     _d = [groupId];
-                    return [4 /*yield*/, (0, imgflipHandler_1.getImgflipImage)(config_1.botOptions.outMessage)];
+                    return [4 /*yield*/, imgflipHandler_1.getImgflipImage(config_1.botOptions.outMessage)];
                 case 2:
-                    _c.apply(_b, _d.concat([_h.sent(), '', "Adeus +" + event.who.toString().split('@')[0] + ", vai tarde!"]));
+                    _c.apply(_b, _d.concat([_h.sent(),
+                        '',
+                        "Adeus +" + event.who.toString().split('@')[0] + ", vai tarde!"]));
                     _h.label = 3;
                 case 3: return [3 /*break*/, 8];
                 case 4:
@@ -75,9 +77,11 @@ var registerParticipantsListener = function (client) {
                     if (!config_1.botOptions.interactOut) return [3 /*break*/, 7];
                     _f = (_e = client).sendImage;
                     _g = [groupId];
-                    return [4 /*yield*/, (0, imgflipHandler_1.getImgflipImage)(config_1.botOptions.inMessage)];
+                    return [4 /*yield*/, imgflipHandler_1.getImgflipImage(config_1.botOptions.inMessage)];
                 case 5:
-                    _f.apply(_e, _g.concat([_h.sent(), '', "Divirta-se, +" + event.who.toString().split('@')[0] + "!"]));
+                    _f.apply(_e, _g.concat([_h.sent(),
+                        '',
+                        "Divirta-se, +" + event.who.toString().split('@')[0] + "!"]));
                     return [4 /*yield*/, client.getGroupInfo(groupId)];
                 case 6:
                     groupInfo = _h.sent();
