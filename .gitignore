@@ -94,7 +94,10 @@ config.js
 **.data.json
 _IGNORE_*/
 # end managed by open-wa. see: https://github.com/open-wa/wa-automate-nodejs/issues/1632
-
 # managed
 **.node-persist**
 # end managed
+
+# managed by open-wa
+**_IGNORE_**
+# end managed by open-wa
