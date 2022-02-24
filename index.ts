@@ -23,7 +23,7 @@ import axios, { AxiosResponse } from 'axios'
 console.log('Environment Variables:')
 console.log(process.env)
 
-const start = async (client: Client) => {
+const start = (client: Client) => {
   // Usage Counters
   const ioImages = io.counter({
     name: 'Images',
@@ -50,10 +50,7 @@ const start = async (client: Client) => {
     id: 'refreshes'
   })
 
-  // List of Administered groups
-  const adminGroups = await client.iAmAdmin()
-  console.log('Admin in groups:')
-  adminGroups.forEach((g) => console.log(g))
+  let adminGroups: `${number}-${number}@g.us`[]
 
   // Message Handlers
   void client.onMessage(async (message) => {
@@ -64,7 +61,10 @@ const start = async (client: Client) => {
     if (!message.isGroupMsg && botOptions.groupsOnly) return
 
     // Skips non-administered groups
-    if (!adminGroups.includes(groupId)) return
+    adminGroups = await client.iAmAdmin()
+    console.log('Admin in groups:')
+    adminGroups.forEach((g) => console.log(g))
+    if (message.isGroupMsg && !adminGroups.includes(groupId)) return
 
     if (message.isGroupMsg && groupId)
       if (
