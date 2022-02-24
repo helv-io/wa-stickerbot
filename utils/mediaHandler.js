@@ -41,13 +41,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getConversionOptions = exports.getMedia = void 0;
 var mime_types_1 = __importDefault(require("mime-types"));
-var wa_decrypt_1 = require("wa-decrypt");
+var wa_decrypt_1 = require("@open-wa/wa-decrypt");
 var config_1 = require("../config");
 var getMedia = function (message) { return __awaiter(void 0, void 0, void 0, function () {
     var mediaData, media;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, wa_decrypt_1.decryptMedia(message)];
+            case 0: return [4 /*yield*/, (0, wa_decrypt_1.decryptMedia)(message)];
             case 1:
                 mediaData = _a.sent();
                 media = {
