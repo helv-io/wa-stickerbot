@@ -57,17 +57,19 @@ const start = async (client: Client) => {
   void client.onMessage(async (message) => {
     // Refresh adminGroups
     adminGroups = await client.iAmAdmin()
-    console.log(`Admin in groups: ${JSON.stringify(adminGroups, undefined, 4)}`)
 
     // Get groupId
     const groupId = message.chatId as unknown as `${number}-${number}@g.us`
-    console.log(`Group ID: ${groupId}`)
 
     // Skips personal chats unless specified
     if (!message.isGroupMsg && botOptions.groupsOnly) return
 
-    // Skips non-administered groups
-    if (message.isGroupMsg && !adminGroups.includes(groupId)) return
+    // Skips non-administered groups unless specified
+    if (
+      message.isGroupMsg &&
+      (!adminGroups.includes(groupId) || !botOptions.groupAdminOnly)
+    )
+      return
 
     if (message.isGroupMsg && groupId)
       if (
