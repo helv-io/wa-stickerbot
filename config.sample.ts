@@ -43,6 +43,7 @@ export const clientConfig: ConfigObject = {
 // Custom Instructions
 export const botOptions = {
   stickers: 10,
+  groupAdminOnly: true,
   groupsOnly: true,
   interactIn: true,
   interactOut: true,
