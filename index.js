@@ -97,7 +97,7 @@ var start = function (client) {
                 case 1:
                     // Start typing
                     _u.sent();
-                    return [4 /*yield*/, mediaHandler_1.getMedia(message)];
+                    return [4 /*yield*/, (0, mediaHandler_1.getMedia)(message)];
                 case 2:
                     media = _u.sent();
                     if (!(message.type === wa_automate_1.MessageTypes.STICKER)) return [3 /*break*/, 7];
@@ -127,7 +127,7 @@ var start = function (client) {
                     _u.label = 10;
                 case 10:
                     _u.trys.push([10, 12, , 13]);
-                    return [4 /*yield*/, client.sendMp4AsSticker(message.from, media.dataURL, mediaHandler_1.getConversionOptions(i), config_1.stickerMeta)];
+                    return [4 /*yield*/, client.sendMp4AsSticker(message.from, media.dataURL, (0, mediaHandler_1.getConversionOptions)(i), config_1.stickerMeta)];
                 case 11:
                     _u.sent();
                     return [3 /*break*/, 13];
@@ -136,7 +136,7 @@ var start = function (client) {
                     return [3 /*break*/, 13];
                 case 13:
                     _u.trys.push([13, 15, , 16]);
-                    return [4 /*yield*/, client.sendMp4AsSticker(message.from, media.dataURL, mediaHandler_1.getConversionOptions(i), config_1.circleMeta)];
+                    return [4 /*yield*/, client.sendMp4AsSticker(message.from, media.dataURL, (0, mediaHandler_1.getConversionOptions)(i), config_1.circleMeta)];
                 case 14:
                     _u.sent();
                     return [3 /*break*/, 16];
@@ -189,7 +189,7 @@ var start = function (client) {
                     _g = _u.sent();
                     return [3 /*break*/, 32];
                 case 32: return [2 /*return*/];
-                case 33: return [4 /*yield*/, textHandler_1.getTextAction(message.body)];
+                case 33: return [4 /*yield*/, (0, textHandler_1.getTextAction)(message.body)];
                 case 34:
                     action = _u.sent();
                     if (!action) return [3 /*break*/, 77];
@@ -239,7 +239,7 @@ var start = function (client) {
                     console.log('Sending meme list');
                     _o = (_m = client).sendText;
                     _p = [message.from];
-                    return [4 /*yield*/, imgflipHandler_1.getImgflipList()];
+                    return [4 /*yield*/, (0, imgflipHandler_1.getImgflipList)()];
                 case 46: return [4 /*yield*/, _o.apply(_m, _p.concat([_u.sent()]))];
                 case 47:
                     _u.sent();
@@ -264,7 +264,7 @@ var start = function (client) {
                 case 50:
                     console.log("Sending (" + message.body.split('\n').join(')(') + ")");
                     ioMemes.inc();
-                    return [4 /*yield*/, imgflipHandler_1.getImgflipImage(message.body)];
+                    return [4 /*yield*/, (0, imgflipHandler_1.getImgflipImage)(message.body)];
                 case 51:
                     url = _u.sent();
                     return [4 /*yield*/, client.sendImage(message.from, url, 'imgflip', url)];
@@ -311,12 +311,12 @@ var start = function (client) {
                     return [3 /*break*/, 65];
                 case 65: return [3 /*break*/, 77];
                 case 66:
-                    searches = stickerHandler_1.getStickerSearches(message.body);
+                    searches = (0, stickerHandler_1.getStickerSearches)(message.body);
                     console.log('Sending Stickers for', searches.giphySearch.q);
-                    return [4 /*yield*/, giphyHandler_1.getGiphys(searches.giphySearch)];
+                    return [4 /*yield*/, (0, giphyHandler_1.getGiphys)(searches.giphySearch)];
                 case 67:
                     giphyURLs = _u.sent();
-                    return [4 /*yield*/, tenorHandler_1.getTenors(searches.tenorSearch)];
+                    return [4 /*yield*/, (0, tenorHandler_1.getTenors)(searches.tenorSearch)];
                 case 68:
                     tenorURLs = _u.sent();
                     if (!giphyURLs) return [3 /*break*/, 72];
@@ -373,7 +373,7 @@ var start = function (client) {
         });
     }); });
     // Participants Handler
-    utils_1.registerParticipantsListener(client);
+    (0, utils_1.registerParticipantsListener)(client);
     // Click "Use Here" when another WhatsApp Web page is open
     void client.onStateChanged(function (state) {
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') {
@@ -420,4 +420,4 @@ var start = function (client) {
     }); })
         .listen(6001);
 };
-wa_automate_1.create(config_1.clientConfig).then(function (client) { return start(client); });
+(0, wa_automate_1.create)(config_1.clientConfig).then(function (client) { return start(client); });

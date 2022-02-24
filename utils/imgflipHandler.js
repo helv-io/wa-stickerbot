@@ -58,7 +58,7 @@ var getImgflipImage = function (body) { return __awaiter(void 0, void 0, void 0,
                     .toLowerCase()
                     .replace('meme ', '')
                     .trim();
-                return [4 /*yield*/, exports.getImgflipMemes()];
+                return [4 /*yield*/, (0, exports.getImgflipMemes)()];
             case 1:
                 memes = _a.sent();
                 meme = memes.find(function (m) { return m.name.toLowerCase().includes(memeTitle); });
@@ -68,7 +68,7 @@ var getImgflipImage = function (body) { return __awaiter(void 0, void 0, void 0,
                 for (i = 0; i < memeMeta.length; i++) {
                     config_1.imgflip.boxes.push({ text: memeMeta[i] });
                 }
-                return [4 /*yield*/, axios_1.default.get(imgflipCaptionImageURL + "?" + utils_1.paramSerializer(config_1.imgflip))];
+                return [4 /*yield*/, axios_1.default.get(imgflipCaptionImageURL + "?" + (0, utils_1.paramSerializer)(config_1.imgflip))];
             case 2: return [2 /*return*/, ((_a.sent()).data.data.url || '')];
             case 3: return [2 /*return*/, ''];
         }
@@ -82,7 +82,7 @@ var getImgflipList = function () { return __awaiter(void 0, void 0, void 0, func
             case 0:
                 if (!config_1.imgflip.username)
                     return [2 /*return*/, ''];
-                return [4 /*yield*/, exports.getImgflipMemes()];
+                return [4 /*yield*/, (0, exports.getImgflipMemes)()];
             case 1:
                 memes = _a.sent();
                 response = '';

@@ -1,6 +1,6 @@
 import { Message } from '@open-wa/wa-automate'
 import mime from 'mime-types'
-import { decryptMedia } from 'wa-decrypt'
+import { decryptMedia } from '@open-wa/wa-decrypt'
 import { mp4StickerConversionOptions } from '../config'
 
 export const getMedia = async (message: Message) => {
