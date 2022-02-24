@@ -83,7 +83,8 @@ var start = function (client) { return __awaiter(void 0, void 0, void 0, functio
                 return [4 /*yield*/, client.iAmAdmin()];
             case 1:
                 adminGroups = _a.sent();
-                console.log("Admin in groups: " + adminGroups);
+                console.log('Admin in groups:');
+                adminGroups.forEach(function (g) { return console.log(g); });
                 // Message Handlers
                 void client.onMessage(function (message) { return __awaiter(void 0, void 0, void 0, function () {
                     var groupId, media, _a, i, _b, _c, _d, _e, _f, _g, action, _h, groupInfo, _j, _k, _l, _m, _o, _p, stats, url, text, textUrlA, textUrlS, b64a, b64s, _q, _r, searches, giphyURLs, tenorURLs, _s, _t;
