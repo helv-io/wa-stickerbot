@@ -62,7 +62,7 @@ const start = (client: Client) => {
 
     // Skips non-administered groups
     adminGroups = await client.iAmAdmin()
-    console.log(`Admin in groups: ${adminGroups}`)
+    console.log(`Admin in groups: ${JSON.stringify(adminGroups, undefined, 4)}`)
 
     if (message.isGroupMsg && !adminGroups.includes(groupId)) return
 
