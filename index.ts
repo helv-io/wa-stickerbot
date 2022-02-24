@@ -23,7 +23,7 @@ import axios, { AxiosResponse } from 'axios'
 console.log('Environment Variables:')
 console.log(process.env)
 
-const start = (client: Client) => {
+const start = async (client: Client) => {
   // Usage Counters
   const ioImages = io.counter({
     name: 'Images',
@@ -50,81 +50,103 @@ const start = (client: Client) => {
     id: 'refreshes'
   })
 
+  // List of Administered groups
+  const adminGroups = await client.iAmAdmin()
+  console.log(`Admin in groups: ${adminGroups}`)
+
   // Message Handlers
   void client.onMessage(async (message) => {
     const groupId = message.chatId as unknown as `${number}-${number}@g.us`
+    console.log(`Group ID: ${groupId}`)
 
     // Skips personal chats unless specified
     if (!message.isGroupMsg && botOptions.groupsOnly) return
 
-    // Handles Media
-    if (
-      message.type === MessageTypes.IMAGE ||
-      message.type === MessageTypes.VIDEO ||
-      message.type === MessageTypes.AUDIO ||
-      message.type === MessageTypes.VOICE ||
-      message.type === MessageTypes.STICKER
-    ) {
-      // Start typing
-      await client.simulateTyping(message.from, true)
+    // Skips non-administered groups
+    if (!adminGroups.includes(groupId)) return
 
-      const media: WhatsappMedia = await getMedia(message)
+    if (message.isGroupMsg && groupId)
+      if (
+        message.type === MessageTypes.IMAGE ||
+        message.type === MessageTypes.VIDEO ||
+        message.type === MessageTypes.AUDIO ||
+        message.type === MessageTypes.VOICE ||
+        message.type === MessageTypes.STICKER
+      ) {
+        // Handles Media
+        // Start typing
+        await client.simulateTyping(message.from, true)
 
-      if (message.type === MessageTypes.STICKER) {
-        try {
-          await client.sendImage(message.from, media.dataURL, media.filename, '')
-        } catch { }
-      } else if (media.filename.endsWith('.mp4')) {
-        // Sends as Video Sticker
-        console.log('MP4/GIF Sticker', media.filename)
-        ioVideos.inc()
+        const media: WhatsappMedia = await getMedia(message)
 
-        for (let i = 15; i > 0; i--) {
+        if (message.type === MessageTypes.STICKER) {
           try {
-            try {
-              await client.sendMp4AsSticker(
-                message.from,
-                media.dataURL,
-                getConversionOptions(i),
-                stickerMeta
-              )
-            } catch { }
+            await client.sendImage(
+              message.from,
+              media.dataURL,
+              media.filename,
+              ''
+            )
+          } catch {}
+        } else if (media.filename.endsWith('.mp4')) {
+          // Sends as Video Sticker
+          console.log('MP4/GIF Sticker', media.filename)
+          ioVideos.inc()
 
+          for (let i = 15; i > 0; i--) {
             try {
-              await client.sendMp4AsSticker(
-                message.from,
-                media.dataURL,
-                getConversionOptions(i),
-                circleMeta
-              )
-            } catch { }
-            break
-          } catch {
-            console.log(`Video is too long. Reducing length.`)
+              try {
+                await client.sendMp4AsSticker(
+                  message.from,
+                  media.dataURL,
+                  getConversionOptions(i),
+                  stickerMeta
+                )
+              } catch {}
+
+              try {
+                await client.sendMp4AsSticker(
+                  message.from,
+                  media.dataURL,
+                  getConversionOptions(i),
+                  circleMeta
+                )
+              } catch {}
+              break
+            } catch {
+              console.log(`Video is too long. Reducing length.`)
+            }
           }
-        }
-      } else if (media.filename.endsWith('.oga')) {
-        try {
-          await client.sendPtt(message.from, media.dataURL, 'true_0000000000@c.us_JHB2HB23HJ4B234HJB')
-        } catch { }
-      } else {
-        // Sends as Image sticker
-        console.log('IMAGE Sticker', media.filename)
-        ioImages.inc()
+        } else if (media.filename.endsWith('.oga')) {
+          try {
+            await client.sendPtt(
+              message.from,
+              media.dataURL,
+              'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
+            )
+          } catch {}
+        } else {
+          // Sends as Image sticker
+          console.log('IMAGE Sticker', media.filename)
+          ioImages.inc()
 
-        try {
-          await client.sendImageAsSticker(
-            message.from,
-            media.dataURL,
-            stickerMeta
-          )
-        } catch { }
-        try {
-          await client.sendImageAsSticker(message.from, media.dataURL, circleMeta)
-        } catch { }
+          try {
+            await client.sendImageAsSticker(
+              message.from,
+              media.dataURL,
+              stickerMeta
+            )
+          } catch {}
+          try {
+            await client.sendImageAsSticker(
+              message.from,
+              media.dataURL,
+              circleMeta
+            )
+          } catch {}
+        }
+        return
       }
-      return
-    }
 
     // Handles Text Messages
     const action = await getTextAction(message.body)
@@ -209,8 +231,8 @@ const start = (client: Client) => {
           console.log(`Sending (${text})`)
           ioStickers.inc()
 
-          const b64a: any = (await axios.get(textUrlA))
-          const b64s: any = (await axios.get(textUrlS))
+          const b64a: any = await axios.get(textUrlA)
+          const b64s: any = await axios.get(textUrlS)
 
           try {
             if (b64a.status === 200)
@@ -219,7 +241,7 @@ const start = (client: Client) => {
                 b64a.data.result,
                 stickerMeta
               )
-          } catch { }
+          } catch {}
           try {
             if (b64s.status === 200)
               await client.sendImageAsSticker(
@@ -227,7 +249,7 @@ const start = (client: Client) => {
                 b64s.data.result,
                 stickerMeta
               )
-          } catch { }
+          } catch {}
 
           break
 
@@ -246,7 +268,7 @@ const start = (client: Client) => {
                 'attributions/giphy.gif',
                 stickerMeta
               )
-            } catch { }
+            } catch {}
           }
           if (tenorURLs) {
             try {
@@ -255,7 +277,7 @@ const start = (client: Client) => {
                 'attributions/tenor.png',
                 stickerMeta
               )
-            } catch { }
+            } catch {}
           }
 
           giphyURLs.concat(tenorURLs).forEach(async (url) => {
@@ -267,7 +289,7 @@ const start = (client: Client) => {
                 stickerMeta
               )
               ioStickers.inc()
-            } catch { }
+            } catch {}
           })
           break
       }
@@ -295,7 +317,7 @@ const start = (client: Client) => {
 
       switch (url) {
         case '/restart': {
-          pm2.restart('wa-stickerbot', () => { })
+          pm2.restart('wa-stickerbot', () => {})
           console.log('Restarting wa-stickerbot...')
           res.end('Restarting wa-stickerbot...')
           break
@@ -314,4 +336,4 @@ const start = (client: Client) => {
     .listen(6001)
 }
 
-create(clientConfig).then(client => start(client))
+create(clientConfig).then((client) => start(client))
