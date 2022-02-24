@@ -23,7 +23,7 @@ import axios, { AxiosResponse } from 'axios'
 console.log('Environment Variables:')
 console.log(process.env)
 
-const start = (client: Client) => {
+const start = async (client: Client) => {
   // Usage Counters
   const ioImages = io.counter({
     name: 'Images',
@@ -50,7 +50,8 @@ const start = (client: Client) => {
     id: 'refreshes'
   })
 
-  let adminGroups: `${number}-${number}@g.us`[]
+  // Get administered groups
+  let adminGroups = await client.iAmAdmin()
 
   // Message Handlers
   void client.onMessage(async (message) => {
@@ -61,7 +62,6 @@ const start = (client: Client) => {
     if (!message.isGroupMsg && botOptions.groupsOnly) return
 
     // Skips non-administered groups
-    adminGroups = await client.iAmAdmin()
     console.log(`Admin in groups: ${JSON.stringify(adminGroups, undefined, 4)}`)
 
     if (message.isGroupMsg && !adminGroups.includes(groupId)) return
@@ -301,7 +301,7 @@ const start = (client: Client) => {
   })
 
   // Participants Handler
-  registerParticipantsListener(client)
+  // registerParticipantsListener(client)
 
   // Click "Use Here" when another WhatsApp Web page is open
   void client.onStateChanged((state) => {
