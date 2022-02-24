@@ -52,7 +52,8 @@ const start = async (client: Client) => {
 
   // List of Administered groups
   const adminGroups = await client.iAmAdmin()
-  console.log(`Admin in groups: ${adminGroups}`)
+  console.log('Admin in groups:')
+  adminGroups.forEach((g) => console.log(g))
 
   // Message Handlers
   void client.onMessage(async (message) => {
