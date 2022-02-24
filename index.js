@@ -93,8 +93,7 @@ var start = function (client) {
                 case 1:
                     // Skips non-administered groups
                     adminGroups = _u.sent();
-                    console.log('Admin in groups:');
-                    adminGroups.forEach(function (g) { return console.log(g); });
+                    console.log("Admin in groups: " + adminGroups);
                     if (message.isGroupMsg && !adminGroups.includes(groupId))
                         return [2 /*return*/];
                     if (!(message.isGroupMsg && groupId)) return [3 /*break*/, 34];
