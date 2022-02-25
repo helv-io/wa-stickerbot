@@ -12,7 +12,6 @@ export const getMedia = async (message: Message) => {
       'base64'
     )}`
   }
-
   return media
 }
 

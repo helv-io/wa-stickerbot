@@ -49,12 +49,12 @@ var getGiphys = function (search) { return __awaiter(void 0, void 0, void 0, fun
             case 0:
                 if (!search.api_key)
                     return [2 /*return*/, []];
-                return [4 /*yield*/, axios_1.default.get(giphyBaseUrl + "/gifs/search", {
+                return [4 /*yield*/, axios_1.default.get("".concat(giphyBaseUrl, "/gifs/search"), {
                         params: search
                     })];
             case 1:
                 _b = (_a = (_c.sent()).data.data).concat;
-                return [4 /*yield*/, axios_1.default.get(giphyBaseUrl + "/stickers/search", {
+                return [4 /*yield*/, axios_1.default.get("".concat(giphyBaseUrl, "/stickers/search"), {
                         params: search
                     })];
             case 2:

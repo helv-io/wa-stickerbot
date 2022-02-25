@@ -44,8 +44,8 @@ var axios_1 = __importDefault(require("axios"));
 var config_1 = require("../config");
 var utils_1 = require("./utils");
 var imgflipBaseURL = 'https://api.imgflip.com';
-var imgflipGetMemesURL = imgflipBaseURL + "/get_memes";
-var imgflipCaptionImageURL = imgflipBaseURL + "/caption_image";
+var imgflipGetMemesURL = "".concat(imgflipBaseURL, "/get_memes");
+var imgflipCaptionImageURL = "".concat(imgflipBaseURL, "/caption_image");
 var getImgflipImage = function (body) { return __awaiter(void 0, void 0, void 0, function () {
     var memeMeta, memeTitle, memes, meme, i;
     return __generator(this, function (_a) {
@@ -68,7 +68,7 @@ var getImgflipImage = function (body) { return __awaiter(void 0, void 0, void 0,
                 for (i = 0; i < memeMeta.length; i++) {
                     config_1.imgflip.boxes.push({ text: memeMeta[i] });
                 }
-                return [4 /*yield*/, axios_1.default.get(imgflipCaptionImageURL + "?" + (0, utils_1.paramSerializer)(config_1.imgflip))];
+                return [4 /*yield*/, axios_1.default.get("".concat(imgflipCaptionImageURL, "?").concat((0, utils_1.paramSerializer)(config_1.imgflip)))];
             case 2: return [2 /*return*/, ((_a.sent()).data.data.url || '')];
             case 3: return [2 /*return*/, ''];
         }
@@ -86,7 +86,7 @@ var getImgflipList = function () { return __awaiter(void 0, void 0, void 0, func
             case 1:
                 memes = _a.sent();
                 response = '';
-                memes.forEach(function (meme) { return (response += meme.name + " (" + meme.box_count + ")\n"); });
+                memes.forEach(function (meme) { return (response += "".concat(meme.name, " (").concat(meme.box_count, ")\n")); });
                 return [2 /*return*/, response];
         }
     });
