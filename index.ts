@@ -18,7 +18,7 @@ import {
 } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
 import { registerParticipantsListener } from './utils/utils'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 
 console.log('Environment Variables:')
 console.log(process.env)
@@ -65,11 +65,9 @@ const start = async (client: Client) => {
     if (!message.isGroupMsg && botOptions.groupsOnly) return
 
     // Skips non-administered groups unless specified
-    if (
-      message.isGroupMsg &&
-      (!adminGroups.includes(groupId) || !botOptions.groupAdminOnly)
-    )
-      return
+    if (message.isGroupMsg)
+      if (!adminGroups.includes(groupId) || !botOptions.groupAdminOnly)
+        return
 
     if (message.isGroupMsg && groupId)
       if (
@@ -93,7 +91,7 @@ const start = async (client: Client) => {
               media.filename,
               ''
             )
-          } catch {}
+          } catch { }
         } else if (media.filename.endsWith('.mp4')) {
           // Sends as Video Sticker
           console.log('MP4/GIF Sticker', media.filename)
@@ -108,7 +106,7 @@ const start = async (client: Client) => {
                   getConversionOptions(i),
                   stickerMeta
                 )
-              } catch {}
+              } catch { }
 
               try {
                 await client.sendMp4AsSticker(
@@ -117,7 +115,7 @@ const start = async (client: Client) => {
                   getConversionOptions(i),
                   circleMeta
                 )
-              } catch {}
+              } catch { }
               break
             } catch {
               console.log(`Video is too long. Reducing length.`)
@@ -130,7 +128,7 @@ const start = async (client: Client) => {
               media.dataURL,
               'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
             )
-          } catch {}
+          } catch { }
         } else {
           // Sends as Image sticker
           console.log('IMAGE Sticker', media.filename)
@@ -142,14 +140,14 @@ const start = async (client: Client) => {
               media.dataURL,
               stickerMeta
             )
-          } catch {}
+          } catch { }
           try {
             await client.sendImageAsSticker(
               message.from,
               media.dataURL,
               circleMeta
             )
-          } catch {}
+          } catch { }
         }
         return
       }
@@ -247,7 +245,7 @@ const start = async (client: Client) => {
                 b64a.data.result,
                 stickerMeta
               )
-          } catch {}
+          } catch { }
           try {
             if (b64s.status === 200)
               await client.sendImageAsSticker(
@@ -255,7 +253,7 @@ const start = async (client: Client) => {
                 b64s.data.result,
                 stickerMeta
               )
-          } catch {}
+          } catch { }
 
           break
 
@@ -274,7 +272,7 @@ const start = async (client: Client) => {
                 'attributions/giphy.gif',
                 stickerMeta
               )
-            } catch {}
+            } catch { }
           }
           if (tenorURLs) {
             try {
@@ -283,7 +281,7 @@ const start = async (client: Client) => {
                 'attributions/tenor.png',
                 stickerMeta
               )
-            } catch {}
+            } catch { }
           }
 
           giphyURLs.concat(tenorURLs).forEach(async (url) => {
@@ -295,7 +293,7 @@ const start = async (client: Client) => {
                 stickerMeta
               )
               ioStickers.inc()
-            } catch {}
+            } catch { }
           })
           break
       }
@@ -323,7 +321,7 @@ const start = async (client: Client) => {
 
       switch (url) {
         case '/restart': {
-          pm2.restart('wa-stickerbot', () => {})
+          pm2.restart('wa-stickerbot', () => { })
           console.log('Restarting wa-stickerbot...')
           res.end('Restarting wa-stickerbot...')
           break

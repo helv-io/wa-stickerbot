@@ -82,19 +82,20 @@ var start = function (client) { return __awaiter(void 0, void 0, void 0, functio
             var groupId, media, _a, i, _b, _c, _d, _e, _f, _g, action, _h, groupInfo, _j, _k, _l, _m, _o, _p, stats, url, text, textUrlA, textUrlS, b64a, b64s, _q, _r, searches, giphyURLs, tenorURLs, _s, _t;
             return __generator(this, function (_u) {
                 switch (_u.label) {
-                    case 0: return [4 /*yield*/, client.iAmAdmin()];
+                    case 0: return [4 /*yield*/, client.iAmAdmin()
+                        // Get groupId
+                    ];
                     case 1:
                         // Refresh adminGroups
                         adminGroups = _u.sent();
-                        console.log("Admin in groups: " + JSON.stringify(adminGroups, undefined, 4));
                         groupId = message.chatId;
-                        console.log("Group ID: " + groupId);
                         // Skips personal chats unless specified
                         if (!message.isGroupMsg && config_1.botOptions.groupsOnly)
                             return [2 /*return*/];
-                        // Skips non-administered groups
-                        if (message.isGroupMsg && !adminGroups.includes(groupId))
-                            return [2 /*return*/];
+                        // Skips non-administered groups unless specified
+                        if (message.isGroupMsg)
+                            if (!adminGroups.includes(groupId) || !config_1.botOptions.groupAdminOnly)
+                                return [2 /*return*/];
                         if (!(message.isGroupMsg && groupId)) return [3 /*break*/, 34];
                         if (!(message.type === wa_automate_1.MessageTypes.IMAGE ||
                             message.type === wa_automate_1.MessageTypes.VIDEO ||
@@ -258,22 +259,22 @@ var start = function (client) { return __awaiter(void 0, void 0, void 0, functio
                     case 49:
                         stats = "*Current Usage*\n\n";
                         stats += "Images\n";
-                        stats += ioImages.val() + "\n\n";
+                        stats += "".concat(ioImages.val(), "\n\n");
                         stats += "GIFs and Videos\n";
-                        stats += ioVideos.val() + "\n\n";
+                        stats += "".concat(ioVideos.val(), "\n\n");
                         stats += "Memes\n";
-                        stats += ioMemes.val() + "\n\n";
+                        stats += "".concat(ioMemes.val(), "\n\n");
                         stats += "Stickers\n";
-                        stats += ioStickers.val() + "\n\n";
+                        stats += "".concat(ioStickers.val(), "\n\n");
                         stats += "Refreshes\n";
-                        stats += ioRefreshes.val() + "\n\n";
+                        stats += "".concat(ioRefreshes.val(), "\n\n");
                         stats += "Reset on Bot Reboot or Update";
                         return [4 /*yield*/, client.sendText(message.from, stats)];
                     case 50:
                         _u.sent();
                         return [3 /*break*/, 78];
                     case 51:
-                        console.log("Sending (" + message.body.split('\n').join(')(') + ")");
+                        console.log("Sending (".concat(message.body.split('\n').join(')('), ")"));
                         ioMemes.inc();
                         return [4 /*yield*/, (0, imgflipHandler_1.getImgflipImage)(message.body)];
                     case 52:
@@ -287,9 +288,9 @@ var start = function (client) { return __awaiter(void 0, void 0, void 0, functio
                         return [3 /*break*/, 78];
                     case 55:
                         text = message.body.slice(6);
-                        textUrlA = "https://api.xteam.xyz/attp?text=" + encodeURIComponent(text);
-                        textUrlS = "https://api.xteam.xyz/ttp?text=" + encodeURIComponent(text);
-                        console.log("Sending (" + text + ")");
+                        textUrlA = "https://api.xteam.xyz/attp?text=".concat(encodeURIComponent(text));
+                        textUrlS = "https://api.xteam.xyz/ttp?text=".concat(encodeURIComponent(text));
+                        console.log("Sending (".concat(text, ")"));
                         ioStickers.inc();
                         return [4 /*yield*/, axios_1.default.get(textUrlA)];
                     case 56:

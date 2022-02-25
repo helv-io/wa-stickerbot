@@ -51,9 +51,9 @@ var getMedia = function (message) { return __awaiter(void 0, void 0, void 0, fun
             case 1:
                 mediaData = _a.sent();
                 media = {
-                    filename: message.t + "." + (mime_types_1.default.extension(message.mimetype || '') || ''),
+                    filename: "".concat(message.t, ".").concat(mime_types_1.default.extension(message.mimetype || '') || ''),
                     mediaData: mediaData,
-                    dataURL: "data:" + (message.mimetype || '') + ";base64," + mediaData.toString('base64')
+                    dataURL: "data:".concat(message.mimetype || '', ";base64,").concat(mediaData.toString('base64'))
                 };
                 return [2 /*return*/, media];
         }
@@ -62,7 +62,7 @@ var getMedia = function (message) { return __awaiter(void 0, void 0, void 0, fun
 exports.getMedia = getMedia;
 var getConversionOptions = function (duration) {
     var cOptions = config_1.mp4StickerConversionOptions;
-    cOptions.endTime = "00:00:" + duration.toString().padStart(2, '0') + ".0";
+    cOptions.endTime = "00:00:".concat(duration.toString().padStart(2, '0'), ".0");
     return cOptions;
 };
 exports.getConversionOptions = getConversionOptions;
