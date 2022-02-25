@@ -69,88 +69,87 @@ const start = async (client: Client) => {
       if (!adminGroups.includes(groupId) || !botOptions.groupAdminOnly)
         return
 
-    if (message.isGroupMsg && groupId)
-      if (
-        message.type === MessageTypes.IMAGE ||
-        message.type === MessageTypes.VIDEO ||
-        message.type === MessageTypes.AUDIO ||
-        message.type === MessageTypes.VOICE ||
-        message.type === MessageTypes.STICKER
-      ) {
-        // Handles Media
-        // Start typing
-        await client.simulateTyping(message.from, true)
+    if (
+      message.type === MessageTypes.IMAGE ||
+      message.type === MessageTypes.VIDEO ||
+      message.type === MessageTypes.AUDIO ||
+      message.type === MessageTypes.VOICE ||
+      message.type === MessageTypes.STICKER
+    ) {
+      // Handles Media
+      // Start typing
+      await client.simulateTyping(message.from, true)
 
-        const media: WhatsappMedia = await getMedia(message)
+      const media: WhatsappMedia = await getMedia(message)
 
-        if (message.type === MessageTypes.STICKER) {
+      if (message.type === MessageTypes.STICKER) {
+        try {
+          await client.sendImage(
+            message.from,
+            media.dataURL,
+            media.filename,
+            ''
+          )
+        } catch { }
+      } else if (media.filename.endsWith('.mp4')) {
+        // Sends as Video Sticker
+        console.log('MP4/GIF Sticker', media.filename)
+        ioVideos.inc()
+
+        for (let i = 15; i > 0; i--) {
           try {
-            await client.sendImage(
-              message.from,
-              media.dataURL,
-              media.filename,
-              ''
-            )
-          } catch { }
-        } else if (media.filename.endsWith('.mp4')) {
-          // Sends as Video Sticker
-          console.log('MP4/GIF Sticker', media.filename)
-          ioVideos.inc()
-
-          for (let i = 15; i > 0; i--) {
             try {
-              try {
-                await client.sendMp4AsSticker(
-                  message.from,
-                  media.dataURL,
-                  getConversionOptions(i),
-                  stickerMeta
-                )
-              } catch { }
+              await client.sendMp4AsSticker(
+                message.from,
+                media.dataURL,
+                getConversionOptions(i),
+                stickerMeta
+              )
+            } catch { }
 
-              try {
-                await client.sendMp4AsSticker(
-                  message.from,
-                  media.dataURL,
-                  getConversionOptions(i),
-                  circleMeta
-                )
-              } catch { }
-              break
-            } catch {
-              console.log(`Video is too long. Reducing length.`)
-            }
+            try {
+              await client.sendMp4AsSticker(
+                message.from,
+                media.dataURL,
+                getConversionOptions(i),
+                circleMeta
+              )
+            } catch { }
+            break
+          } catch {
+            console.log(`Video is too long. Reducing length.`)
           }
-        } else if (media.filename.endsWith('.oga')) {
-          try {
-            await client.sendPtt(
-              message.from,
-              media.dataURL,
-              'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
-            )
-          } catch { }
-        } else {
-          // Sends as Image sticker
-          console.log('IMAGE Sticker', media.filename)
-          ioImages.inc()
-
-          try {
-            await client.sendImageAsSticker(
-              message.from,
-              media.dataURL,
-              stickerMeta
-            )
-          } catch { }
-          try {
-            await client.sendImageAsSticker(
-              message.from,
-              media.dataURL,
-              circleMeta
-            )
-          } catch { }
         }
-        return
+      } else if (media.filename.endsWith('.oga')) {
+        try {
+          await client.sendPtt(
+            message.from,
+            media.dataURL,
+            'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
+          )
+        } catch { }
+      } else {
+        // Sends as Image sticker
+        console.log('IMAGE Sticker', media.filename)
+        ioImages.inc()
+
+        try {
+          await client.sendImageAsSticker(
+            message.from,
+            media.dataURL,
+            stickerMeta
+          )
+        } catch { }
+        try {
+          await client.sendImageAsSticker(
+            message.from,
+            media.dataURL,
+            circleMeta
+          )
+        } catch { }
       }
+      return
+    }
 
     // Handles Text Messages
     const action = await getTextAction(message.body)
