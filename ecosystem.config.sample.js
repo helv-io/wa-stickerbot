@@ -3,7 +3,7 @@ module.exports = {
   apps: [
     {
       name: 'wa-stickerbot',
-      script: './index.ts',
+      script: 'ts-node ./index.ts',
       watch: true,
       env: {
         IMGFLIP_USERNAME: '',
