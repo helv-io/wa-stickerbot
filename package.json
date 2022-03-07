@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/Helvio88/wa-stickerbot#readme",
   "dependencies": {
-    "@open-wa/wa-automate": "^4.31.6",
+    "@open-wa/wa-automate": "^4.31.13",
     "@open-wa/wa-decrypt": "^4.3.1",
     "@pm2/io": "^5.0.0",
     "axios": "^0.26.0",
@@ -34,14 +34,14 @@
     "@types/mime-types": "^2.1.1",
     "@types/node": "^17.0.21",
     "@types/qs": "^6.9.7",
-    "@typescript-eslint/eslint-plugin": "^5.12.1",
-    "@typescript-eslint/parser": "^5.12.1",
-    "eslint": "^8.9.0",
-    "eslint-config-prettier": "^8.4.0",
-    "eslint-plugin-jsdoc": "^37.9.4",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.13.0",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jsdoc": "^37.9.7",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "prettier": "2.5.1",
-    "ts-node": "^10.5.0",
-    "typescript": "^4.5.5"
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2"
   }
 }
