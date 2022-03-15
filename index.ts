@@ -27,17 +27,26 @@ const start = async (client: Client) => {
   // Message Handlers
   void client.onMessage(async (message) => {
     // Refresh adminGroups
-    adminGroups = await client.iAmAdmin()
+    adminGroups = [] //await client.iAmAdmin()
 
     // Get groupId
     const groupId = message.chatId as unknown as `${number}-${number}@g.us`
 
     // Skips personal chats unless specified
-    if (!message.isGroupMsg && botOptions.groupsOnly) return
+    if (!message.isGroupMsg) {
+      if (botOptions.groupsOnly) {
+        return
+      }
+    }
 
     // Skips non-administered groups unless specified
-    if (message.isGroupMsg)
-      if (!adminGroups.includes(groupId) || !botOptions.groupAdminOnly) return
+    if (message.isGroupMsg) {
+      if (botOptions.groupAdminOnly) {
+        if (!adminGroups.includes(groupId)) {
+          return
+        }
+      }
+    }
 
     if (
       message.type === MessageTypes.IMAGE ||
