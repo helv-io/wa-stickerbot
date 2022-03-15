@@ -2,10 +2,6 @@
 
 import { create, Client, MessageTypes } from '@open-wa/wa-automate'
 
-import http from 'http'
-import io from '@pm2/io'
-import pm2 from 'pm2'
-
 import { botOptions, clientConfig, stickerMeta, circleMeta } from './config'
 import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
 import { getStickerSearches } from './utils/stickerHandler'
@@ -18,38 +14,13 @@ import {
 } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
 import { registerParticipantsListener } from './utils/utils'
+import { getCount, addCount } from './utils/dbHandler'
 import axios from 'axios'
 
 console.log('Environment Variables:')
 console.log(process.env)
 
 const start = async (client: Client) => {
-  // Usage Counters
-  const ioImages = io.counter({
-    name: 'Images',
-    id: 'images'
-  })
-
-  const ioVideos = io.counter({
-    name: 'GIFs and Videos',
-    id: 'videos'
-  })
-
-  const ioMemes = io.counter({
-    name: 'Memes',
-    id: 'memes'
-  })
-
-  const ioStickers = io.counter({
-    name: 'Stickers',
-    id: 'sticker'
-  })
-
-  const ioRefreshes = io.counter({
-    name: 'Refreshes',
-    id: 'refreshes'
-  })
-
   // Get administered groups
   let adminGroups: `${number}-${number}@g.us`[]
 
@@ -66,8 +37,7 @@ const start = async (client: Client) => {
 
     // Skips non-administered groups unless specified
     if (message.isGroupMsg)
-      if (!adminGroups.includes(groupId) || !botOptions.groupAdminOnly)
-        return
+      if (!adminGroups.includes(groupId) || !botOptions.groupAdminOnly) return
 
     if (
       message.type === MessageTypes.IMAGE ||
@@ -90,11 +60,11 @@ const start = async (client: Client) => {
             media.filename,
             ''
           )
-        } catch { }
+        } catch {}
       } else if (media.filename.endsWith('.mp4')) {
         // Sends as Video Sticker
         console.log('MP4/GIF Sticker', media.filename)
-        ioVideos.inc()
+        addCount('Videos')
 
         for (let i = 15; i > 0; i--) {
           try {
@@ -105,7 +75,7 @@ const start = async (client: Client) => {
                 getConversionOptions(i),
                 stickerMeta
               )
-            } catch { }
+            } catch {}
 
             try {
               await client.sendMp4AsSticker(
@@ -114,7 +84,7 @@ const start = async (client: Client) => {
                 getConversionOptions(i),
                 circleMeta
               )
-            } catch { }
+            } catch {}
             break
           } catch {
             console.log(`Video is too long. Reducing length.`)
@@ -127,11 +97,11 @@ const start = async (client: Client) => {
             media.dataURL,
             'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
           )
-        } catch { }
+        } catch {}
       } else {
         // Sends as Image sticker
         console.log('IMAGE Sticker', media.filename)
-        ioImages.inc()
+        addCount('Images')
 
         try {
           await client.sendImageAsSticker(
@@ -139,14 +109,14 @@ const start = async (client: Client) => {
             media.dataURL,
             stickerMeta
           )
-        } catch { }
+        } catch {}
         try {
           await client.sendImageAsSticker(
             message.from,
             media.dataURL,
             circleMeta
           )
-        } catch { }
+        } catch {}
       }
       return
     }
@@ -190,28 +160,26 @@ const start = async (client: Client) => {
           let stats = `*Current Usage*\n\n`
 
           stats += `Images\n`
-          stats += `${ioImages.val()}\n\n`
+          stats += `${await getCount('Images')}\n\n`
 
           stats += `GIFs and Videos\n`
-          stats += `${ioVideos.val()}\n\n`
+          stats += `${await getCount('Videos')}\n\n`
 
           stats += `Memes\n`
-          stats += `${ioMemes.val()}\n\n`
+          stats += `${await getCount('Memes')}\n\n`
 
           stats += `Stickers\n`
-          stats += `${ioStickers.val()}\n\n`
+          stats += `${await getCount('Stickers')}\n\n`
 
-          stats += `Refreshes\n`
-          stats += `${ioRefreshes.val()}\n\n`
-
-          stats += `Reset on Bot Reboot or Update`
+          stats += `Text\n`
+          stats += `${await getCount('Text')}`
 
           await client.sendText(message.from, stats)
           break
 
         case actions.MEME:
           console.log(`Sending (${message.body.split('\n').join(')(')})`)
-          ioMemes.inc()
+          addCount('Memes')
 
           const url = await getImgflipImage(message.body)
           await client.sendImage(message.from, url, 'imgflip', url)
@@ -232,7 +200,7 @@ const start = async (client: Client) => {
             text
           )}`
           console.log(`Sending (${text})`)
-          ioStickers.inc()
+          addCount('Text')
 
           const b64a: any = await axios.get(textUrlA)
           const b64s: any = await axios.get(textUrlS)
@@ -244,7 +212,7 @@ const start = async (client: Client) => {
                 b64a.data.result,
                 stickerMeta
               )
-          } catch { }
+          } catch {}
           try {
             if (b64s.status === 200)
               await client.sendImageAsSticker(
@@ -252,7 +220,7 @@ const start = async (client: Client) => {
                 b64s.data.result,
                 stickerMeta
               )
-          } catch { }
+          } catch {}
 
           break
 
@@ -271,7 +239,7 @@ const start = async (client: Client) => {
                 'attributions/giphy.gif',
                 stickerMeta
               )
-            } catch { }
+            } catch {}
           }
           if (tenorURLs) {
             try {
@@ -280,7 +248,7 @@ const start = async (client: Client) => {
                 'attributions/tenor.png',
                 stickerMeta
               )
-            } catch { }
+            } catch {}
           }
 
           giphyURLs.concat(tenorURLs).forEach(async (url) => {
@@ -291,8 +259,8 @@ const start = async (client: Client) => {
                 undefined,
                 stickerMeta
               )
-              ioStickers.inc()
-            } catch { }
+              addCount('Stickers')
+            } catch {}
           })
           break
       }
@@ -311,32 +279,6 @@ const start = async (client: Client) => {
       void client.forceRefocus()
     }
   })
-
-  // Status / Reload / Restart Web Server
-  http
-    .createServer(async (req, res) => {
-      res.writeHead(200, { 'Content-Type': 'text/plain' })
-      const url = req.url?.toLowerCase()
-
-      switch (url) {
-        case '/restart': {
-          pm2.restart('wa-stickerbot', () => { })
-          console.log('Restarting wa-stickerbot...')
-          res.end('Restarting wa-stickerbot...')
-          break
-        }
-        case '/refresh': {
-          await client.refresh()
-          ioRefreshes.inc()
-          console.log('Refreshed wa-stickerbot')
-          res.end('Refreshed wa-stickerbot')
-          break
-        }
-        default:
-          res.end('Running')
-      }
-    })
-    .listen(6001)
 }
 
 create(clientConfig).then((client) => start(client))
