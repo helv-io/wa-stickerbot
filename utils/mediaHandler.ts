@@ -1,9 +1,8 @@
-import { Message } from '@open-wa/wa-automate'
-import mime from 'mime-types'
 import { decryptMedia } from '@open-wa/wa-decrypt'
+import mime from 'mime-types'
 import { mp4StickerConversionOptions } from '../config'
 
-export const getMedia = async (message: Message) => {
+export const getMedia = async (message: any) => {
   const mediaData = await decryptMedia(message)
   const media: WhatsappMedia = {
     filename: `${message.t}.${mime.extension(message.mimetype || '') || ''}`,
