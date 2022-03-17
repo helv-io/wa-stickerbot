@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 
-import { create, Client, MessageTypes } from '@open-wa/wa-automate'
+import { create, Client } from '@open-wa/wa-automate'
 
 import { botOptions, clientConfig, stickerMeta, circleMeta } from './config'
 import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
@@ -15,6 +15,10 @@ import {
 import { actions, getTextAction } from './utils/textHandler'
 import { registerParticipantsListener } from './utils/utils'
 import { getCount, addCount } from './utils/dbHandler'
+import {
+  Message,
+  MessageTypes
+} from '@open-wa/wa-automate/dist/api/model/message'
 import axios from 'axios'
 
 console.log('Environment Variables:')
@@ -22,15 +26,32 @@ console.log(process.env)
 
 const start = async (client: Client) => {
   // Get administered groups
-  let adminGroups: `${number}-${number}@g.us`[]
+  let adminGroups: (`${number}-${number}@g.us` | `${number}@g.us`)[] = []
 
   // Message Handlers
-  void client.onMessage(async (message) => {
-    // Refresh adminGroups
-    adminGroups = [] //await client.iAmAdmin()
-
+  void client.onMessage(async (message: Message) => {
     // Get groupId
-    const groupId = message.chatId as unknown as `${number}-${number}@g.us`
+    const groupId = message.chat.groupMetadata.id
+
+    // Adjust adminGroups
+    if (message.isGroupMsg) {
+      try {
+        const me = await client.getMe()
+        const admins = await client.getGroupAdmins(groupId)
+
+        if (admins.indexOf(me.status) >= 0) {
+          adminGroups.push(groupId)
+          // Remove duplicates
+          adminGroups = adminGroups.filter(
+            (value, index, self) => self.indexOf(value) === index
+          )
+        } else {
+          adminGroups = adminGroups.filter((v) => v !== groupId)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
 
     // Skips personal chats unless specified
     if (!message.isGroupMsg) {
