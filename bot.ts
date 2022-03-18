@@ -202,7 +202,7 @@ const start = async () => {
                 break;
             case MessageType.STICKER:
                 let sticker64 = await client.downloadMedia(message)
-                await client.sendGifFromBase64(message.from, sticker64, '')
+                await client.sendImageAsSticker(message.from, sticker64)
                 break;
 
             case MessageType.IMAGE:
@@ -215,11 +215,7 @@ const start = async () => {
                     )}`
                 }
 
-                const fullPath = `${tmpdir()}/${media.filename}`
-                console.log(fullPath)
-                await fs.writeFile(fullPath, media.mediaData)
-
-                await client.sendImageAsSticker(message.from, fullPath)
+                await client.sendImageAsSticker(message.from, media.dataURL)
                 break;
         }
 
