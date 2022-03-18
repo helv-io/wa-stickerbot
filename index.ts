@@ -31,10 +31,10 @@ const start = async (client: Client) => {
   // Message Handlers
   void client.onMessage(async (message: Message) => {
     // Get groupId
-    const groupId = message.chat.groupMetadata.id
+    const groupId = message.isGroupMsg ? message.chat.groupMetadata.id : ''
 
     // Adjust adminGroups
-    if (message.isGroupMsg) {
+    if (groupId) {
       try {
         const me = await client.getMe()
         const admins = await client.getGroupAdmins(groupId)
@@ -54,14 +54,12 @@ const start = async (client: Client) => {
     }
 
     // Skips personal chats unless specified
-    if (!message.isGroupMsg) {
+    if (!groupId) {
       if (botOptions.groupsOnly) {
         return
       }
-    }
-
-    // Skips non-administered groups unless specified
-    if (message.isGroupMsg) {
+    } else {
+      // Skips non-administered groups unless specified
       if (botOptions.groupAdminOnly) {
         if (!adminGroups.includes(groupId)) {
           return
@@ -161,7 +159,7 @@ const start = async (client: Client) => {
         case actions.INSTRUCTIONS:
           console.log('Sending instructions')
 
-          if (message.isGroupMsg) {
+          if (groupId) {
             const groupInfo = await client.getGroupInfo(groupId)
             await client.sendText(message.from, groupInfo.description)
           } else {
@@ -170,7 +168,7 @@ const start = async (client: Client) => {
           break
 
         case actions.LINK:
-          if (!message.isGroupMsg) return
+          if (!groupId) return
           console.log('Sending Link')
 
           await client.sendText(
