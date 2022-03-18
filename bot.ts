@@ -9,6 +9,8 @@ import { getImgflipList, getImgflipImage } from './utils/imgflipHandler';
 import { getStickerSearches } from './utils/stickerHandler';
 import { getTenors } from './utils/tenorHandler';
 import { getTextAction, actions } from './utils/textHandler';
+import mime from 'mime-types'
+import { WhatsappMedia } from './utils/mediaHandler';
 
 const session = 'wa-stickerbot'
 
@@ -202,9 +204,16 @@ const start = async () => {
                 break;
 
             case MessageType.IMAGE:
-                let b64 = await client.downloadMedia(message)
-                let file = await client.downloadFile(b64)
-                await client.sendImageAsSticker(message.from, file.toString())
+                let mediaData = await client.decryptFile(message)
+                const media: WhatsappMedia = {
+                    filename: `${message.t}.${mime.extension(message.mimetype || '') || ''}`,
+                    mediaData: mediaData,
+                    dataURL: `data:${message.mimetype || ''};base64,${mediaData.toString(
+                        'base64'
+                    )}`
+                }
+
+                await client.sendImageAsSticker(message.from, media.dataURL)
                 break;
         }
 
