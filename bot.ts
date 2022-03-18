@@ -12,7 +12,7 @@ import { getTextAction, actions } from './utils/textHandler';
 import mime from 'mime-types'
 import { WhatsappMedia } from './utils/mediaHandler';
 import { tmpdir } from 'os';
-const saveBuffer = require('save-buffer');
+import * as fs from 'fs/promises';
 
 const session = 'wa-stickerbot'
 
@@ -216,7 +216,8 @@ const start = async () => {
                 }
 
                 const fullPath = `${tmpdir()}/${media.filename}`
-                await saveBuffer(media.mediaData, fullPath)
+                console.log(fullPath)
+                await fs.writeFile(fullPath, media.mediaData)
 
                 await client.sendImageAsSticker(message.from, fullPath)
                 break;
