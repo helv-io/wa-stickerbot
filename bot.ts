@@ -200,6 +200,14 @@ const start = async () => {
                 let sticker64 = await client.downloadMedia(message)
                 await client.sendGifFromBase64(message.from, sticker64, '')
                 break;
+
+            case MessageType.IMAGE:
+                let b64 = await client.downloadMedia(message)
+                let file = await client.downloadFile(b64)
+                console.log(file)
+                console.log(b64)
+                await client.sendImageAsSticker(message.from, b64)
+                break;
         }
 
         await client.stopTyping(message.from)
