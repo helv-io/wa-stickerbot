@@ -206,7 +206,7 @@ const start = async () => {
                 let file = await client.downloadFile(b64)
                 console.log(file)
                 console.log(b64)
-                await client.sendImageAsSticker(message.from, b64)
+                await client.sendImageAsSticker(message.from, file.toString())
                 break;
         }
 
