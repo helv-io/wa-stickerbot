@@ -204,8 +204,6 @@ const start = async () => {
             case MessageType.IMAGE:
                 let b64 = await client.downloadMedia(message)
                 let file = await client.downloadFile(b64)
-                console.log(file)
-                console.log(b64)
                 await client.sendImageAsSticker(message.from, file.toString())
                 break;
         }
