@@ -17,7 +17,8 @@ const start = async () => {
         session: session,
         puppeteerOptions: {
             userDataDir: `./tokens/${session}`
-        }
+        },
+        browserArgs: ['--no-sandbox']
     })
 
     let adminGroups: string[] = []
