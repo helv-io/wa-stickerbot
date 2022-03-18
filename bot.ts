@@ -11,6 +11,8 @@ import { getTenors } from './utils/tenorHandler';
 import { getTextAction, actions } from './utils/textHandler';
 import mime from 'mime-types'
 import { WhatsappMedia } from './utils/mediaHandler';
+import { tmpdir } from 'os';
+const saveBuffer = require('save-buffer');
 
 const session = 'wa-stickerbot'
 
@@ -213,7 +215,10 @@ const start = async () => {
                     )}`
                 }
 
-                await client.sendImageAsSticker(message.from, media.dataURL)
+                const fullPath = `${tmpdir()}/${media.filename}`
+                await saveBuffer(media.mediaData, fullPath)
+
+                await client.sendImageAsSticker(message.from, fullPath)
                 break;
         }
 
