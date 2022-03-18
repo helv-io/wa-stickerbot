@@ -219,6 +219,7 @@ const start = async () => {
         break
 
       case MessageType.IMAGE:
+        const viewOnce = (<any>message.mediaData).isViewOnce
         let mediaData = await client.decryptFile(message)
         const media: WhatsappMedia = {
           filename: `${message.t}.${
