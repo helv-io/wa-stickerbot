@@ -2,9 +2,9 @@
   "name": "wa-stickerbot",
   "version": "1.0.0",
   "description": "WhatsApp Sticker Bot",
-  "main": "index.js",
+  "main": "bot.ts",
   "scripts": {
-    "start": "node index.js",
+    "start": "ts-node bot.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,12 +25,15 @@
     "@open-wa/wa-automate": "^4.32.13",
     "@open-wa/wa-decrypt": "^4.4.0",
     "@pm2/io": "^5.0.0",
+    "@wppconnect-team/wppconnect": "^1.12.8",
     "axios": "^0.26.1",
+    "ffmpeg-static": "^5.0.0",
     "mime-types": "^2.1.35",
     "pm2": "^5.2.0",
     "qs": "^6.10.3",
     "sqlite": "^4.0.25",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "winston": "^3.6.0"
   },
   "devDependencies": {
     "@types/mime-types": "^2.1.1",
