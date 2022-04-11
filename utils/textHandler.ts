@@ -8,7 +8,6 @@ export const getTextAction = async (message: string) => {
     message = message.toLowerCase()
 
     if (message === 'stats') return actions.STATS
-    if (message === 'print') return actions.PRINT
     if (message === 'memes') return actions.MEME_LIST
     if (message === 'link') return actions.LINK
     if (message === 'instrucoes' || message === 'rtfm')
@@ -26,6 +25,5 @@ export enum actions {
   STICKER,
   LINK,
   STATS,
-  TEXT,
-  PRINT
+  TEXT
 }
