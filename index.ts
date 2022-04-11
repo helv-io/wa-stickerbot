@@ -291,11 +291,6 @@ const start = async (client: Client) => {
             } catch {}
           })
           break
-
-        case actions.PRINT:
-          const print = await client.getSnapshot(message.from)
-          client.sendImage(message.from, print, '', '')
-          break
       }
     }
 
