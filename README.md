@@ -7,11 +7,9 @@ Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create
 
 1. Ubuntu or another Debian distribution.
 2. NodeJS:
-   `curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash - sudo apt install -y nodejs`
-3. ffmpeg:
-   `sudo apt install ffmpeg`
-4. A phone with WhatsApp installed
-5. pm2 Package Manager `sudo npm install -g pm2`
+   `curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash - sudo apt install -y nodejs`
+3. A phone with WhatsApp installed
+4. pm2 Package Manager `sudo npm install -g pm2`
 
 ### Downloading the source
 
