@@ -30,6 +30,7 @@ const start = async (client: Client) => {
     // Get groupId
     const groupId = message.isGroupMsg ? message.chat.groupMetadata.id : ''
     const admins = await client.iAmAdmin()
+    console.log(admins)
 
     // Skips personal chats unless specified
     if (!groupId) {
