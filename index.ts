@@ -25,12 +25,31 @@ console.log('Environment Variables:')
 console.log(process.env)
 
 const start = async (client: Client) => {
+  // Get administered groups
+  let adminGroups: (`${number}-${number}@g.us` | `${number}@g.us`)[] = []
   // Message Handlers
   void client.onMessage(async (message: Message) => {
     // Get groupId
     const groupId = message.isGroupMsg ? message.chat.groupMetadata.id : ''
-    const admins = await client.iAmAdmin()
-    console.log(admins)
+    // Adjust adminGroups
+    if (groupId) {
+      try {
+        const me = await client.getMe()
+        const admins = await client.getGroupAdmins(groupId)
+
+        if (admins.indexOf(me.status) >= 0) {
+          adminGroups.push(groupId)
+          // Remove duplicates
+          adminGroups = adminGroups.filter(
+            (value, index, self) => self.indexOf(value) === index
+          )
+        } else {
+          adminGroups = adminGroups.filter((v) => v !== groupId)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
 
     // Skips personal chats unless specified
     if (!groupId) {
@@ -40,7 +59,7 @@ const start = async (client: Client) => {
     } else {
       // Skips non-administered groups unless specified
       if (botOptions.groupAdminOnly) {
-        if (!admins.includes(groupId)) {
+        if (!adminGroups.includes(groupId)) {
           return
         }
       }
