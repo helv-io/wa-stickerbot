@@ -9,7 +9,6 @@ import { getGiphys } from './utils/giphyHandler'
 import { getTenors } from './utils/tenorHandler'
 import {
   getConversionOptions,
-  getMedia,
   WhatsappMedia
 } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
@@ -20,6 +19,7 @@ import {
   MessageTypes
 } from '@open-wa/wa-automate/dist/api/model/message'
 import axios from 'axios'
+import mime from 'mime-types'
 
 console.log('Environment Variables:')
 console.log(process.env)
@@ -76,7 +76,12 @@ const start = async (client: Client) => {
       // Start typing
       await client.simulateTyping(message.from, true)
 
-      const media: WhatsappMedia = await getMedia(message)
+      const data = await client.decryptMedia(message)
+      const media: WhatsappMedia = {
+        dataURL: data,
+        filename: `${message.t}.${mime.extension(message.mimetype || '') || ''}`,
+        mediaData: Buffer.from(data)
+      }
 
       if (message.type === MessageTypes.STICKER) {
         try {
