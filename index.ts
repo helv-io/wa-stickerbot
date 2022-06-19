@@ -203,7 +203,10 @@ const start = async (client: Client) => {
           stats += `${await getCount('Stickers')}\n\n`
 
           stats += `Text\n`
-          stats += `${await getCount('Text')}`
+          stats += `${await getCount('Text')}\n\n`
+
+          stats += `Donation Link\n`
+          stats += `https://helv.io/donate\n`
 
           await client.sendText(message.from, stats)
           break
