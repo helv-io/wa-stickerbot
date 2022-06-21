@@ -20,6 +20,7 @@ import {
 } from '@open-wa/wa-automate/dist/api/model/message'
 import axios from 'axios'
 import mime from 'mime-types'
+import { config } from 'process'
 
 console.log('Environment Variables:')
 console.log(process.env)
@@ -205,8 +206,10 @@ const start = async (client: Client) => {
           stats += `Text\n`
           stats += `${await getCount('Text')}\n\n`
 
-          stats += `Donation Link\n`
-          stats += `https://helv.io/donate\n`
+          if(botOptions.donationLink) {
+            stats += `Donation Link\n`
+            stats += botOptions.donationLink
+          }
 
           await client.sendText(message.from, stats)
           break
