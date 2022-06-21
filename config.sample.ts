@@ -43,6 +43,7 @@ export const clientConfig: ConfigObject = {
 // Custom Instructions
 export const botOptions = {
   donationLink: 'https://your.donation.link/',
+  donationChance: 10,
   stickers: 10,
   groupAdminOnly: true,
   groupsOnly: true,

@@ -43,3 +43,7 @@ export const registerParticipantsListener = (client: Client) => {
     }
   })
 }
+
+export const oneChanceIn = (odds: number) => {
+  return Math.floor(Math.random() * odds) === 0
+}

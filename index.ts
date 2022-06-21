@@ -12,7 +12,7 @@ import {
   WhatsappMedia
 } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
-import { registerParticipantsListener } from './utils/utils'
+import { oneChanceIn, registerParticipantsListener } from './utils/utils'
 import { getCount, addCount } from './utils/dbHandler'
 import {
   Message,
@@ -20,7 +20,6 @@ import {
 } from '@open-wa/wa-automate/dist/api/model/message'
 import axios from 'axios'
 import mime from 'mime-types'
-import { config } from 'process'
 
 console.log('Environment Variables:')
 console.log(process.env)
@@ -302,6 +301,10 @@ const start = async (client: Client) => {
           break
       }
     }
+
+    // One chance in X to send a Donation link
+    if(botOptions.donationLink && oneChanceIn(botOptions.donationChance))
+      await client.sendText(message.from, botOptions.donationLink)
 
     // Stop typing
     await client.simulateTyping(message.from, false)
