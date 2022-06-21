@@ -166,7 +166,7 @@ const start = async (client: Client) => {
             const groupInfo = await client.getGroupInfo(groupId)
             await client.sendText(message.from, groupInfo.description)
           } else {
-            await client.sendText(message.from, 'No Group Instructions.')
+            await client.sendText(message.from, '¯\_(ツ)_/¯')
           }
           break
 
