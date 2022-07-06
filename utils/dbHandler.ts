@@ -9,7 +9,8 @@ let db: Database<sqlite3.Database, sqlite3.Statement>
     filename: `${clientConfig.sessionId || 'default'}.sqlite`,
     driver: sqlite3.Database
   })
-  db.run('CREATE TABLE IF NOT EXISTS Usage (type TEXT, count NUM)')
+  await db.run('CREATE TABLE IF NOT EXISTS Usage (type TEXT, count NUM)')
+  await db.run('CREATE TABLE IF NOT EXISTS Donors (name TEXT)')
 })()
 
 export const getCount = async (type: string) => {
@@ -25,4 +26,16 @@ export const addCount = async (type: string) => {
   } else {
     db.run('INSERT INTO Usage VALUES (?, 1)', type)
   }
+}
+
+export const getDonors = async () => {
+  let donors = ''
+  await db.each('SELECT * FROM Donors', (err, row) => {
+    donors += `${row.name}\n`
+  })
+  return donors
+}
+
+export const addDonor = (name: string) => {
+  db.run('INSERT INTO Donors VALUES (?)', name)
 }
