@@ -13,7 +13,7 @@ import {
 } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
 import { oneChanceIn, registerParticipantsListener } from './utils/utils'
-import { getCount, addCount } from './utils/dbHandler'
+import { getCount, addCount, addDonor, getDonors } from './utils/dbHandler'
 import {
   Message,
   MessageTypes
@@ -206,8 +206,12 @@ const start = async (client: Client) => {
           stats += `${await getCount('Text')}\n\n`
 
           if(botOptions.donationLink) {
-            stats += `Donation Link\n`
+            stats += `Donation:\n`
             stats += botOptions.donationLink
+
+            const donors = await getDonors()
+            if(donors)
+              stats += `\n\nDonors:\n${donors}`
           }
 
           await client.sendText(message.from, stats)
@@ -248,7 +252,9 @@ const start = async (client: Client) => {
                 b64a.data.result,
                 stickerMeta
               )
-          } catch {}
+          } catch {
+            await client.reply(message.from, 'Offline 👎', message.id)
+          }
           try {
             if (b64s.status === 200)
               await client.sendImageAsSticker(
@@ -256,7 +262,9 @@ const start = async (client: Client) => {
                 b64s.data.result,
                 stickerMeta
               )
-          } catch {}
+          } catch {
+            await client.reply(message.from, 'Offline 👎', message.id)
+          }
 
           break
 
@@ -298,6 +306,14 @@ const start = async (client: Client) => {
               addCount('Stickers')
             } catch {}
           })
+          break
+
+          case actions.DONOR:
+            const name = message.body.slice(10)
+            await addDonor(name)
+            await client.reply(message.from, `💰${name} added!`, message.id)
+            const donorList = await getDonors()
+            await client.sendText(message.from, JSON.stringify(donorList, undefined, 4))
           break
       }
     }
