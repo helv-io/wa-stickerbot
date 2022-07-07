@@ -7,10 +7,7 @@ import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
 import { getStickerSearches } from './utils/stickerHandler'
 import { getGiphys } from './utils/giphyHandler'
 import { getTenors } from './utils/tenorHandler'
-import {
-  getConversionOptions,
-  WhatsappMedia
-} from './utils/mediaHandler'
+import { getConversionOptions, WhatsappMedia } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
 import { oneChanceIn, registerParticipantsListener } from './utils/utils'
 import { getCount, addCount, addDonor, getDonors } from './utils/dbHandler'
@@ -79,7 +76,9 @@ const start = async (client: Client) => {
       const data = await client.decryptMedia(message)
       const media: WhatsappMedia = {
         dataURL: data,
-        filename: `${message.t}.${mime.extension(message.mimetype || '') || ''}`,
+        filename: `${message.t}.${
+          mime.extension(message.mimetype || '') || ''
+        }`,
         mediaData: Buffer.from(data)
       }
 
@@ -166,7 +165,7 @@ const start = async (client: Client) => {
             const groupInfo = await client.getGroupInfo(groupId)
             await client.sendText(message.from, groupInfo.description)
           } else {
-            await client.sendText(message.from, '¯\_(ツ)_/¯')
+            await client.sendText(message.from, '¯_(ツ)_/¯')
           }
           break
 
@@ -205,13 +204,12 @@ const start = async (client: Client) => {
           stats += `Text\n`
           stats += `${await getCount('Text')}\n\n`
 
-          if(botOptions.donationLink) {
+          if (botOptions.donationLink) {
             stats += `Donation:\n`
             stats += botOptions.donationLink
 
             const donors = await getDonors()
-            if(donors)
-              stats += `\n\nDonors:\n${donors}`
+            if (donors) stats += `\n\nDonors:\n${donors}`
           }
 
           await client.sendText(message.from, stats)
@@ -308,19 +306,25 @@ const start = async (client: Client) => {
           })
           break
 
-          case actions.DONOR:
-            const name = message.body.slice(10)
-            await addDonor(name)
-            await client.reply(message.from, `💰${name} added!`, message.id)
-            const donorList = await getDonors()
-            await client.sendText(message.from, JSON.stringify(donorList, undefined, 4))
+        case actions.DONOR:
+          const name = message.body.slice(10)
+          await addDonor(name)
+          await client.reply(message.from, `💰${name} added!`, message.id)
+          const donorList = await getDonors()
+          await client.sendText(
+            message.from,
+            JSON.stringify(donorList, undefined, 4)
+          )
           break
       }
     }
 
     // One chance in X to send a Donation link
-    if(botOptions.donationLink && oneChanceIn(botOptions.donationChance))
-      await client.sendText(message.from, botOptions.donationLink)
+    if (botOptions.donationLink && oneChanceIn(botOptions.donationChance))
+      await client.sendText(
+        message.from,
+        `${botOptions.donationLink}\n\n${await getDonors()}`
+      )
 
     // Stop typing
     await client.simulateTyping(message.from, false)
