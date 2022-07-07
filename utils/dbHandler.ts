@@ -33,6 +33,7 @@ export const getDonors = async () => {
   await db.each('SELECT * FROM Donors', (err, row) => {
     donors += `${row.name}\n`
   })
+  if (donors) donors = `🙌🙌🙌\n` + donors
   return donors
 }
 

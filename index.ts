@@ -207,9 +207,7 @@ const start = async (client: Client) => {
           if (botOptions.donationLink) {
             stats += `Donation:\n`
             stats += botOptions.donationLink
-
-            const donors = await getDonors()
-            if (donors) stats += `\n\nDonors:\n${donors}`
+            stats += `\n\n${await getDonors()}`
           }
 
           await client.sendText(message.from, stats)
@@ -311,20 +309,18 @@ const start = async (client: Client) => {
           await addDonor(name)
           await client.reply(message.from, `💰${name} added!`, message.id)
           const donorList = await getDonors()
-          await client.sendText(
-            message.from,
-            JSON.stringify(donorList, undefined, 4)
-          )
+          await client.sendText(message.from, donorList)
           break
       }
     }
 
     // One chance in X to send a Donation link
-    if (botOptions.donationLink && oneChanceIn(botOptions.donationChance))
-      await client.sendText(
-        message.from,
-        `${botOptions.donationLink}\n\n${await getDonors()}`
-      )
+    if (botOptions.donationLink && oneChanceIn(botOptions.donationChance)) {
+      const donors = await getDonors()
+      let msg = botOptions.donationLink
+      if (donors) msg += `\n\n${await getDonors()}`
+      await client.sendText(message.from, msg)
+    }
 
     // Stop typing
     await client.simulateTyping(message.from, false)
