@@ -33,7 +33,6 @@ Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create
 | SB_STICKERS                | Number of Stickers to sead (each API) | 10          | yes      |
 | SB_GROUP_ADMIN_ONLY        | Only interact if bot is Group Admin   | true        | yes      |
 | SB_GROUPS_ONLY             | Only interact with Group Chats        | true        | yes      |
-| SB_PACK                    |                                       | Sticker Bot | yes      |
 
 [docker]: https://docs.docker.com/engine/install/
 [giphy]: https://developers.giphy.com/branch/master/docs/api/
