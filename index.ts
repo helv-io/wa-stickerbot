@@ -10,7 +10,7 @@ import { getGiphys } from './utils/giphyHandler'
 import { getTenors } from './utils/tenorHandler'
 import { getConversionOptions, WhatsappMedia } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
-import { oneChanceIn, registerParticipantsListener } from './utils/utils'
+import { oneChanceIn } from './utils/utils'
 import { getCount, addCount, addDonor, getDonors } from './utils/dbHandler'
 import {
   Message,
@@ -338,9 +338,6 @@ const start = async (client: Client) => {
     // Stop typing
     await client.simulateTyping(message.from, false)
   })
-
-  // Participants Handler
-  // registerParticipantsListener(client)
 
   // Click "Use Here" when another WhatsApp Web page is open
   void client.onStateChanged((state) => {

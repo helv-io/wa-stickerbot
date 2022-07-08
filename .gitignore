@@ -84,13 +84,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-# Project specific files
-*.data.json
-ecosystem.config.js
-.ecosystem.config..swp
-config.ts
-config.js
-*.sqlite
 # managed by open-wa. see: https://github.com/open-wa/wa-automate-nodejs/issues/1632
 **.data.json
 _IGNORE_*/

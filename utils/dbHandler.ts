@@ -6,7 +6,7 @@ let db: Database<sqlite3.Database, sqlite3.Statement>
 ;(async () => {
   // open the database
   db = await open({
-    filename: `${clientConfig.sessionId || 'default'}.sqlite`,
+    filename: `/data/${clientConfig.sessionId || 'default'}.sqlite`,
     driver: sqlite3.Database
   })
   await db.run('CREATE TABLE IF NOT EXISTS Usage (type TEXT, count NUM)')
