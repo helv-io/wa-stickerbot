@@ -1,6 +1,7 @@
 #!/usr/bin/env ts-node
 
 import { create, Client } from '@open-wa/wa-automate'
+import { Configuration, OpenAIApi } from 'openai'
 
 import { botOptions, clientConfig, stickerMeta, circleMeta } from './config'
 import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
@@ -17,6 +18,7 @@ import {
 } from '@open-wa/wa-automate/dist/api/model/message'
 import axios from 'axios'
 import mime from 'mime-types'
+import { ask } from './utils/aiHandler'
 
 console.log('Environment Variables:')
 console.log(process.env)
@@ -204,6 +206,9 @@ const start = async (client: Client) => {
           stats += `Text\n`
           stats += `${await getCount('Text')}\n\n`
 
+          stats += `AI\n`
+          stats += `${await getCount('AI')}\n\n`
+
           if (botOptions.donationLink) {
             stats += `Donation:\n`
             stats += botOptions.donationLink
@@ -310,6 +315,14 @@ const start = async (client: Client) => {
           await client.reply(message.from, `💰${name} added!`, message.id)
           const donorList = await getDonors()
           await client.sendText(message.from, donorList)
+          break
+
+        case actions.AI:
+          const question = message.body.slice(5)
+          console.log(question)
+          const response = (await ask(question)) || ''
+          await client.reply(message.from, response, message.id)
+          addCount('AI')
           break
       }
     }

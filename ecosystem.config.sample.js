@@ -6,6 +6,8 @@ module.exports = {
       script: 'ts-node ./index.ts',
       watch: true,
       env: {
+        OPENAI_API_KEY: '',
+        OPENAI_API_ORG: '',
         IMGFLIP_USERNAME: '',
         IMGFLIP_PASSWORD: '',
         TENOR_API: '',

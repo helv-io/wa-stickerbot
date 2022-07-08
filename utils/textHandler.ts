@@ -16,6 +16,7 @@ export const getTextAction = async (message: string) => {
     if (message.startsWith('meme ')) return actions.MEME
     if (message.startsWith('texto ')) return actions.TEXT
     if (message.startsWith('add-donor ')) return actions.DONOR
+    if (message.startsWith('bot, ')) return actions.AI
   }
 }
 
@@ -27,5 +28,6 @@ export enum actions {
   LINK,
   STATS,
   TEXT,
-  DONOR
+  DONOR,
+  AI
 }
