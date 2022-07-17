@@ -17,7 +17,7 @@ Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create
 
 ### How to scan the QR Code
 
-Once the container is running, you need to link your phone to it. To do so, you have a few options
+Once the container is running, you need to link your phone to it. To do so, you have a few options:
 
 - http://docker_host:13579/ to see a small page with the QR Code to scan.
 - `docker logs -f wa-stickerbot` to open the live log. The QR will be printed there.
