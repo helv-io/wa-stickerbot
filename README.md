@@ -7,7 +7,7 @@ Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create
 
 1. [Docker]
 2. Image: `helvio/wa-stickerbot`n
-3. amd64 (Chrome can't run on arm yet. [Chromium is not supported] for )
+3. amd64 (Chrome can't run on arm yet)
 
 ## Downloading and running the container
 
@@ -19,8 +19,8 @@ Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create
 
 Once the container is running, you need to link your phone to it. To do so, you have a few options
 
-* http://docker_host:13579/ to see a small page with the QR Code to scan.
-* `docker logs -f wa-stickerbot` to open the live log. The QR will be printed there.
+- http://docker_host:13579/ to see a small page with the QR Code to scan.
+- `docker logs -f wa-stickerbot` to open the live log. The QR will be printed there.
 
 ## Environment Variables
 
@@ -48,4 +48,3 @@ Once the container is running, you need to link your phone to it. To do so, you 
 [tenor]: https://tenor.com/gifapi
 [tenor locale]: https://developers.google.com/tenor/guides/localization
 [imgflip]: https://imgflip.com/signup
-[chromium is not supported]: https://docs.openwa.dev/pages/The%20Client/config-object.html
