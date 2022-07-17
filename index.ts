@@ -41,6 +41,7 @@ const start = async (client: Client) => {
 
   // Message Handlers
   void client.onMessage(async (message: Message) => {
+    const isOwner = message.sender.id.split('@')[0] === botOptions.ownerNumber
     // Get groupId
     const groupId = message.isGroupMsg ? message.chat.groupMetadata.id : ''
     // Adjust adminGroups
@@ -323,17 +324,21 @@ const start = async (client: Client) => {
           break
 
         case actions.DONOR:
-          const name = message.body.slice(10)
-          await addDonor(name)
-          await client.reply(message.from, `💰${name} added!`, message.id)
-          const donorList = await getDonors()
-          await client.sendText(message.from, donorList)
+          if (isOwner) {
+            const name = message.body.slice(10)
+            await addDonor(name)
+            await client.reply(message.from, `💰${name}`, message.id)
+            const donorList = await getDonors()
+            await client.sendText(message.from, donorList)
+          }
           break
 
         case actions.AI:
           const question = message.body.slice(5)
           console.log(question)
-          const response = (await ask(question)) || ''
+          const response = `${message.sender.pushname} ${
+            (await ask(question)) || ''
+          }`
           await client.reply(message.from, response, message.id)
           addCount('AI')
           break
