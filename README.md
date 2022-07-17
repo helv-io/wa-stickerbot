@@ -6,7 +6,7 @@ Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create
 ## Pre Requisites
 
 1. [Docker]
-2. Image: `helvio/wa-stickerbot`n
+2. Image: `helvio/wa-stickerbot`
 3. amd64 (Chrome can't run on arm yet)
 
 ## Downloading and running the container
