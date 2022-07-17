@@ -29,6 +29,7 @@ const start = async (client: Client) => {
   // Welcome Message
   if (botOptions.welcomeMessage) {
     await client.onGlobalParticipantsChanged(async (event) => {
+      console.log(event)
       if (event.action === 'add') {
         await client.sendTextWithMentions(
           event.chat,
