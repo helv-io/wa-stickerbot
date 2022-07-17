@@ -29,10 +29,8 @@ const start = async (client: Client) => {
   // Welcome Message
   if (botOptions.welcomeMessage) {
     await client.onGlobalParticipantsChanged(async (event) => {
-      console.log(event)
       if (event.action === 'add') {
-        const who = `@${event.who.toString().split('@')[0]}:`
-        console.log('who: ', who)
+        const who = `${event.who.toString().split('@')[0]}:`
         await client.sendTextWithMentions(
           event.chat,
           `@${who}\n${botOptions.welcomeMessage}`
