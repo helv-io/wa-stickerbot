@@ -40,5 +40,5 @@ export const getDonors = async () => {
 }
 
 export const addDonor = (name: string) => {
-  db.run('INSERT INTO Donors VALUES (?)', name)
+  db.run('INSERT INTO Donors VALUES (?, ?, ?)', name, null, null)
 }
