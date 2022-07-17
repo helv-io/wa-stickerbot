@@ -10,7 +10,9 @@ let db: Database<sqlite3.Database, sqlite3.Statement>
     driver: sqlite3.Database
   })
   await db.run('CREATE TABLE IF NOT EXISTS Usage (type TEXT, count NUM)')
-  await db.run('CREATE TABLE IF NOT EXISTS Donors (name TEXT)')
+  await db.run(
+    'CREATE TABLE IF NOT EXISTS Donors (name TEXT, number TEXT, amount NUM)'
+  )
 })()
 
 export const getCount = async (type: string) => {
@@ -30,10 +32,10 @@ export const addCount = async (type: string) => {
 
 export const getDonors = async () => {
   let donors = ''
-  await db.each('SELECT * FROM Donors', (err, row) => {
+  await db.each('SELECT * FROM Donors ORDER BY amount DESC', (err, row) => {
     donors += `${row.name}\n`
   })
-  if (donors) donors = `🙌🙌🙌\n` + donors
+  if (donors) donors = `🙌🙌🙌\n${donors}`
   return donors
 }
 
