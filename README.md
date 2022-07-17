@@ -24,23 +24,26 @@ Once the container is running, you need to link your phone to it. To do so, you 
 
 ## Environment Variables
 
-| Variable                   | Description                           | Default     | Optional |
-| -------------------------- | ------------------------------------- | ----------- | -------- |
-| WA_SESSION_ID              | Session ID / File Names               | session     | yes      |
-| WA_POPUP                   | TCP port for QR image                 | false       | yes      |
-| GIPHY_API                  | [Giphy] API Key                       | (blank)     | yes      |
-| GIPHY_LANGUAGE             | [Giphy Language] code                 | pt          | yes      |
-| TENOR_API                  | [Tenor] API Key                       | (blank)     | yes      |
-| TENOR_LOCALE               | [Tenor Locale]                        | pt_BR       | yes      |
-| IMGFLIP_USERNAME           | [imgflip] username                    | (blank)     | yes      |
-| IMGFLIP_PASSWORD           | [imgflip] password                    | (blank)     | yes      |
-| SB_AUTHOR                  | Sticker Author Name                   | Helvio      | yes      |
-| SB_PACK                    | Sticker Pack Name                     | Sticker Bot | yes      |
-| SB_DONATION                | Donation Link / Text                  | pix@helv.io | yes      |
-| SB_DONATION_MESSAGE_CHANCE | 1 chance in X of a donation message   | 30          | yes      |
-| SB_STICKERS                | Number of Stickers to sead (each API) | 10          | yes      |
-| SB_GROUP_ADMIN_ONLY        | Only interact if bot is Group Admin   | true        | yes      |
-| SB_GROUPS_ONLY             | Only interact with Group Chats        | true        | yes      |
+All variables are optional
+
+| Variable                   | Description                           | Default     |
+| -------------------------- | ------------------------------------- | ----------- |
+| WA_SESSION_ID              | Session ID / File Names               | session     |
+| WA_POPUP                   | TCP port for QR image                 | false       |
+| GIPHY_API                  | [Giphy] API Key                       | (blank)     |
+| GIPHY_LANGUAGE             | [Giphy Language] code                 | pt          |
+| TENOR_API                  | [Tenor] API Key                       | (blank)     |
+| TENOR_LOCALE               | [Tenor Locale]                        | pt_BR       |
+| IMGFLIP_USERNAME           | [imgflip] username                    | (blank)     |
+| IMGFLIP_PASSWORD           | [imgflip] password                    | (blank)     |
+| SB_AUTHOR                  | Sticker Author Name                   | Helvio      |
+| SB_PACK                    | Sticker Pack Name                     | Sticker Bot |
+| SB_DONATION                | Donation Link / Text                  | pix@helv.io |
+| SB_DONATION_MESSAGE_CHANCE | 1 chance in X of a donation message   | 30          |
+| SB_STICKERS                | Number of Stickers to sead (each API) | 10          |
+| SB_GROUP_ADMIN_ONLY        | Only interact if bot is Group Admin   | true        |
+| SB_GROUPS_ONLY             | Only interact with Group Chats        | true        |
+| SB_WELCOME_MESSAGE         | Optional Welcome Message (Groups)     | true        |
 
 [docker]: https://docs.docker.com/engine/install/
 [giphy]: https://developers.giphy.com/branch/master/docs/api/

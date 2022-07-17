@@ -40,7 +40,8 @@ export const botOptions = {
   donationChance: +(process.env.SB_DONATION_MESSAGE_CHANCE || 30),
   stickers: +(process.env.SB_STICKERS || 10),
   groupAdminOnly: process.env.SB_GROUP_ADMIN_ONLY || true,
-  groupsOnly: process.env.SB_GROUPS_ONLY || true
+  groupsOnly: process.env.SB_GROUPS_ONLY || true,
+  welcomeMessage: process.env.SB_WELCOME_MESSAGE
 }
 
 // https://docs.openwa.dev/modules/api_model_media.html#mp4stickerconversionprocessoptions

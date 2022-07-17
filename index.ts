@@ -1,7 +1,6 @@
 #!/usr/bin/env ts-node
 
 import { create, Client } from '@open-wa/wa-automate'
-import { Configuration, OpenAIApi } from 'openai'
 
 import { botOptions, clientConfig, stickerMeta, circleMeta } from './config'
 import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
@@ -24,8 +23,21 @@ console.log('Environment Variables:')
 console.log(process.env)
 
 const start = async (client: Client) => {
-  // Get administered groups
+  // Administered groups
   let adminGroups: (`${number}-${number}@g.us` | `${number}@g.us`)[] = []
+
+  // Welcome Message
+  if (botOptions.welcomeMessage) {
+    await client.onGlobalParticipantsChanged(async (event) => {
+      if (event.action === 'add') {
+        await client.sendTextWithMentions(
+          event.chat,
+          `${event.who.join(', ')}:\n${botOptions.welcomeMessage}`
+        )
+      }
+    })
+  }
+
   // Message Handlers
   void client.onMessage(async (message: Message) => {
     // Get groupId
@@ -348,3 +360,9 @@ const start = async (client: Client) => {
 }
 
 create(clientConfig).then((client) => start(client))
+function ParticipantChangedEventModel(
+  participantChangedEvent: any,
+  ParticipantChangedEventModel: any
+) {
+  throw new Error('Function not implemented.')
+}
