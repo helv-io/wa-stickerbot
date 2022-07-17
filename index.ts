@@ -336,7 +336,7 @@ const start = async (client: Client) => {
         case actions.AI:
           const question = message.body.slice(5)
           console.log(question)
-          const response = `${message.sender.pushname},${
+          const response = `${message.sender.shortName},${
             (await ask(question)) || ''
           }`
           await client.reply(message.from, response, message.id)
