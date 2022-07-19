@@ -29,10 +29,29 @@ const start = async (client: Client) => {
   // Welcome Message
   if (botOptions.welcomeMessage) {
     await client.onGlobalParticipantsChanged(async (event) => {
-      const chat = <`${number}-${number}@g.us` | `${number}@g.us`> event.chat.toString();
-      console.log(chat)
-      console.log(adminGroups)
-      if (event.action === 'add') {
+      const groupId = <`${number}-${number}@g.us` | `${number}@g.us`>(
+        event.chat.toString()
+      )
+      try {
+        const me = await client.getMe()
+        const admins = await client.getGroupAdmins(groupId)
+
+        if (admins.indexOf(me.status) >= 0) {
+          adminGroups.push(groupId)
+          // Remove duplicates
+          adminGroups = adminGroups.filter(
+            (value, index, self) => self.indexOf(value) === index
+          )
+        } else {
+          adminGroups = adminGroups.filter((v) => v !== groupId)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+      if (
+        event.action === 'add' &&
+        (adminGroups.includes(groupId) || !botOptions.groupsOnly)
+      ) {
         const who = `${event.who.toString().split('@')[0]}:`
         await client.sendTextWithMentions(
           event.chat,
@@ -370,9 +389,3 @@ const start = async (client: Client) => {
 }
 
 create(clientConfig).then((client) => start(client))
-function ParticipantChangedEventModel(
-  participantChangedEvent: any,
-  ParticipantChangedEventModel: any
-) {
-  throw new Error('Function not implemented.')
-}
