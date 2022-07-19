@@ -337,7 +337,9 @@ const start = async (client: Client) => {
           const question = message.body.slice(5)
           console.log(question)
           console.log(message.sender)
-          const response = `${(await ask(question)) || ''}`
+          const response = `${message.sender.pushname.split(' ')[0]},${
+            (await ask(question)) || ''
+          }`
           await client.reply(message.from, response, message.id)
           addCount('AI')
           break
