@@ -19,7 +19,7 @@ docker run -d --name wa-stickerbot -p 13579:13579 -v [/your/data/folder]:/config
 
 Once the container is running, you need to link your phone to it. To do so, you have a few options:
 
-- http://docker_host:13579/ to see a small page with the QR Code to scan.
+- `http://docker_host:13579/` to see a small page with the QR Code to scan.
 - `docker logs -f wa-stickerbot` to open the live log. The QR will be printed there.
 
 ## Environment Variables
