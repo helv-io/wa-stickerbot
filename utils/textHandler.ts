@@ -14,6 +14,8 @@ export const getTextAction = async (message: string) => {
     if (message.startsWith('texto ')) return actions.TEXT
     if (message.startsWith('add-donor ')) return actions.DONOR
     if (message.startsWith('bot, ')) return actions.AI
+    if (message.startsWith('ban ')) return actions.BAN
+    if (message.startsWith('unban ')) return actions.UNBAN
   }
 }
 
@@ -26,5 +28,7 @@ export enum actions {
   STATS,
   TEXT,
   DONOR,
-  AI
+  AI,
+  BAN,
+  UNBAN
 }

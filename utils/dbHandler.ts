@@ -13,6 +13,7 @@ let db: Database<sqlite3.Database, sqlite3.Statement>
   await db.run(
     'CREATE TABLE IF NOT EXISTS Donors (name TEXT, number TEXT, amount NUM)'
   )
+  await db.run('CREATE TABLE IF NOT EXISTS Banned (user TEXT)')
 })()
 
 export const getCount = async (type: string) => {
@@ -41,4 +42,16 @@ export const getDonors = async () => {
 
 export const addDonor = (name: string) => {
   db.run('INSERT INTO Donors VALUES (?, ?, ?)', name, null, null)
+}
+
+export const ban = (user: string) => {
+  db.run('INSERT INTO Banned VALUES (?)', user)
+}
+
+export const unban = (user: string) => {
+  db.run('DELETE FROM Banned WHERE user = ?', user)
+}
+
+export const isBanned = async (user: string) => {
+  return !!(await db.get('SELECT user FROM Banned WHERE user = ?', user)).user
 }

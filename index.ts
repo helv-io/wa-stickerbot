@@ -10,7 +10,15 @@ import { getTenors } from './utils/tenorHandler'
 import { getConversionOptions, WhatsappMedia } from './utils/mediaHandler'
 import { actions, getTextAction } from './utils/textHandler'
 import { oneChanceIn } from './utils/utils'
-import { getCount, addCount, addDonor, getDonors } from './utils/dbHandler'
+import {
+  getCount,
+  addCount,
+  addDonor,
+  getDonors,
+  isBanned,
+  ban,
+  unban
+} from './utils/dbHandler'
 import {
   Message,
   MessageTypes
@@ -98,6 +106,11 @@ const start = async (client: Client) => {
           return
         }
       }
+    }
+
+    if (await isBanned(message.sender.id.replace(/\D/g, ''))) {
+      await client.deleteMessage(message.chatId, message.id)
+      return
     }
 
     if (
@@ -352,6 +365,20 @@ const start = async (client: Client) => {
             await client.reply(message.from, `💰${name}`, message.id)
             const donorList = await getDonors()
             await client.sendText(message.from, donorList)
+          }
+          break
+
+        case actions.BAN:
+          if (isOwner) {
+            const user = message.body.slice(4).replace(/\D/g, '')
+            await ban(user)
+          }
+          break
+
+        case actions.UNBAN:
+          if (isOwner) {
+            const user = message.body.slice(6).replace(/\D/g, '')
+            await unban(user)
           }
           break
 
