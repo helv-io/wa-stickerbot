@@ -53,8 +53,5 @@ export const unban = (user: string) => {
 }
 
 export const isBanned = async (user: string) => {
-  return (
-    !!(await db.get('SELECT user FROM Banned WHERE user = ?', user)).user ||
-    false
-  )
+  return (await db.get('SELECT COUNT(0) ct FROM Banned WHERE user = ?', user)).ct > 0
 }
