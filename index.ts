@@ -72,8 +72,13 @@ const start = async (client: Client) => {
   // Message Handlers
   void client.onMessage(async (message: Message) => {
     const isOwner = message.sender.id.split('@')[0] === botOptions.ownerNumber
-    // Get groupId
-    const groupId = message.isGroupMsg ? message.chat.groupMetadata.id : ''
+    let isAdmin = false
+    // Get groupId and set isAdmin (based on Sender)
+    const groupId = message.isGroupMsg ? message.chat.groupMetadata.id : null
+    if (groupId) {
+      isAdmin =
+        (await client.getGroupAdmins(groupId)).indexOf(message.sender.id) !== -1
+    }
     // Adjust adminGroups
     if (groupId) {
       try {
@@ -369,13 +374,7 @@ const start = async (client: Client) => {
           break
 
         case actions.BAN:
-          let admins
-          if (message.isGroupMsg) {
-            admins = await client.getGroupAdmins(<GroupChatId>groupId)
-          }
-          console.log(admins)
-          console.log(message.sender)
-          if (isOwner || admins?.indexOf(message.sender.id)) {
+          if (isOwner || isAdmin) {
             const user = message.body.slice(4).replace(/\D/g, '')
             await ban(user)
             await client.reply(message.chatId, `${user} banned`, message.id)
@@ -383,12 +382,7 @@ const start = async (client: Client) => {
           break
 
         case actions.UNBAN:
-          if (message.isGroupMsg) {
-            admins = await client.getGroupAdmins(<GroupChatId>groupId)
-          }
-          console.log(admins)
-          console.log(message.sender)
-          if (isOwner || admins?.indexOf(message.sender.id)) {
+          if (isOwner || isAdmin) {
             const user = message.body.slice(6).replace(/\D/g, '')
             await unban(user)
             await client.reply(message.chatId, `${user} unbanned`, message.id)
