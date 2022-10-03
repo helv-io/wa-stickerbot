@@ -373,6 +373,8 @@ const start = async (client: Client) => {
           if (message.isGroupMsg) {
             admins = await client.getGroupAdmins(<GroupChatId>groupId)
           }
+          console.log(admins)
+          console.log(message.sender)
           if (isOwner || admins?.indexOf(message.sender.id)) {
             const user = message.body.slice(4).replace(/\D/g, '')
             await ban(user)
@@ -384,6 +386,8 @@ const start = async (client: Client) => {
           if (message.isGroupMsg) {
             admins = await client.getGroupAdmins(<GroupChatId>groupId)
           }
+          console.log(admins)
+          console.log(message.sender)
           if (isOwner || admins?.indexOf(message.sender.id)) {
             const user = message.body.slice(6).replace(/\D/g, '')
             await unban(user)
