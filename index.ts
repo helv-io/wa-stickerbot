@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 
-import { create, Client } from '@open-wa/wa-automate'
+import { create, Client, GroupChatId } from '@open-wa/wa-automate'
 
 import { botOptions, clientConfig, stickerMeta, circleMeta } from './config'
 import { getImgflipList, getImgflipImage } from './utils/imgflipHandler'
@@ -108,7 +108,7 @@ const start = async (client: Client) => {
       }
     }
 
-    if (await isBanned(message.sender.id.replace(/\D/g, ''))) {
+    if (!isOwner && (await isBanned(message.sender.id.replace(/\D/g, '')))) {
       await client.deleteMessage(message.chatId, message.id)
       return
     }
@@ -369,16 +369,25 @@ const start = async (client: Client) => {
           break
 
         case actions.BAN:
-          if (isOwner) {
+          let admins
+          if (message.isGroupMsg) {
+            admins = await client.getGroupAdmins(<GroupChatId>groupId)
+          }
+          if (isOwner || admins?.indexOf(message.sender.id)) {
             const user = message.body.slice(4).replace(/\D/g, '')
             await ban(user)
+            await client.reply(message.chatId, `${user} banned`, message.id)
           }
           break
 
         case actions.UNBAN:
-          if (isOwner) {
+          if (message.isGroupMsg) {
+            admins = await client.getGroupAdmins(<GroupChatId>groupId)
+          }
+          if (isOwner || admins?.indexOf(message.sender.id)) {
             const user = message.body.slice(6).replace(/\D/g, '')
             await unban(user)
+            await client.reply(message.chatId, `${user} unbanned`, message.id)
           }
           break
 
