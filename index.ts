@@ -132,9 +132,8 @@ const start = async (client: Client) => {
       const data = await client.decryptMedia(message)
       const media: WhatsappMedia = {
         dataURL: data,
-        filename: `${message.t}.${
-          mime.extension(message.mimetype || '') || ''
-        }`,
+        filename: `${message.t}.${mime.extension(message.mimetype || '') || ''
+          }`,
         mediaData: Buffer.from(data)
       }
 
@@ -146,7 +145,7 @@ const start = async (client: Client) => {
             media.filename,
             ''
           )
-        } catch {}
+        } catch { }
       } else if (media.filename.endsWith('.mp4')) {
         // Sends as Video Sticker
         console.log('MP4/GIF Sticker', media.filename)
@@ -161,7 +160,7 @@ const start = async (client: Client) => {
                 getConversionOptions(i),
                 stickerMeta
               )
-            } catch {}
+            } catch { }
 
             try {
               await client.sendMp4AsSticker(
@@ -170,7 +169,7 @@ const start = async (client: Client) => {
                 getConversionOptions(i),
                 circleMeta
               )
-            } catch {}
+            } catch { }
             break
           } catch {
             console.log(`Video is too long. Reducing length.`)
@@ -183,7 +182,7 @@ const start = async (client: Client) => {
             media.dataURL,
             'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
           )
-        } catch {}
+        } catch { }
       } else {
         // Sends as Image sticker
         console.log('IMAGE Sticker', media.filename)
@@ -195,14 +194,14 @@ const start = async (client: Client) => {
             media.dataURL,
             stickerMeta
           )
-        } catch {}
+        } catch { }
         try {
           await client.sendImageAsSticker(
             message.from,
             media.dataURL,
             circleMeta
           )
-        } catch {}
+        } catch { }
       }
       return
     }
@@ -331,35 +330,37 @@ const start = async (client: Client) => {
           const giphyURLs = await getGiphys(searches.giphySearch)
           const tenorURLs = await getTenors(searches.tenorSearch)
 
+          console.log(giphyURLs, tenorURLs)
+
           if (giphyURLs) {
             try {
               await client.sendImageAsSticker(
-                message.from,
+                message.chatId,
                 'attributions/giphy.gif',
                 stickerMeta
               )
-            } catch {}
+            } catch { }
           }
           if (tenorURLs) {
             try {
               await client.sendImageAsSticker(
-                message.from,
+                message.chatId,
                 'attributions/tenor.png',
                 stickerMeta
               )
-            } catch {}
+            } catch { }
           }
 
           giphyURLs.concat(tenorURLs).forEach(async (url) => {
             try {
               await client.sendStickerfromUrl(
-                message.from,
+                message.chatId,
                 url,
                 undefined,
                 stickerMeta
               )
               addCount('Stickers')
-            } catch {}
+            } catch { }
           })
           break
 
@@ -393,9 +394,8 @@ const start = async (client: Client) => {
           const question = message.body.slice(5)
           console.log(question)
           console.log(message.sender)
-          const response = `${message.sender.pushname.split(' ')[0]},${
-            (await ask(question)) || ''
-          }`
+          const response = `${message.sender.pushname.split(' ')[0]},${(await ask(question)) || ''
+            }`
           await client.reply(message.from, response, message.id)
           addCount('AI')
           break
