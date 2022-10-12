@@ -330,9 +330,7 @@ const start = async (client: Client) => {
           const giphyURLs = await getGiphys(searches.giphySearch)
           const tenorURLs = await getTenors(searches.tenorSearch)
 
-          console.log(giphyURLs, tenorURLs)
-
-          if (giphyURLs) {
+          if (giphyURLs.length) {
             try {
               await client.sendImageAsSticker(
                 message.chatId,
@@ -341,7 +339,7 @@ const start = async (client: Client) => {
               )
             } catch { }
           }
-          if (tenorURLs) {
+          if (tenorURLs.length) {
             try {
               await client.sendImageAsSticker(
                 message.chatId,
