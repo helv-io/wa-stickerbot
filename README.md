@@ -13,7 +13,7 @@ Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create
 
 ### Main commands
 
-`docker run -d --name wa-stickerbot -p 13579:13579 -v [/your/data/folder]:/config helvio/wa-stickerbot`
+`docker run -d --name wa-stickerbot -p 13579:13579 -v [/your/data/folder]:/data helvio/wa-stickerbot`
 
 ### How to scan the QR Code
 
