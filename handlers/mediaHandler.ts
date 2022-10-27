@@ -62,9 +62,9 @@ export const handleMedia = async (message: Message) => {
     // Something between 20 and 80
     const pitch = Math.round(Math.random() * 60 + 20)
     // Something between 0.5 and 3
-    const tempo = Math.round(10 * (Math.random() * 3.5) + 0.5) / 10
+    const tempo = Math.round(10 * (Math.random() + 0.5)) / 10
 
-    let ffmpeg = spawn('ffmpeg', [
+    const args = [
       '-i',
       origFile,
       '-filter:a',
@@ -72,7 +72,11 @@ export const handleMedia = async (message: Message) => {
       '-vn',
       '-y',
       procFile
-    ])
+    ]
+
+    console.log('ffmpeg', args)
+
+    let ffmpeg = spawn('ffmpeg', args)
 
     ffmpeg.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`)
@@ -97,8 +101,8 @@ export const handleMedia = async (message: Message) => {
         )
       } catch {
       } finally {
-        // await fs.unlink(origFile)
-        // await fs.unlink(procFile)
+        await fs.unlink(origFile)
+        await fs.unlink(procFile)
       }
     })
   } else {
