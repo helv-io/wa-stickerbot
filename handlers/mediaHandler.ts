@@ -5,8 +5,7 @@ import { addCount } from '../utils/dbHandler'
 import mime from 'mime-types'
 import { waClient } from '..'
 import fs from 'fs/promises'
-import Kali from '@descript/kali'
-import { atob, btoa } from 'buffer'
+import { spawnSync } from 'child_process'
 
 export const handleMedia = async (message: Message) => {
   // Start typing
@@ -55,23 +54,31 @@ export const handleMedia = async (message: Message) => {
       }
     }
   } else if (media.filename.endsWith('.oga')) {
-    const tmpFile = `/data/tmp_${media.filename}`
-    //await fs.writeFile(tmpFile, media.mediaData)
-    let out = new Float32Array()
-    let kali = new Kali(2)
-    kali.setup(1.5, 1.5, true)
-    kali.input(new Float32Array(media.mediaData))
-    kali.process()
-    kali.output(out)
-    kali.flush()
+    const origFile = `/data/orig_${media.filename}`
+    const procFile = `/data/proc_${media.filename}`
+    await fs.writeFile(origFile, media.mediaData)
+
+    let tempo = spawnSync('ffmpeg', [
+      '-i',
+      origFile,
+      '-filter:a',
+      '"atempo:1.8',
+      '-vn',
+      procFile
+    ])
+    console.log(tempo)
 
     try {
       await waClient.sendPtt(
         message.from,
-        out.buffer,
+        procFile,
         'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
       )
-    } catch {}
+    } catch {
+    } finally {
+      await fs.unlink(origFile)
+      await fs.unlink(procFile)
+    }
   } else {
     // Sends as Image sticker
     console.log('IMAGE Sticker', media.filename)
