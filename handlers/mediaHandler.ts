@@ -63,12 +63,14 @@ export const handleMedia = async (message: Message) => {
     const pitch = Math.round(Math.random() * 60 + 20)
     // Something between 0.5 and 3
     const tempo = Math.round(10 * (Math.random() + 0.5)) / 10
+    // Reverse?
+    const reverse = Math.random() < 0.25
 
     const args = [
       '-i',
       origFile,
       '-filter:a',
-      `atempo=${tempo},asetrate=r=${pitch}K`,
+      `atempo=${tempo},asetrate=r=${pitch}K${reverse ? ',areverse' : ''}`,
       '-vn',
       '-y',
       procFile
