@@ -117,7 +117,11 @@ export const handleMedia = async (message: Message) => {
         procFile,
         'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
       )
-      await waClient.sendReplyWithMentions(message.from, stt, message.id)
+      await waClient.sendReplyWithMentions(
+        message.from,
+        JSON.parse(stt).text,
+        message.id
+      )
     } catch {
     } finally {
       await fs.unlink(origFile)
