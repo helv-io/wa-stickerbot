@@ -43,8 +43,8 @@ export const botOptions = {
   donationLink: process.env.SB_DONATION || 'pix@helv.io',
   donationChance: +(process.env.SB_DONATION_MESSAGE_CHANCE || 30),
   stickers: +(process.env.SB_STICKERS || 10),
-  groupAdminOnly: process.env.SB_GROUP_ADMIN_ONLY?.toLowerCase() === 'true' || true,
-  groupsOnly: process.env.SB_GROUPS_ONLY?.toLowerCase() === 'true' || true,
+  groupAdminOnly: JSON.parse(process.env.SB_GROUP_ADMIN_ONLY || 'false'),
+  groupsOnly: JSON.parse(process.env.SB_GROUPS_ONLY || 'false'),
   welcomeMessage: process.env.SB_WELCOME_MESSAGE,
   ownerNumber: process.env.SB_OWNER_NUMBER || ''
 }
