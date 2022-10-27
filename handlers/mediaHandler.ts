@@ -71,7 +71,7 @@ export const handleMedia = async (message: Message) => {
     const reverse = Math.random() < 0.25
 
     const ffmpeg_filters = [
-      'ffpmeg',
+      'ffmpeg',
       '-i',
       origFile,
       '-filter:a',
@@ -81,8 +81,8 @@ export const handleMedia = async (message: Message) => {
       procFile
     ]
 
-    const ffpmeg_wave = [
-      'ffpmeg',
+    const ffmpeg_wave = [
+      'ffmpeg',
       '-i',
       origFile,
       '-ac 1',
@@ -106,7 +106,7 @@ export const handleMedia = async (message: Message) => {
     console.log(rand.stdout)
     console.error(rand.stderr)
 
-    const wave = await run(ffpmeg_wave.join(' '))
+    const wave = await run(ffmpeg_wave.join(' '))
     console.log(wave.stdout)
     console.error(wave.stderr)
 
