@@ -46,7 +46,8 @@ export const botOptions = {
   groupAdminOnly: JSON.parse(process.env.SB_GROUP_ADMIN_ONLY || 'false'),
   groupsOnly: JSON.parse(process.env.SB_GROUPS_ONLY || 'false'),
   welcomeMessage: process.env.SB_WELCOME_MESSAGE,
-  ownerNumber: process.env.SB_OWNER_NUMBER || ''
+  ownerNumber: process.env.SB_OWNER_NUMBER || '',
+  sttProfile: process.env.SB_STT_PROFILE || 'pt-br_pocketsphinx-cmu'
 }
 
 // https://docs.openwa.dev/modules/api_model_media.html#mp4stickerconversionprocessoptions

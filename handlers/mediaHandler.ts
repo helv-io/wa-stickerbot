@@ -1,5 +1,5 @@
 import { Message, MessageTypes } from '@open-wa/wa-automate'
-import { stickerMeta, circleMeta } from '../config'
+import { stickerMeta, circleMeta, botOptions } from '../config'
 import { addCount } from '../utils/dbHandler'
 import mime from 'mime-types'
 import { waClient } from '..'
@@ -97,7 +97,8 @@ export const handleMedia = async (message: Message) => {
 
     const stt_cmd = [
       'voice2json',
-      '--profile pt-br_pocketsphinx-cmu',
+      '--profile',
+      botOptions.sttProfile,
       'transcribe-wav',
       waveFile,
       '2>/dev/null'
