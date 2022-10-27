@@ -1,11 +1,14 @@
-import { getConversionOptions, WhatsappMedia } from '../utils/mediaHandler'
 import { Message, MessageTypes } from '@open-wa/wa-automate'
 import { stickerMeta, circleMeta } from '../config'
 import { addCount } from '../utils/dbHandler'
 import mime from 'mime-types'
 import { waClient } from '..'
 import fs from 'fs/promises'
-import { spawn } from 'child_process'
+import { exec } from 'child_process'
+import { mp4StickerConversionOptions } from '../config'
+import util from 'util'
+
+const run = util.promisify(exec)
 
 export const handleMedia = async (message: Message) => {
   // Start typing
@@ -56,6 +59,7 @@ export const handleMedia = async (message: Message) => {
   } else if (media.filename.endsWith('.oga')) {
     const origFile = `/data/orig_${media.filename}`
     const procFile = `/data/proc_${media.filename}.mp3`
+    const waveFile = `/data/proc_${media.filename}.wav`
     const b64 = `${media.dataURL.split(';base64,').pop()}`
     await fs.writeFile(origFile, b64, { encoding: 'base64' })
 
@@ -66,7 +70,8 @@ export const handleMedia = async (message: Message) => {
     // Reverse?
     const reverse = Math.random() < 0.25
 
-    const args = [
+    const ffmpeg_filters = [
+      'ffpmeg',
       '-i',
       origFile,
       '-filter:a',
@@ -76,37 +81,50 @@ export const handleMedia = async (message: Message) => {
       procFile
     ]
 
-    console.log('ffmpeg', args)
+    const ffpmeg_wave = [
+      'ffpmeg',
+      '-i',
+      origFile,
+      '-ac 1',
+      '-af aresample=16000',
+      '-y',
+      waveFile
+    ]
 
-    let ffmpeg = spawn('ffmpeg', args)
+    const stt_cmd = [
+      'pocketsphinx_continuous',
+      '-hmm /usr/src/app/models/br-pt/',
+      //'-nfft 2048',
+      '-dict /usr/src/app/models/br-pt.dic',
+      '-infile',
+      waveFile,
+      '2>/dev/null'
+    ]
 
-    ffmpeg.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`)
-    })
+    // Run and print outputs
+    const rand = await run(ffmpeg_filters.join(' '))
+    console.log(rand.stdout)
+    console.error(rand.stderr)
 
-    ffmpeg.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`)
-    })
+    const wave = await run(ffpmeg_wave.join(' '))
+    console.log(wave.stdout)
+    console.error(wave.stderr)
 
-    ffmpeg.on('error', (error) => {
-      console.log(`error: ${error.message}`)
-    })
+    const stt = await (await run(stt_cmd.join(' '))).stdout
 
-    ffmpeg.on('close', async (code) => {
-      console.log(`child process exited with code ${code}`)
-
-      try {
-        await waClient.sendPtt(
-          message.from,
-          procFile,
-          'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
-        )
-      } catch {
-      } finally {
-        await fs.unlink(origFile)
-        await fs.unlink(procFile)
-      }
-    })
+    try {
+      await waClient.sendPtt(
+        message.from,
+        procFile,
+        'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
+      )
+      await waClient.sendReplyWithMentions(message.from, stt, message.id)
+    } catch {
+    } finally {
+      await fs.unlink(origFile)
+      await fs.unlink(procFile)
+      await fs.unlink(waveFile)
+    }
   } else {
     // Sends as Image sticker
     console.log('IMAGE Sticker', media.filename)
@@ -124,4 +142,16 @@ export const handleMedia = async (message: Message) => {
     } catch {}
   }
   return
+}
+
+export const getConversionOptions = (duration: number) => {
+  const cOptions = mp4StickerConversionOptions
+  cOptions.endTime = `00:00:${duration.toString().padStart(2, '0')}.0`
+  return cOptions
+}
+
+export interface WhatsappMedia {
+  filename: string
+  mediaData: Buffer
+  dataURL: string
 }
