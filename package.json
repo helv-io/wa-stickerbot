@@ -26,6 +26,7 @@
     "axios": "^1.1.3",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
+    "microsoft-cognitiveservices-speech-sdk": "^1.24.0",
     "mime-types": "^2.1.35",
     "openai": "^3.0.1",
     "pm2": "^5.2.2",

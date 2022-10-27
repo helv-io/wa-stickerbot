@@ -7,6 +7,14 @@ import fs from 'fs/promises'
 import { exec } from 'child_process'
 import { mp4StickerConversionOptions } from '../config'
 import util from 'util'
+import {
+  AudioConfig,
+  SpeechRecognizer,
+  ResultReason,
+  SpeechConfig,
+  CancellationDetails,
+  CancellationReason
+} from 'microsoft-cognitiveservices-speech-sdk'
 
 const run = util.promisify(exec)
 
@@ -95,15 +103,6 @@ export const handleMedia = async (message: Message) => {
       waveFile
     ]
 
-    const stt_cmd = [
-      'voice2json',
-      '--profile',
-      botOptions.sttProfile,
-      'transcribe-wav',
-      waveFile,
-      '2>/dev/null'
-    ]
-
     // Run and print outputs
     const rand = await run(ffmpeg_filters.join(' '))
     console.log(rand.stdout)
@@ -113,19 +112,47 @@ export const handleMedia = async (message: Message) => {
     console.log(wave.stdout)
     console.error(wave.stderr)
 
-    const stt = (await run(stt_cmd.join(' '))).stdout
-    console.log(stt)
+    let speechConfig = SpeechConfig.fromSubscription(
+      botOptions.microsoftApiKey,
+      botOptions.microsoftLanguage
+    )
+    let audioConfig = AudioConfig.fromWavFileInput(await fs.readFile(waveFile))
+    let speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig)
+
+    speechRecognizer.recognizeOnceAsync(async (result) => {
+      switch (result.reason) {
+        case ResultReason.RecognizedSpeech:
+          console.log(`RECOGNIZED: Text=${result.text}`)
+          await waClient.sendReplyWithMentions(
+            message.from,
+            result.text,
+            message.id
+          )
+          break
+        case ResultReason.NoMatch:
+          console.log('NOMATCH: Speech could not be recognized.')
+          break
+        case ResultReason.Canceled:
+          const cancellation = CancellationDetails.fromResult(result)
+          console.log(`CANCELED: Reason=${cancellation.reason}`)
+
+          if (cancellation.reason == CancellationReason.Error) {
+            console.log(`CANCELED: ErrorCode=${cancellation.ErrorCode}`)
+            console.log(`CANCELED: ErrorDetails=${cancellation.errorDetails}`)
+            console.log(
+              'CANCELED: Did you set the speech resource key and region values?'
+            )
+          }
+          break
+      }
+      speechRecognizer.close()
+    })
 
     try {
       await waClient.sendPtt(
         message.from,
         procFile,
         'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
-      )
-      await waClient.sendReplyWithMentions(
-        message.from,
-        JSON.parse(stt).text,
-        message.id
       )
     } catch {
     } finally {
