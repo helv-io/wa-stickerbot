@@ -92,11 +92,9 @@ export const handleMedia = async (message: Message) => {
     ]
 
     const stt_cmd = [
-      'pocketsphinx_continuous',
-      '-hmm /usr/src/app/models/br-pt/',
-      //'-nfft 2048',
-      '-dict /usr/src/app/models/br-pt.dic',
-      '-infile',
+      'voice2json',
+      '--profile pt-br_pocketsphinx-cmu',
+      'transcribe-wav',
       waveFile,
       '2>/dev/null'
     ]
@@ -111,6 +109,7 @@ export const handleMedia = async (message: Message) => {
     console.error(wave.stderr)
 
     const stt = await (await run(stt_cmd.join(' '))).stdout
+    console.log(stt)
 
     try {
       await waClient.sendPtt(
