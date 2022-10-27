@@ -35,7 +35,7 @@ const start = async () => {
 
     // Refresh adminGroups
     if (groupId) {
-      AdminGroupsManager.refresh(message)
+      await AdminGroupsManager.refresh(message)
     }
 
     // Skips personal chats unless specified
