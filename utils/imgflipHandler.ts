@@ -1,7 +1,7 @@
-import axios from 'axios'
-import { imgflip } from '../config'
 import { ImgflipResponse } from '../types/Imgflip'
 import { paramSerializer } from './utils'
+import { imgflip } from '../config'
+import axios from 'axios'
 
 const imgflipBaseURL = 'https://api.imgflip.com'
 const imgflipGetMemesURL = `${imgflipBaseURL}/get_memes`

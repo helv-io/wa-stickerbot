@@ -1,8 +1,8 @@
 import { Client } from '@open-wa/wa-automate'
 import qs from 'qs'
 
-import { botOptions } from '../config'
 import { getImgflipImage } from './imgflipHandler'
+import { botOptions } from '../config'
 
 export const paramSerializer = (p: any) => {
   return qs.stringify(p, { arrayFormat: 'brackets' })

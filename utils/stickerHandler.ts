@@ -1,5 +1,5 @@
 import { giphySearch, tenorSearch, botOptions } from '../config'
-import { stickerRegExp } from './textHandler'
+import { stickerRegExp } from '../handlers/textHandler'
 
 export const getStickerSearches = (message: string) => {
   const keywords = stickerRegExp.exec(message) || []

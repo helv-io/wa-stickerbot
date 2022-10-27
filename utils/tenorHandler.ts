@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { TenorResponse, TenorSearch } from '../types/Tenor'
+import axios from 'axios'
 
 const tenorURL = 'https://g.tenor.com/v1/search'
 

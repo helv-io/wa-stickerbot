@@ -1,6 +1,6 @@
-import sqlite3 from 'sqlite3'
-import { Database, open } from 'sqlite'
 import { clientConfig } from '../config'
+import { Database, open } from 'sqlite'
+import sqlite3 from 'sqlite3'
 
 let db: Database<sqlite3.Database, sqlite3.Statement>
 ;(async () => {
@@ -53,5 +53,7 @@ export const unban = (user: string) => {
 }
 
 export const isBanned = async (user: string) => {
-  return (await db.get('SELECT COUNT(0) ct FROM Banned WHERE user = ?', user)).ct > 0
+  return (
+    (await db.get('SELECT COUNT(0) ct FROM Banned WHERE user = ?', user)).ct > 0
+  )
 }
