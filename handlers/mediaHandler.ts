@@ -56,7 +56,11 @@ export const handleMedia = async (message: Message) => {
         console.log(`Video is too long. Reducing length.`)
       }
     }
-  } else if (media.filename.endsWith('.oga')) {
+  } else if (
+    // Audio files
+    media.filename.endsWith('.oga') ||
+    media.filename.endsWith('.mpga')
+  ) {
     const origFile = `/data/orig_${media.filename}`
     const procFile = `/data/proc_${media.filename}.mp3`
     const waveFile = `/data/proc_${media.filename}.wav`
@@ -108,7 +112,7 @@ export const handleMedia = async (message: Message) => {
     console.log(wave.stdout)
     console.error(wave.stderr)
 
-    const stt = await (await run(stt_cmd.join(' '))).stdout
+    const stt = (await run(stt_cmd.join(' '))).stdout
     console.log(stt)
 
     try {
