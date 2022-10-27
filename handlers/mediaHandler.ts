@@ -62,7 +62,7 @@ export const handleMedia = async (message: Message) => {
       '-i',
       origFile,
       '-filter:a',
-      '"atempo:1.8',
+      'atempo=1.8',
       '-vn',
       procFile
     ])
