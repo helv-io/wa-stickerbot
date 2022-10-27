@@ -5,7 +5,7 @@ import { addCount } from '../utils/dbHandler'
 import mime from 'mime-types'
 import { waClient } from '..'
 import fs from 'fs/promises'
-import { spawnSync } from 'child_process'
+import { spawn } from 'child_process'
 
 export const handleMedia = async (message: Message) => {
   // Start typing
@@ -58,7 +58,7 @@ export const handleMedia = async (message: Message) => {
     const procFile = `/data/proc_${media.filename}`
     await fs.writeFile(origFile, media.mediaData)
 
-    let tempo = spawnSync('ffmpeg', [
+    let ffmpeg = spawn('ffmpeg', [
       '-i',
       origFile,
       '-filter:a',
@@ -66,19 +66,34 @@ export const handleMedia = async (message: Message) => {
       '-vn',
       procFile
     ])
-    console.log(tempo)
 
-    try {
-      await waClient.sendPtt(
-        message.from,
-        procFile,
-        'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
-      )
-    } catch {
-    } finally {
-      await fs.unlink(origFile)
-      await fs.unlink(procFile)
-    }
+    ffmpeg.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`)
+    })
+
+    ffmpeg.stderr.on('data', (data) => {
+      console.log(`stderr: ${data}`)
+    })
+
+    ffmpeg.on('error', (error) => {
+      console.log(`error: ${error.message}`)
+    })
+
+    ffmpeg.on('close', async (code) => {
+      console.log(`child process exited with code ${code}`)
+
+      try {
+        await waClient.sendPtt(
+          message.from,
+          procFile,
+          'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
+        )
+      } catch {
+      } finally {
+        // await fs.unlink(origFile)
+        // await fs.unlink(procFile)
+      }
+    })
   } else {
     // Sends as Image sticker
     console.log('IMAGE Sticker', media.filename)
