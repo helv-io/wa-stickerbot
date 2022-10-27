@@ -56,14 +56,20 @@ export const handleMedia = async (message: Message) => {
   } else if (media.filename.endsWith('.oga')) {
     const origFile = `/data/orig_${media.filename}`
     const procFile = `/data/proc_${media.filename}`
-    await fs.writeFile(origFile, media.mediaData)
+    await fs.writeFile(origFile, media.mediaData, {encoding: 'base64'})
+
+    // Something between 20 and 80
+    const pitch = Math.round(Math.random() * 60 + 20)
+    // Something between 0.5 and 3
+    const tempo = Math.round(10 * (Math.random() * 3.5) + 0.5) / 10
 
     let ffmpeg = spawn('ffmpeg', [
       '-i',
       origFile,
       '-filter:a',
-      'atempo=1.8',
+      `atempo=${tempo},asetrate=r=${pitch}K`,
       '-vn',
+      '-y',
       procFile
     ])
 
