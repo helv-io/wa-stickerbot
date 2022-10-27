@@ -48,7 +48,7 @@ export const botOptions = {
   welcomeMessage: process.env.SB_WELCOME_MESSAGE,
   ownerNumber: process.env.SB_OWNER_NUMBER || '',
   microsoftApiKey: process.env.SPEECH_KEY || '',
-  microsoftLanguage: process.env.SPEECH_REGION || 'pt-BR'
+  microsoftLanguage: process.env.SPEECH_LANGUAGE || 'pt-BR'
 }
 
 // https://docs.openwa.dev/modules/api_model_media.html#mp4stickerconversionprocessoptions

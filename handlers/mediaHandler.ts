@@ -112,12 +112,15 @@ export const handleMedia = async (message: Message) => {
     console.log(wave.stdout)
     console.error(wave.stderr)
 
-    let speechConfig = SpeechConfig.fromSubscription(
+    const speechConfig = SpeechConfig.fromSubscription(
       botOptions.microsoftApiKey,
-      botOptions.microsoftLanguage
+      'eastus'
     )
-    let audioConfig = AudioConfig.fromWavFileInput(await fs.readFile(waveFile))
-    let speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig)
+    speechConfig.speechRecognitionLanguage = botOptions.microsoftLanguage
+    const audioConfig = AudioConfig.fromWavFileInput(
+      await fs.readFile(waveFile)
+    )
+    const speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig)
 
     speechRecognizer.recognizeOnceAsync(async (result) => {
       switch (result.reason) {
