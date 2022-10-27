@@ -19,13 +19,6 @@ export const handleMedia = async (message: Message) => {
   if (message.type === MessageTypes.STICKER) {
     try {
       await waClient.sendImage(message.from, media.dataURL, media.filename, '')
-      // EXPERIMENTAL: Send sticker as GIF. Might fail.
-      await waClient.sendVideoAsGif(
-        message.from,
-        media.dataURL,
-        media.filename,
-        ''
-      )
     } catch {
       console.log('Sending Sticker as GIF Failed')
     }
