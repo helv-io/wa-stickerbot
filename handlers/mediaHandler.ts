@@ -55,7 +55,7 @@ export const handleMedia = async (message: Message) => {
     }
   } else if (media.filename.endsWith('.oga')) {
     const origFile = `/data/orig_${media.filename}`
-    const procFile = `/data/proc_${media.filename}`
+    const procFile = `/data/proc_${media.filename}.mp3`
     const b64 = `${media.dataURL.split(';base64,').pop()}`
     await fs.writeFile(origFile, b64, { encoding: 'base64' })
 
