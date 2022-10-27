@@ -27,8 +27,7 @@ export const handleText = async (
 
   if (groupId) {
     isAdmin =
-      (await waClient.getGroupAdmins(groupId)).indexOf(message.sender.id) !==
-      -1
+      (await waClient.getGroupAdmins(groupId)).indexOf(message.sender.id) !== -1
   }
 
   if (action) {

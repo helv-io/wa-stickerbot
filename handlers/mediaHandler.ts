@@ -4,6 +4,9 @@ import { stickerMeta, circleMeta } from '../config'
 import { addCount } from '../utils/dbHandler'
 import mime from 'mime-types'
 import { waClient } from '..'
+import fs from 'fs/promises'
+import Kali from '@descript/kali'
+import { atob, btoa } from 'buffer'
 
 export const handleMedia = async (message: Message) => {
   // Start typing
@@ -52,10 +55,20 @@ export const handleMedia = async (message: Message) => {
       }
     }
   } else if (media.filename.endsWith('.oga')) {
+    const tmpFile = `/data/tmp_${media.filename}`
+    //await fs.writeFile(tmpFile, media.mediaData)
+    let out = new Float32Array()
+    let kali = new Kali(2)
+    kali.setup(1.5, 1.5, true)
+    kali.input(new Float32Array(media.mediaData))
+    kali.process()
+    kali.output(out)
+    kali.flush()
+
     try {
       await waClient.sendPtt(
         message.from,
-        media.dataURL,
+        out.buffer,
         'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
       )
     } catch {}
