@@ -56,7 +56,8 @@ export const handleMedia = async (message: Message) => {
   } else if (media.filename.endsWith('.oga')) {
     const origFile = `/data/orig_${media.filename}`
     const procFile = `/data/proc_${media.filename}`
-    await fs.writeFile(origFile, media.mediaData, {encoding: 'base64'})
+    const b64 = `${media.dataURL.split(';base64,').pop()}`
+    await fs.writeFile(origFile, b64, { encoding: 'base64' })
 
     // Something between 20 and 80
     const pitch = Math.round(Math.random() * 60 + 20)
