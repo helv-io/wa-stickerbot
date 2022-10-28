@@ -13,23 +13,17 @@ export const transcribeAudio = async (wav: string, message: Message) => {
   sConfig.speechRecognitionLanguage = botOptions.azureLanguage
   const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wav))
   const reco = new SpeechRecognizer(sConfig, aConfig)
-  const transcript: string[] = []
+  const transcription: string[] = []
 
-  reco.recognizing = (_sender, event) => {
-    console.log('recognizing', event.result)
-    transcript.push(event.result.text)
+  reco.recognized = (_sender, event) => {
+    console.log('recognized', event.result)
+    transcription.push(event.result.text)
   }
 
-  reco.recognized = async (_sender, event) => {
-    console.log('recognized', event.result)
+  reco.speechEndDetected = async (_sender, event) => {
     await waClient.sendReplyWithMentions(
       message.from,
-      event.result.text,
-      message.id
-    )
-    await waClient.sendReplyWithMentions(
-      message.from,
-      transcript.join(' '),
+      transcription.join(' '),
       message.id
     )
     reco.stopContinuousRecognitionAsync()
