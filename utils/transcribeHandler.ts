@@ -7,6 +7,7 @@ import { botOptions } from '../config'
 import fs from 'fs/promises'
 import { Message } from '@open-wa/wa-automate'
 import { waClient } from '..'
+import { ask } from './aiHandler'
 
 export const transcribeAudio = async (wav: string, message: Message) => {
   const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
@@ -21,11 +22,17 @@ export const transcribeAudio = async (wav: string, message: Message) => {
   }
 
   reco.speechEndDetected = async (_sender, event) => {
-    await waClient.sendReplyWithMentions(
+    const id = await waClient.sendReplyWithMentions(
       message.from,
       transcription.join(' '),
       message.id
     )
+    if (typeof id !== 'boolean')
+      await waClient.sendReplyWithMentions(
+        message.from,
+        `${await ask(transcription.join(' '))}`,
+        id
+      )
     reco.stopContinuousRecognitionAsync()
     reco.close()
   }
