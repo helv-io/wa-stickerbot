@@ -1,5 +1,6 @@
 import {
   AudioConfig,
+  AutoDetectSourceLanguageConfig,
   SpeechConfig,
   SpeechRecognizer,
   SpeechSynthesizer
@@ -30,19 +31,37 @@ export const transcribeAudio = async (wav: string, message: Message) => {
       transcription.join(' '),
       message.id
     )
-    if (typeof id !== 'boolean') {
-      const synthesizer = new SpeechSynthesizer(sConfig, aConfig)
-      synthesizer.speakTextAsync(
-        `${await ask(transcription.join(' '))}`,
-        async (_result) => {
-          await waClient.sendAudio(message.from, wav, message.id)
-        }
-      )
-    }
     reco.stopContinuousRecognitionAsync()
     reco.close()
+
+    if (typeof id !== 'boolean') {
+      const ai = `${await ask(transcription.join(' '))}`
+      await synthesizeText(wav, ai)
+    }
   }
 
   // Recognize text and exit
   reco.startContinuousRecognitionAsync()
+}
+
+export const synthesizeText = async (
+  wav: string,
+  text: string,
+  message: Message
+) => {
+  const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
+  sConfig.speechSynthesisLanguage = botOptions.azureLanguage
+  sConfig.speechSynthesisVoiceName = 'pt-BR-FabioNeural'
+
+  const synt = SpeechSynthesizer.FromConfig(
+    sConfig,
+    AutoDetectSourceLanguageConfig.fromLanguages([
+      'en-US',
+      botOptions.azureLanguage
+    ]),
+    AudioConfig.fromAudioFileOutput(wav)
+  )
+  synt.speakTextAsync(text, async (_result) => {
+    await waClient.sendAudio(message.from, wav, message.id)
+  })
 }

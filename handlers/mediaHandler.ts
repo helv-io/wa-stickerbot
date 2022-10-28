@@ -15,7 +15,7 @@ import {
   CancellationDetails,
   CancellationReason
 } from 'microsoft-cognitiveservices-speech-sdk'
-import { transcribeAudio } from '../utils/transcribeHandler'
+import { transcribeAudio } from '../utils/speechHandler'
 import { tmpdir } from 'os'
 import path from 'path'
 
