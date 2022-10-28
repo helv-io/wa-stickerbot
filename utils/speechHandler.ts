@@ -62,6 +62,6 @@ export const synthesizeText = async (
     AudioConfig.fromAudioFileOutput(wav)
   )
   synt.speakTextAsync(text, async (_result) => {
-    await waClient.sendAudio(message.from, wav, message.id)
+    await waClient.sendPtt(message.from, wav, message.id)
   })
 }
