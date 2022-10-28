@@ -11,21 +11,16 @@ export const transbribeAudio = async (wav: string) => {
   sConfig.speechRecognitionLanguage = botOptions.azureLanguage
   const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wav))
   const reco = new SpeechRecognizer(sConfig, aConfig)
-  const transcript: string[] = []
-
-  reco.recognizing = (_sender, event) => {
-    console.log('recognizing', event.result)
-    transcript.push(event.result.text)
-  }
+  let transcript: string = ''
 
   reco.recognized = (_sender, event) => {
     console.log('recognized', event.result)
-    reco.stopContinuousRecognitionAsync()
+    transcript = event.result.text
     reco.close()
   }
 
-  reco.startContinuousRecognitionAsync()
-
+  // Recognize text and exit
+  reco.recognizeOnceAsync()
   console.log('Completed Transcription')
-  return transcript.join(' ')
+  return transcript
 }
