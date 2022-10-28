@@ -28,6 +28,7 @@ export const transcribeAudio = async (wav: string, message: Message) => {
   }
 
   reco.speechEndDetected = async (_sender, _event) => {
+    console.log(`Speech recognized: "${transcription.join(' ')}"`)
     const id = await waClient.sendReplyWithMentions(
       message.from,
       transcription.join(' '),
@@ -62,7 +63,6 @@ export const synthesizeText = async (text: string, message: Message) => {
     AudioConfig.fromAudioFileOutput(file)
   )
   synt.speakTextAsync(text, async (_result) => {
-    console.log(file)
     synt.close()
     await waClient.sendPtt(message.from, file, message.id)
     await fs.unlink(file)
