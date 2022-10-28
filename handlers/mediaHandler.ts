@@ -15,6 +15,9 @@ import {
   CancellationDetails,
   CancellationReason
 } from 'microsoft-cognitiveservices-speech-sdk'
+import { transbribeAudio } from '../utils/transcribeHandler'
+import { tmpdir } from 'os'
+import path from 'path'
 
 const run = util.promisify(exec)
 
@@ -69,31 +72,13 @@ export const handleMedia = async (message: Message) => {
     media.filename.endsWith('.oga') ||
     media.filename.endsWith('.mpga')
   ) {
-    const origFile = `/data/orig_${media.filename}`
-    const procFile = `/data/proc_${media.filename}.mp3`
-    const waveFile = `/data/proc_${media.filename}.wav`
+    // Extract base64 from Media and save to file
+    const origFile = path.join(tmpdir(), media.filename)
+    const waveFile = path.join(tmpdir(), `${media.filename}.wav`)
     const b64 = `${media.dataURL.split(';base64,').pop()}`
     await fs.writeFile(origFile, b64, { encoding: 'base64' })
 
-    // Something between 20 and 80
-    const pitch = Math.round(Math.random() * 60 + 20)
-    // Something between 0.5 and 3
-    const tempo = Math.round(10 * (Math.random() + 0.5)) / 10
-    // Reverse?
-    const reverse = Math.random() < 0.25
-
-    const ffmpeg_filters = [
-      'ffmpeg',
-      '-i',
-      origFile,
-      '-filter:a',
-      `atempo=${tempo},asetrate=r=${pitch}K${reverse ? ',areverse' : ''}`,
-      '-vn',
-      '-y',
-      procFile
-    ]
-
-    const ffmpeg_wave = [
+    const convertToWav = [
       'ffmpeg',
       '-i',
       origFile,
@@ -101,68 +86,24 @@ export const handleMedia = async (message: Message) => {
       '-af aresample=16000',
       '-y',
       waveFile
-    ]
+    ].join(' ')
 
     // Run and print outputs
-    const rand = await run(ffmpeg_filters.join(' '))
-    console.log(rand.stdout)
-    console.error(rand.stderr)
-
-    const wave = await run(ffmpeg_wave.join(' '))
+    const wave = await run(convertToWav)
+    console.log(convertToWav)
     console.log(wave.stdout)
     console.error(wave.stderr)
 
-    const speechConfig = SpeechConfig.fromSubscription(
-      botOptions.microsoftApiKey,
-      'eastus'
+    // Send transcription
+    await waClient.sendReplyWithMentions(
+      message.from,
+      await transbribeAudio(waveFile),
+      message.id
     )
-    speechConfig.speechRecognitionLanguage = botOptions.microsoftLanguage
-    const audioConfig = AudioConfig.fromWavFileInput(
-      await fs.readFile(waveFile)
-    )
-    const speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig)
 
-    speechRecognizer.recognizeOnceAsync(async (result) => {
-      switch (result.reason) {
-        case ResultReason.RecognizedSpeech:
-          console.log(`RECOGNIZED: Text=${result.text}`)
-          await waClient.sendReplyWithMentions(
-            message.from,
-            result.text,
-            message.id
-          )
-          break
-        case ResultReason.NoMatch:
-          console.log('NOMATCH: Speech could not be recognized.')
-          break
-        case ResultReason.Canceled:
-          const cancellation = CancellationDetails.fromResult(result)
-          console.log(`CANCELED: Reason=${cancellation.reason}`)
-
-          if (cancellation.reason == CancellationReason.Error) {
-            console.log(`CANCELED: ErrorCode=${cancellation.ErrorCode}`)
-            console.log(`CANCELED: ErrorDetails=${cancellation.errorDetails}`)
-            console.log(
-              'CANCELED: Did you set the speech resource key and region values?'
-            )
-          }
-          break
-      }
-      speechRecognizer.close()
-    })
-
-    try {
-      await waClient.sendPtt(
-        message.from,
-        procFile,
-        'true_0000000000@c.us_JHB2HB23HJ4B234HJB'
-      )
-    } catch {
-    } finally {
-      await fs.unlink(origFile)
-      await fs.unlink(procFile)
-      await fs.unlink(waveFile)
-    }
+    // Delete files
+    await fs.unlink(origFile)
+    await fs.unlink(waveFile)
   } else {
     // Sends as Image sticker
     console.log('IMAGE Sticker', media.filename)
