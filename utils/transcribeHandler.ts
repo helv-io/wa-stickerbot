@@ -9,25 +9,24 @@ import { botOptions } from '../config'
 import fs from 'fs/promises'
 
 export const transbribeAudio = async (wav: string, transcript = '') => {
-  const sConfig = SpeechConfig.fromSubscription(
-    botOptions.microsoftApiKey,
-    'eastus'
-  )
-  sConfig.speechRecognitionLanguage = botOptions.microsoftLanguage
+  const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
+  sConfig.speechRecognitionLanguage = botOptions.azureLanguage
   const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wav))
   const reco = new SpeechRecognizer(sConfig, aConfig)
 
-  const transcribe = (
-    _sender: Recognizer,
-    event: SpeechRecognitionEventArgs
-  ) => {
+  reco.recognizing = (_sender, event) => {
+    console.log('recognizing', event.result)
     transcript += event.result.text
   }
 
-  reco.recognizing = transcribe
-  reco.recognized = transcribe
+  reco.recognized = (_sender, event) => {
+    console.log('recognized', event.result)
+    transcript += event.result.text
+    reco.close()
+  }
 
   reco.startContinuousRecognitionAsync()
 
+  console.log('Completed Transcription')
   return transcript
 }

@@ -47,8 +47,8 @@ export const botOptions = {
   groupsOnly: JSON.parse(process.env.SB_GROUPS_ONLY || 'false'),
   welcomeMessage: process.env.SB_WELCOME_MESSAGE,
   ownerNumber: process.env.SB_OWNER_NUMBER || '',
-  microsoftApiKey: process.env.SPEECH_KEY || '',
-  microsoftLanguage: process.env.SPEECH_LANGUAGE || 'pt-BR'
+  azureKey: process.env.SPEECH_KEY || '',
+  azureLanguage: process.env.SPEECH_LANGUAGE || 'pt-BR'
 }
 
 // https://docs.openwa.dev/modules/api_model_media.html#mp4stickerconversionprocessoptions
