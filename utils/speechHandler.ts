@@ -36,7 +36,7 @@ export const transcribeAudio = async (wav: string, message: Message) => {
 
     if (typeof id !== 'boolean') {
       const ai = `${await ask(transcription.join(' '))}`
-      await synthesizeText(wav, ai)
+      await synthesizeText(wav, ai, message)
     }
   }
 
