@@ -14,6 +14,7 @@ import { tmpdir } from 'os'
 import path from 'path'
 
 export const transcribeAudio = async (wav: string, message: Message) => {
+  console.log(`Reconizing speech from "${message.sender.formattedName}`)
   const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
   sConfig.speechRecognitionLanguage = botOptions.azureLanguage
   sConfig.speechSynthesisLanguage = botOptions.azureLanguage
@@ -23,7 +24,6 @@ export const transcribeAudio = async (wav: string, message: Message) => {
   const transcription: string[] = []
 
   reco.recognized = (_sender, event) => {
-    console.log('recognized', event.result)
     transcription.push(event.result.text)
   }
 
@@ -47,6 +47,7 @@ export const transcribeAudio = async (wav: string, message: Message) => {
 }
 
 export const synthesizeText = async (text: string, message: Message) => {
+  console.log(`Synthesizing: "${text}" in ${botOptions.azureLanguage}`)
   const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
   sConfig.speechSynthesisLanguage = botOptions.azureLanguage
   sConfig.speechSynthesisVoiceName = 'pt-BR-FabioNeural'
@@ -61,7 +62,8 @@ export const synthesizeText = async (text: string, message: Message) => {
     AudioConfig.fromAudioFileOutput(file)
   )
   synt.speakTextAsync(text, async (_result) => {
+    console.log(file)
     await waClient.sendPtt(message.from, file, message.id)
-    await fs.unlink(file)
+    // await fs.unlink(file)
   })
 }
