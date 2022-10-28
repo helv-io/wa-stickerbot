@@ -15,7 +15,7 @@ import {
   CancellationDetails,
   CancellationReason
 } from 'microsoft-cognitiveservices-speech-sdk'
-import { transbribeAudio } from '../utils/transcribeHandler'
+import { transcribeAudio } from '../utils/transcribeHandler'
 import { tmpdir } from 'os'
 import path from 'path'
 
@@ -94,12 +94,8 @@ export const handleMedia = async (message: Message) => {
     console.log(wave.stdout)
     console.error(wave.stderr)
 
-    // Send transcription
-    await waClient.sendReplyWithMentions(
-      message.from,
-      await transbribeAudio(waveFile),
-      message.id
-    )
+    // Send
+    await transcribeAudio(waveFile, message)
 
     // Delete files
     await fs.unlink(origFile)
