@@ -65,6 +65,6 @@ export const synthesizeText = async (text: string, message: Message) => {
     console.log(file)
     synt.close()
     await waClient.sendPtt(message.from, file, message.id)
-    // await fs.unlink(file)
+    await fs.unlink(file)
   })
 }
