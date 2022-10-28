@@ -10,6 +10,8 @@ import fs from 'fs/promises'
 import { Message } from '@open-wa/wa-automate'
 import { waClient } from '..'
 import { ask } from './aiHandler'
+import { tmpdir } from 'os'
+import path from 'path'
 
 export const transcribeAudio = async (wav: string, message: Message) => {
   const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
@@ -36,7 +38,7 @@ export const transcribeAudio = async (wav: string, message: Message) => {
 
     if (typeof id !== 'boolean') {
       const ai = `${await ask(transcription.join(' '))}`
-      await synthesizeText(wav, ai, message)
+      await synthesizeText(ai, message)
     }
   }
 
@@ -44,14 +46,11 @@ export const transcribeAudio = async (wav: string, message: Message) => {
   reco.startContinuousRecognitionAsync()
 }
 
-export const synthesizeText = async (
-  wav: string,
-  text: string,
-  message: Message
-) => {
+export const synthesizeText = async (text: string, message: Message) => {
   const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
   sConfig.speechSynthesisLanguage = botOptions.azureLanguage
   sConfig.speechSynthesisVoiceName = 'pt-BR-FabioNeural'
+  const file = path.join(tmpdir(), `${message.id}.mp3`)
 
   const synt = SpeechSynthesizer.FromConfig(
     sConfig,
@@ -59,9 +58,10 @@ export const synthesizeText = async (
       'en-US',
       botOptions.azureLanguage
     ]),
-    AudioConfig.fromAudioFileOutput(wav)
+    AudioConfig.fromAudioFileOutput(file)
   )
   synt.speakTextAsync(text, async (_result) => {
-    await waClient.sendPtt(message.from, wav, message.id)
+    await waClient.sendPtt(message.from, file, message.id)
+    await fs.unlink(file)
   })
 }
