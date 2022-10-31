@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 
-import { create, Client } from '@open-wa/wa-automate'
+import { create, Client, GroupChatId } from '@open-wa/wa-automate'
 
 import {
   Message,
@@ -15,6 +15,8 @@ import { botOptions, clientConfig } from './config'
 import { oneChanceIn } from './utils/utils'
 
 export let waClient: Client
+export let isAdmin: boolean, isOwner: boolean
+export let groupId: GroupChatId | null
 
 console.log('Environment Variables:')
 console.log(process.env)
@@ -27,11 +29,15 @@ const start = async () => {
 
   // Message Handlers
   void waClient.onMessage(async (message: Message) => {
-    // Test if the sender is an owner
-    const isOwner = message.sender.id.split('@')[0] === botOptions.ownerNumber
-
     // Get groupId
-    const groupId = message.isGroupMsg ? message.chat.groupMetadata.id : null
+    groupId = message.isGroupMsg ? message.chat.groupMetadata.id : null
+
+    // Test if the sender is an owner or admin
+    isOwner = message.sender.id.split('@')[0] === botOptions.ownerNumber
+    isAdmin = groupId
+      ? (await waClient.getGroupAdmins(groupId)).indexOf(message.sender.id) !==
+        -1
+      : false
 
     // Refresh adminGroups
     if (groupId) {
@@ -70,10 +76,15 @@ const start = async () => {
     }
 
     // Handle Text
-    await handleText(message, groupId, isOwner)
+    await handleText(message, groupId)
 
-    // One chance in X to send a Donation link
-    if (botOptions.donationLink && oneChanceIn(botOptions.donationChance)) {
+    // One chance in X to send a Donation link (except if Admin or Owner)
+    if (
+      botOptions.donationLink &&
+      oneChanceIn(botOptions.donationChance) &&
+      !isOwner &&
+      !isAdmin
+    ) {
       const donors = await getDonors()
       let msg = botOptions.donationLink
       if (donors) msg += `\n\n${await getDonors()}`

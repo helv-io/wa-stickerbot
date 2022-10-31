@@ -13,22 +13,15 @@ import { botOptions, stickerMeta } from '../config'
 import { getGiphys } from '../utils/giphyHandler'
 import { getTenors } from '../utils/tenorHandler'
 import { ask } from '../utils/aiHandler'
-import { waClient } from '..'
+import { isAdmin, isOwner, waClient } from '..'
 import axios from 'axios'
 
 export const handleText = async (
   message: Message,
-  groupId: GroupChatId | null,
-  isOwner = false,
-  isAdmin = false
+  groupId: GroupChatId | null
 ) => {
   // Get Action from Text
   const action = await getTextAction(message.body)
-
-  if (groupId) {
-    isAdmin =
-      (await waClient.getGroupAdmins(groupId)).indexOf(message.sender.id) !== -1
-  }
 
   if (action) {
     // Start typing
