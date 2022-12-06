@@ -1,7 +1,7 @@
 import { Client } from '@open-wa/wa-automate'
 import qs from 'qs'
 
-import { getImgflipImage } from './imgflipHandler'
+import { makeMeme } from './memeHandler'
 import { botOptions } from '../config'
 
 export const paramSerializer = (p: any) => {

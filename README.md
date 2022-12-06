@@ -1,7 +1,7 @@
 # wa-stickerbot
 
 WhatsApp Sticker Bot. Any images, GIFs or Videos you receive will be converted to a Sticker!
-Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create memes from Imgflip.
+Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create memes from [memegen].
 
 ## Pre Requisites
 
@@ -34,8 +34,6 @@ All variables are optional
 | GIPHY_LANGUAGE             | [Giphy Language] code                 | pt          |
 | TENOR_API                  | [Tenor] API Key                       | (blank)     |
 | TENOR_LOCALE               | [Tenor Locale]                        | pt_BR       |
-| IMGFLIP_USERNAME           | [imgflip] username                    | (blank)     |
-| IMGFLIP_PASSWORD           | [imgflip] password                    | (blank)     |
 | SB_AUTHOR                  | Sticker Author Name                   | Helvio      |
 | SB_PACK                    | Sticker Pack Name                     | Sticker Bot |
 | SB_DONATION                | Donation Link / Text                  | pix@helv.io |
@@ -50,4 +48,4 @@ All variables are optional
 [giphy language]: https://developers.giphy.com/docs/optional-settings/#language-support
 [tenor]: https://tenor.com/gifapi
 [tenor locale]: https://developers.google.com/tenor/guides/localization
-[imgflip]: https://imgflip.com/signup
+[memegen]: https://github.com/jacebrowning/memegen

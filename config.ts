@@ -4,7 +4,6 @@ import {
   StickerMetadata
 } from '@open-wa/wa-automate'
 import { GiphySearch } from './types/Giphy'
-import { Imgflip } from './types/Imgflip'
 import { TenorSearch } from './types/Tenor'
 
 // Load OS Env Vars
@@ -78,12 +77,4 @@ export const tenorSearch: TenorSearch = {
   limit: 1,
   q: 'placeholder',
   type: 'gif'
-}
-
-// https://imgflip.com/api
-export const imgflip: Imgflip = {
-  template_id: '',
-  boxes: [],
-  username: process.env.IMGFLIP_USERNAME || '',
-  password: process.env.IMGFLIP_PASSWORD || ''
 }

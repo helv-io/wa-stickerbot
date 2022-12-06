@@ -6,7 +6,7 @@ import {
   getDonors,
   unban
 } from '../utils/dbHandler'
-import { getImgflipList, getImgflipImage } from '../utils/imgflipHandler'
+import { getMemeList, makeMeme } from '../utils/memeHandler'
 import { getStickerSearches } from '../utils/stickerHandler'
 import { GroupChatId, Message } from '@open-wa/wa-automate'
 import { botOptions, stickerMeta } from '../config'
@@ -52,7 +52,7 @@ export const handleText = async (
       case actions.MEME_LIST:
         console.log('Sending meme list')
 
-        await waClient.sendText(message.from, await getImgflipList())
+        await waClient.sendText(message.from, await getMemeList())
         break
 
       case actions.STATS:
@@ -90,8 +90,8 @@ export const handleText = async (
         console.log(`Sending (${message.body.split('\n').join(')(')})`)
         addCount('Memes')
 
-        const url = await getImgflipImage(message.body)
-        await waClient.sendImage(message.from, url, 'imgflip', url)
+        const url = await makeMeme(message.body)
+        await waClient.sendImage(message.from, url, 'meme', url)
         await waClient.sendStickerfromUrl(
           message.from,
           url,
