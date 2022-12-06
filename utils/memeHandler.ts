@@ -16,6 +16,8 @@ export const makeMeme = async (body: string) => {
 
   if (meme && memeLines.length === meme.lines) {
     memeLines.forEach((line) => {
+      // Replace special characters
+      // https://memegen.link/#special-characters
       line = line
         .replaceAll('?', '~q')
         .replaceAll('&', '~a')
