@@ -42,10 +42,9 @@ export const makeMeme = async (body: string) => {
 }
 
 export const getMemeList = async () => {
-  const memes = await getMemes()
+  const memes = (await getMemes()).sort((a, b) => (a.name > b.name ? 1 : -1))
   let response = ''
   memes.forEach((meme) => (response += `${meme.name} (${meme.lines})\n`))
-  memes.sort((a, b) => (a.name > b.name ? 1 : -1))
   return response
 }
 
