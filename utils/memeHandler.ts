@@ -18,19 +18,21 @@ export const makeMeme = async (body: string) => {
     memeLines.forEach((line, i, arr) => {
       // Replace special characters
       // https://memegen.link/#special-characters
-      arr[i] = line
-        .replaceAll('?', '~q')
-        .replaceAll('&', '~a')
-        .replaceAll('%', '~p')
-        .replaceAll('#', '~h')
-        .replaceAll('/', '~s')
-        .replaceAll('\\', '~b')
-        .replaceAll('<', '~l')
-        .replaceAll('>', '~g')
-        .replaceAll('"', "''")
-        .replaceAll('-', '--')
-        .replaceAll('_', '__')
-        .replaceAll(' ', '_')
+      arr[i] = encodeURIComponent(
+        line
+          .replaceAll('?', '~q')
+          .replaceAll('&', '~a')
+          .replaceAll('%', '~p')
+          .replaceAll('#', '~h')
+          .replaceAll('/', '~s')
+          .replaceAll('\\', '~b')
+          .replaceAll('<', '~l')
+          .replaceAll('>', '~g')
+          .replaceAll('"', "''")
+          .replaceAll('-', '--')
+          .replaceAll('_', '__')
+          .replaceAll(' ', '_')
+      )
     })
     const url = `${memeMakeURL}/${meme.id}/${memeLines.join('/')}.gif`
     console.log(url)
