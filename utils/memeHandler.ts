@@ -44,6 +44,7 @@ export const getMemeList = async () => {
   console.log(memes)
   let response = ''
   memes.forEach((meme) => (response += `${meme.name} (${meme.lines})\n`))
+  memes.sort((a, b) => (a.name > b.name ? 1 : -1))
   return response
 }
 
