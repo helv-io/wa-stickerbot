@@ -12,7 +12,7 @@ export const makeMeme = async (body: string) => {
     .replace('meme ', '')
     .trim()
   const memes = await getMemes()
-  const meme = memes.find((m) => m.name.toLowerCase().includes(memeTitle))
+  const meme = memes.data.find((m) => m.name.toLowerCase().includes(memeTitle))
 
   if (meme && memeLines.length === meme.lines) {
     memeLines.forEach((line) => {
