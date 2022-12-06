@@ -106,33 +106,25 @@ export const handleText = async (
         addCount('Text')
 
         //
-        const b64a: any = await axios.get(textUrlA).catch(async (e) => {
-          await waClient.reply(message.from, 'Offline 👎', message.id)
+        const b64a: any = await axios.get(textUrlA).catch(async (_error) => {
+          return await waClient.reply(message.from, 'Offline 👎', message.id)
         })
-        const b64s: any = await axios.get(textUrlS).catch(async (e) => {
-          await waClient.reply(message.from, 'Offline 👎', message.id)
+        const b64s: any = await axios.get(textUrlS).catch(async (_error) => {
+          return await waClient.reply(message.from, 'Offline 👎', message.id)
         })
 
-        try {
-          if (b64a.status === 200)
-            await waClient.sendImageAsSticker(
-              message.from,
-              b64a.data.result,
-              stickerMeta
-            )
-        } catch {
-          await waClient.reply(message.from, '👎', message.id)
-        }
-        try {
-          if (b64s.status === 200)
-            await waClient.sendImageAsSticker(
-              message.from,
-              b64s.data.result,
-              stickerMeta
-            )
-        } catch {
-          await waClient.reply(message.from, '👎', message.id)
-        }
+        if (b64a.status === 200)
+          await waClient.sendImageAsSticker(
+            message.from,
+            b64a.data.result,
+            stickerMeta
+          )
+        if (b64s.status === 200)
+          await waClient.sendImageAsSticker(
+            message.from,
+            b64s.data.result,
+            stickerMeta
+          )
 
         break
 
