@@ -39,10 +39,10 @@ export const getMemeList = async () => {
   const memes = await getMemes()
   console.log(memes)
   let response = ''
-  memes.forEach((meme) => (response += `${meme.name} (${meme.lines})\n`))
+  memes.data.forEach((meme) => (response += `${meme.name} (${meme.lines})\n`))
   return response
 }
 
 export const getMemes = async () => {
-  return (await axios.get<Meme[]>(memesGetURL)).data
+  return await axios.get<Meme[]>(memesGetURL)
 }
