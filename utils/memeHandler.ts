@@ -46,9 +46,5 @@ export const getMemeList = async () => {
 }
 
 export const getMemes = async () => {
-  const response = await fetch(memesGetURL)
-  console.log(response)
-  const memes: Meme[] = await response.json()
-  console.log(memes)
-  return memes
+  return <Meme[]>await (await fetch(memesGetURL)).json()
 }
