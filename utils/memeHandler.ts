@@ -1,7 +1,7 @@
 import { Meme } from '../types/Meme'
 import axios from 'axios'
 
-const memesBaseURL = 'https://api.memegen.link/'
+const memesBaseURL = 'https://api.memegen.link'
 const memesGetURL = `${memesBaseURL}/templates`
 const memeMakeURL = `${memesBaseURL}/images`
 
