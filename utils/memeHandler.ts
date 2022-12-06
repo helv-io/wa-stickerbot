@@ -37,6 +37,7 @@ export const makeMeme = async (body: string) => {
 
 export const getMemeList = async () => {
   const memes = await getMemes()
+  console.log(memes)
   let response = ''
   memes.forEach((meme) => (response += `${meme.name} (${meme.lines})\n`))
   return response
