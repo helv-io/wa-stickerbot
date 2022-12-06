@@ -91,13 +91,8 @@ export const handleText = async (
         addCount('Memes')
 
         const url = await makeMeme(message.body)
-        await waClient.sendImage(message.from, url, 'meme', url)
-        await waClient.sendStickerfromUrl(
-          message.from,
-          url,
-          undefined,
-          stickerMeta
-        )
+        await waClient.sendVideoAsGif(message.from, url, 'meme', url)
+        await waClient.sendImageAsSticker(message.from, url, stickerMeta)
         break
 
       case actions.TEXT:
