@@ -15,10 +15,10 @@ export const makeMeme = async (body: string) => {
   const meme = memes.find((m) => m.name.toLowerCase().includes(memeTitle))
 
   if (meme && memeLines.length === meme.lines) {
-    memeLines.forEach((line) => {
+    memeLines.forEach((line, i, arr) => {
       // Replace special characters
       // https://memegen.link/#special-characters
-      line = line
+      arr[i] = line
         .replaceAll('?', '~q')
         .replaceAll('&', '~a')
         .replaceAll('%', '~p')
@@ -41,7 +41,6 @@ export const makeMeme = async (body: string) => {
 
 export const getMemeList = async () => {
   const memes = await getMemes()
-  console.log(memes)
   let response = ''
   memes.forEach((meme) => (response += `${meme.name} (${meme.lines})\n`))
   memes.sort((a, b) => (a.name > b.name ? 1 : -1))
