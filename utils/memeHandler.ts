@@ -12,7 +12,7 @@ export const makeMeme = async (body: string) => {
     .replace('meme ', '')
     .trim()
   const memes = await getMemes()
-  const meme = memes.data.find((m) => m.name.toLowerCase().includes(memeTitle))
+  const meme = memes.find((m) => m.name.toLowerCase().includes(memeTitle))
 
   if (meme && memeLines.length === meme.lines) {
     memeLines.forEach((line) => {
@@ -39,10 +39,14 @@ export const getMemeList = async () => {
   const memes = await getMemes()
   console.log(memes)
   let response = ''
-  memes.data.forEach((meme) => (response += `${meme.name} (${meme.lines})\n`))
+  memes.forEach((meme) => (response += `${meme.name} (${meme.lines})\n`))
   return response
 }
 
 export const getMemes = async () => {
-  return await axios.get<Meme[]>(memesGetURL)
+  return await (
+    await axios.get<Meme[]>(memesGetURL, {
+      headers: { Accept: 'application/json' }
+    })
+  ).data
 }
