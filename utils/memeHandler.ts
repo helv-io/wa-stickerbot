@@ -44,9 +44,9 @@ export const getMemeList = async () => {
 }
 
 export const getMemes = async () => {
-  return await (
-    await axios.get<Meme[]>(memesGetURL, {
-      headers: { Accept: 'application/json' }
-    })
-  ).data
+  const response = await fetch(memesGetURL)
+  console.log(response)
+  const memes: Meme[] = await response.json()
+  console.log(memes)
+  return memes
 }
