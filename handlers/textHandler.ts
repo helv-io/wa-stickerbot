@@ -95,36 +95,35 @@ export const handleText = async (
         break
 
       case actions.TEXT:
-        const text = message.body.slice(6)
-        const textUrlA = `https://api.xteam.xyz/attp?text=${encodeURIComponent(
-          text
-        )}`
-        const textUrlS = `https://api.xteam.xyz/ttp?text=${encodeURIComponent(
-          text
-        )}`
-        console.log(`Sending (${text})`)
-        addCount('Text')
+        try {
+          const text = message.body.slice(6)
+          const textUrlA = `https://api.xteam.xyz/attp?text=${encodeURIComponent(
+            text
+          )}`
+          const textUrlS = `https://api.xteam.xyz/ttp?text=${encodeURIComponent(
+            text
+          )}`
+          console.log(`Sending (${text})`)
+          addCount('Text')
 
-        //
-        const b64a: any = await axios.get(textUrlA).catch(async (_error) => {
-          return await waClient.reply(message.from, 'Offline 👎', message.id)
-        })
-        const b64s: any = await axios.get(textUrlS).catch(async (_error) => {
-          return await waClient.reply(message.from, 'Offline 👎', message.id)
-        })
+          const b64a: any = await (await fetch(textUrlA)).json()
+          const b64s: any = await (await fetch(textUrlS)).json()
 
-        if (b64a.status === 200)
-          await waClient.sendImageAsSticker(
-            message.from,
-            b64a.data.result,
-            stickerMeta
-          )
-        if (b64s.status === 200)
-          await waClient.sendImageAsSticker(
-            message.from,
-            b64s.data.result,
-            stickerMeta
-          )
+          if (b64a.status === 200)
+            await waClient.sendImageAsSticker(
+              message.from,
+              b64a.result,
+              stickerMeta
+            )
+          if (b64s.status === 200)
+            await waClient.sendImageAsSticker(
+              message.from,
+              b64s.result,
+              stickerMeta
+            )
+        } catch {
+          return await waClient.reply(message.from, 'Offline 👎', message.id)
+        }
 
         break
 
