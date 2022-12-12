@@ -32,16 +32,16 @@
     "pm2": "^5.2.2",
     "qs": "^6.11.0",
     "sqlite": "^4.1.2",
-    "sqlite3": "^5.1.2"
+    "sqlite3": "^5.1.4"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.191",
     "@types/mime-types": "^2.1.1",
-    "@types/node": "^18.11.11",
+    "@types/node": "^18.11.13",
     "@types/qs": "^6.9.7",
     "@types/sqlite3": "^3.1.8",
-    "@typescript-eslint/eslint-plugin": "^5.46.0",
-    "@typescript-eslint/parser": "^5.46.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jsdoc": "^39.6.4",
