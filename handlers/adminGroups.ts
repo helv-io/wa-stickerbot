@@ -1,5 +1,4 @@
 import { GroupChatId, Message } from '@open-wa/wa-automate'
-import { ParticipantChangedEventModel } from '@open-wa/wa-automate/dist/api/model/group-metadata'
 import _ from 'lodash'
 import { waClient } from '..'
 

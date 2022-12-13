@@ -1,11 +1,12 @@
 import { TenorResponse, TenorSearch } from '../types/Tenor'
+import { paramSerializer } from './utils'
 
 const tenorURL = 'https://g.tenor.com/v1/search?'
 
 export const getTenors = async (search: TenorSearch) => {
   if (!search.key) return []
   try {
-    const params = `key=${search.key}&q=${search.q}&limit=${search.limit}&locale=${search.locale}&media_filter=${search.media_filter}&type=${search.type}`
+    const params = paramSerializer(search)
     const tenors: TenorResponse = await (await fetch(tenorURL + params)).json()
 
     const urls: string[] = []

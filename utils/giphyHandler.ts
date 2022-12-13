@@ -1,14 +1,23 @@
 import { GiphyResponse, GiphySearch } from '../types/Giphy'
-
+import { paramSerializer } from './utils'
 
 const giphyBaseUrl = 'https://api.giphy.com/v1'
 
 export const getGiphys = async (search: GiphySearch) => {
   if (!search.api_key) return []
-  const params = `api_key=${search.api_key}&lang=${search.lang}&limit=${search.limit}&q=${search.q}&type=${search.type}`
+  const params = paramSerializer(search)
   try {
-    const gifs: GiphyResponse = (await (await fetch(`${giphyBaseUrl}/gifs/search?${params}`)).json())
-    const stickers: GiphyResponse = (await (await fetch(`${giphyBaseUrl}/stickers/search?${params}`)).json())
+    // Fetch gifs
+    const gifs: GiphyResponse = await (
+      await fetch(`${giphyBaseUrl}/gifs/search?${params}`)
+    ).json()
+
+    // Fetch stickers
+    const stickers: GiphyResponse = await (
+      await fetch(`${giphyBaseUrl}/stickers/search?${params}`)
+    ).json()
+
+    // Merge them
     const giphys = gifs.data.concat(stickers.data)
 
     const urls: string[] = []
