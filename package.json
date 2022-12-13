@@ -23,7 +23,6 @@
   "homepage": "https://github.com/Helvio88/wa-stickerbot#readme",
   "dependencies": {
     "@open-wa/wa-automate": "^4.52.0",
-    "axios": "^1.2.1",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
     "microsoft-cognitiveservices-speech-sdk": "^1.24.1",

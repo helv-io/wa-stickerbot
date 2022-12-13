@@ -14,7 +14,6 @@ import { getGiphys } from '../utils/giphyHandler'
 import { getTenors } from '../utils/tenorHandler'
 import { ask } from '../utils/aiHandler'
 import { isAdmin, isOwner, waClient } from '..'
-import axios from 'axios'
 
 export const handleText = async (
   message: Message,

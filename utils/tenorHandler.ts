@@ -1,19 +1,15 @@
 import { TenorResponse, TenorSearch } from '../types/Tenor'
-import axios from 'axios'
 
-const tenorURL = 'https://g.tenor.com/v1/search'
+const tenorURL = 'https://g.tenor.com/v1/search?'
 
 export const getTenors = async (search: TenorSearch) => {
   if (!search.key) return []
   try {
-    const tenors = (
-      await axios.get<TenorResponse>(tenorURL, {
-        params: search
-      })
-    ).data.results
+    const params = `key=${search.key}&q=${search.q}&limit=${search.limit}&locale=${search.locale}&media_filter=${search.media_filter}&type=${search.type}`
+    const tenors: TenorResponse = await (await fetch(tenorURL + params)).json()
 
     const urls: string[] = []
-    tenors.forEach((tenor) =>
+    tenors.results.forEach((tenor) =>
       urls.push(
         tenor.media[0].gif.size <= 1400000
           ? tenor.media[0].gif.url

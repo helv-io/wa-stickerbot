@@ -1,22 +1,15 @@
 import { GiphyResponse, GiphySearch } from '../types/Giphy'
-import axios from 'axios'
+
 
 const giphyBaseUrl = 'https://api.giphy.com/v1'
 
 export const getGiphys = async (search: GiphySearch) => {
   if (!search.api_key) return []
+  const params = `api_key=${search.api_key}&lang=${search.lang}&limit=${search.limit}&q=${search.q}&type=${search.type}`
   try {
-    const giphys = (
-      await axios.get<GiphyResponse>(`${giphyBaseUrl}/gifs/search`, {
-        params: search
-      })
-    ).data.data.concat(
-      (
-        await axios.get<GiphyResponse>(`${giphyBaseUrl}/stickers/search`, {
-          params: search
-        })
-      ).data.data
-    )
+    const gifs: GiphyResponse = (await (await fetch(`${giphyBaseUrl}/gifs/search?${params}`)).json())
+    const stickers: GiphyResponse = (await (await fetch(`${giphyBaseUrl}/stickers/search?${params}`)).json())
+    const giphys = gifs.data.concat(stickers.data)
 
     const urls: string[] = []
     giphys.forEach((giphy) =>
