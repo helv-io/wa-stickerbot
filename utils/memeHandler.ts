@@ -1,6 +1,6 @@
 import { Meme } from '../types/Meme'
 
-const memesBaseURL = 'https://api.memegen.link'
+const memesBaseURL = 'https://meme.helv.io'
 const memesGetURL = `${memesBaseURL}/templates`
 const memeMakeURL = `${memesBaseURL}/images`
 
