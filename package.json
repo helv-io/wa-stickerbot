@@ -24,6 +24,7 @@
   "dependencies": {
     "@open-wa/wa-automate": "^4.52.0",
     "dotenv": "^16.0.3",
+    "jimp": "^0.16.2",
     "lodash": "^4.17.21",
     "microsoft-cognitiveservices-speech-sdk": "^1.24.1",
     "mime-types": "^2.1.35",

@@ -14,6 +14,7 @@ import { getGiphys } from '../utils/giphyHandler'
 import { getTenors } from '../utils/tenorHandler'
 import { ask } from '../utils/aiHandler'
 import { isAdmin, isOwner, waClient } from '..'
+import Jimp from 'jimp'
 
 export const handleText = async (
   message: Message,
@@ -94,8 +95,8 @@ export const handleText = async (
         break
 
       case actions.TEXT:
+        const text = message.body.slice(6)
         try {
-          const text = message.body.slice(6)
           const textUrlA = `https://api.xteam.xyz/attp?text=${encodeURIComponent(
             text
           )}`
@@ -121,7 +122,21 @@ export const handleText = async (
               stickerMeta
             )
         } catch {
-          return await waClient.reply(message.from, 'Offline 👎', message.id)
+          const size = 256
+          new Jimp(size, size, async (_err, image) => {
+            const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE)
+            image.print(font, 0, 0, {
+              text: text,
+              alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+              alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+            },
+            size, size)
+            return await waClient.sendImageAsSticker(
+              message.from,
+              await image.getBase64Async(Jimp.MIME_PNG),
+              stickerMeta
+            )
+          })
         }
 
         break
