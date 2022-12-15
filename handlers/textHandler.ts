@@ -124,13 +124,19 @@ export const handleText = async (
         } catch {
           const size = 256
           new Jimp(size, size, async (_err, image) => {
-            const font = await Jimp.loadFont(Jimp.FONT_SANS_64_WHITE)
-            image.print(font, 0, 0, {
-              text: text,
-              alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
-              alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
-            },
-            size, size)
+            const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE)
+            image.print(
+              font,
+              0,
+              0,
+              {
+                text: text,
+                alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+                alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+              },
+              size,
+              size
+            )
             return await waClient.sendImageAsSticker(
               message.from,
               await image.getBase64Async(Jimp.MIME_PNG),
