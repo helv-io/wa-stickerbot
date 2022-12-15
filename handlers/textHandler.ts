@@ -124,7 +124,7 @@ export const handleText = async (
         } catch {
           const size = 256
           new Jimp(size, size, async (_err, image) => {
-            const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE)
+            const font = await Jimp.loadFont(Jimp.FONT_SANS_64_WHITE)
             image.print(font, 0, 0, {
               text: text,
               alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
