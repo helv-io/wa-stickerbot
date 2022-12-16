@@ -6,7 +6,7 @@ on:
     branches:
       - master
     tags:
-      - *
+      - v*
 
 jobs:
   docker:
@@ -39,10 +39,10 @@ jobs:
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=docker_image::${DOCKER_IMAGE}
 
-#      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@master
-#        with:
-#          platforms: all
+      #      - name: Set up QEMU
+      #        uses: docker/setup-qemu-action@master
+      #        with:
+      #          platforms: all
 
       - name: Set up Docker Buildx
         id: buildx
