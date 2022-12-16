@@ -31,7 +31,7 @@ export const clientConfig: ConfigObject = {
   sessionId: process.env.WA_SESSION_ID,
   popup: process.env.WA_POPUP ? +process.env.WA_POPUP : 13579,
   multiDevice: true,
-  useChrome: true,
+  // useChrome: true,
   sessionDataPath: '/data'
 }
 
