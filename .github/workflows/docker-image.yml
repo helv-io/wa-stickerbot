@@ -1,5 +1,8 @@
 name: docker-ci
 
+env:
+  DH_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/${GITHUB_REPOSITORY#*/}
+
 on:
   workflow_dispatch:
   push:
@@ -12,17 +15,23 @@ on:
       - 'master'
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print env vars
+        run: echo "Image: $env:DH_IMAGE"
+
   docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/${GITHUB_REPOSITORY#*/}
+          images: 
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
