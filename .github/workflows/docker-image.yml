@@ -19,7 +19,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/${GITHUB_REPOSITORY#*/}
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${GITHUB_REPOSITORY#*/}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
