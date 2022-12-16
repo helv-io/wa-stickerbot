@@ -1,12 +1,8 @@
 on:
   push:
-    branches:
-      - master
-    tags:
-      - v*
+    branches: ['master']
   pull_request:
-    branches:
-      - master
+    branches: ['master']
 
 jobs:
   docker:
@@ -19,11 +15,14 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
+          # list of Docker images to use as base name for tags
           images: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${GITHUB_REPOSITORY#*/}
+          # generate Docker tags based on the following events/attributes
           tags: |
             type=ref,event=branch
             type=ref,event=pr
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
 
