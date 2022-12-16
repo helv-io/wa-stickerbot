@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: print env vars
         id: print
-        run: echo ${{env.DH_IMAGE}}
+        run: echo ${{ env.DH_IMAGE }}
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -29,7 +29,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images:
+          images: ${{ env.DH_IMAGE }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
