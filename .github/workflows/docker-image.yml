@@ -15,15 +15,12 @@ on:
       - 'master'
 
 jobs:
-  debug:
+  docker:
     runs-on: ubuntu-latest
     steps:
       - name: print env vars
         run: echo "Image: $env:DH_IMAGE"
 
-  docker:
-    runs-on: ubuntu-latest
-    steps:
       - name: Checkout
         uses: actions/checkout@v3
 
