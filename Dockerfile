@@ -9,6 +9,7 @@ RUN apt-get update && \
     apt-get -y \
     install  \
     # google-chrome-stable \
+    chromium-browser \
     ffmpeg \
     libmp3lame0
 EXPOSE 13579
