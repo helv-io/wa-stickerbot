@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: print env vars
-        run: echo "Image: $env:DH_IMAGE"
+        run: echo 'Image: $env:DH_IMAGE'
 
       - name: Checkout
         uses: actions/checkout@v3
