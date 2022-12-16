@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: print env vars
+        id: print
         run: echo "Image: ${env.DH_IMAGE}"
 
       - name: Checkout
