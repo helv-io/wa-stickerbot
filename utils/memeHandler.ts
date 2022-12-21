@@ -6,12 +6,12 @@ const memeMakeURL = `${memesBaseURL}/images`
 
 export const makeMeme = async (body: string) => {
   const memeLines = body.split('\n')
-  const memeTitle = (memeLines.shift() || '')
+  const memeId = (memeLines.shift() || '')
     .toLowerCase()
     .replace('meme ', '')
     .trim()
   const memes = await getMemes()
-  const meme = memes.find((m) => m.name.toLowerCase().includes(memeTitle))
+  const meme = memes.find((m) => m.id.toLowerCase() === memeId)
 
   if (meme && memeLines.length === meme.lines) {
     memeLines.forEach((line, i, arr) => {
@@ -43,7 +43,9 @@ export const makeMeme = async (body: string) => {
 export const getMemeList = async () => {
   const memes = (await getMemes()).sort((a, b) => (a.name > b.name ? 1 : -1))
   let response = ''
-  memes.forEach((meme) => (response += `${meme.name} (${meme.lines})\n`))
+  memes.forEach(
+    (meme) => (response += `${meme.name} (${meme.id})[${meme.lines}]\n`)
+  )
   return response
 }
 
