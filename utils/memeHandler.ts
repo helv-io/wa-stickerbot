@@ -44,7 +44,7 @@ export const getMemeList = async () => {
   const memes = (await getMemes()).sort((a, b) => (a.name > b.name ? 1 : -1))
   let response = ''
   memes.forEach(
-    (meme) => (response += `${meme.name} (${meme.id})[${meme.lines}]\n`)
+    (meme) => (response += `${meme.name} (${meme.id}) [${meme.lines}]\n`)
   )
   return response
 }
