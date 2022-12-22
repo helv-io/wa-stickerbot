@@ -1,5 +1,7 @@
 # wa-stickerbot
 
+[![Build Status](https://jenkins.helv.io/buildStatus/icon?job=wa-stickerbot)](https://jenkins.helv.io/job/wa-stickerbot/)
+
 WhatsApp Sticker Bot. Any images, GIFs or Videos you receive will be converted to a Sticker!
 Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create memes from [memegen].
 
