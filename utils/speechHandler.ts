@@ -28,7 +28,6 @@ export const transcribeAudio = async (wav: string, message: Message) => {
   }
 
   reco.speechEndDetected = async (_sender, _event) => {
-    console.log(`Speech recognized: "${transcription.join(' ')}"`)
     const id = await waClient.sendReplyWithMentions(
       message.from,
       transcription.join(' '),
