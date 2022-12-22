@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Helvio88/wa-stickerbot#readme",
   "dependencies": {
     "@open-wa/wa-automate": "^4.53.0",
+    "chatgpt": "^3.3.2",
     "dotenv": "^16.0.3",
     "jimp": "^0.16.2",
     "lodash": "^4.17.21",

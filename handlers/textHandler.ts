@@ -217,7 +217,7 @@ export const handleText = async (
         const question = message.body.slice(5)
         console.log(question)
         const response = `${message.sender.pushname.split(' ')[0]},${
-          (await ask(question)) || ''
+          (await ask(question, message.sender.id)) || ''
         }`
         await waClient.sendReplyWithMentions(
           message.chatId,
