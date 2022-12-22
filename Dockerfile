@@ -10,4 +10,4 @@ RUN apt update && \
 RUN npm i
 RUN npm i -g ts-node
 EXPOSE 13579
-ENTRYPOINT ["ts-node","--transpile-only","index.ts"]
+ENTRYPOINT ["ts-node","--swc","index.ts"]
