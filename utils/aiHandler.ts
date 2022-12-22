@@ -1,23 +1,22 @@
 import { Configuration, CreateCompletionRequest, OpenAIApi } from 'openai'
-import { ChatGPTAPIBrowser } from 'chatgpt'
+//import { ChatGPTAPI } from '@oceanlvr/chatgpt'
 
 const org = process.env.OPENAI_API_ORG
 const key = process.env.OPENAI_API_KEY
-const email = process.env.SB_OPENAI_EMAIL || ''
-const password = process.env.SB_OPENAI_PASSWORD || ''
-const gpt = new ChatGPTAPIBrowser({
-  email,
-  password,
+const session = process.env.SB_OPENAI_SESSION
+/*const api = new ChatGPTAPI({
+  sessionToken: session || '',
   markdown: false
 })
+process.env.SB_OPENAI_SESSION*/
 
 export const ask = async (question: string, user: string) => {
-  if (email && password) {
-    if (!(await gpt.getIsAuthenticated())) {
-      await gpt.initSession()
+  if (session) {
+    /*if (!(await api.getIsAuthenticated())) {
+      await api.ensureAuth()
     }
-    const gptResponse = await gpt.sendMessage(question, { messageId: user })
-    return gptResponse.response
+    const response = await api.sendMessage(question, { conversationId: user })
+    return response*/
   } else if (org && key) {
     const completionRequest: CreateCompletionRequest = {
       model: 'code-davinci-002',

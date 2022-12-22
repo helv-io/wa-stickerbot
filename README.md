@@ -1,4 +1,5 @@
 # wa-stickerbot
+
 [![Build Status](https://jenkins.helv.io/buildStatus/icon?job=helvio%2Fwa-stickerbot&build=1)](https://jenkins.helv.io/job/helvio/job/wa-stickerbot/1/)
 
 WhatsApp Sticker Bot. Any images, GIFs or Videos you receive will be converted to a Sticker!
@@ -43,8 +44,6 @@ All variables are optional
 | SB_GROUP_ADMIN_ONLY        | Only interact if bot is Group Admin   | true        |
 | SB_GROUPS_ONLY             | Only interact with Group Chats        | true        |
 | SB_WELCOME_MESSAGE         | Optional Welcome Message (Groups)     | true        |
-| SB_OPENAI_EMAIL            | OpenAI Email for ChatGPT              | (blank)     |
-| SB_OPENAI_PASSWORD         | OpenAI Password for ChatGPT           | (blank)     |
 
 [docker]: https://docs.docker.com/engine/install/
 [giphy]: https://developers.giphy.com/branch/master/docs/api/

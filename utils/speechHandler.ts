@@ -37,7 +37,7 @@ export const transcribeAudio = async (wav: string, message: Message) => {
     reco.close()
 
     if (typeof id !== 'boolean') {
-      const ai = `${await ask(transcription.join(' '))}`
+      const ai = `${await ask(transcription.join(' '), message.sender.id)}`
       await synthesizeText(ai, message)
     }
   }
