@@ -216,7 +216,6 @@ export const handleText = async (
       case actions.AI:
         const question = message.body.slice(5)
         console.log(question)
-        console.log(message.sender)
         const response = `${message.sender.pushname.split(' ')[0]},${
           (await ask(question)) || ''
         }`
