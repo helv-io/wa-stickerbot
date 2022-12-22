@@ -34,7 +34,6 @@ export const makeMeme = async (body: string) => {
       )
     })
     const url = `${memeMakeURL}/${meme.id}/${memeLines.join('/')}.gif`
-    console.log(url)
     return url
   }
   return ''

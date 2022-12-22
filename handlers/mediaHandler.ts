@@ -90,7 +90,6 @@ export const handleMedia = async (message: Message) => {
 
     // Run and print outputs
     const wave = await run(convertToWav)
-    console.log(convertToWav)
     console.log(wave.stdout)
     console.error(wave.stderr)
 
