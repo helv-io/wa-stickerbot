@@ -1,5 +1,4 @@
 import { Configuration, CreateCompletionRequest, OpenAIApi } from 'openai'
-import { ChatGPTAPI } from 'chatgpt-commonjs'
 
 const org = process.env.OPENAI_API_ORG
 const key = process.env.OPENAI_API_KEY
