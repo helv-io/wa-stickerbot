@@ -25,6 +25,7 @@
     "@oceanlvr/chatgpt": "^2.0.0",
     "@open-wa/wa-automate": "^4.54.5",
     "@swc/core": "^1.3.24",
+    "chatgpt-commonjs": "^2.1.1",
     "dotenv": "^16.0.3",
     "jimp": "^0.16.2",
     "lodash": "^4.17.21",
