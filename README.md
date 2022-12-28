@@ -9,7 +9,7 @@ Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create
 
 1. [Docker]
 2. Image: `helvio/wa-stickerbot`
-3. amd64 (Chrome can't run on arm yet)
+3. `amd64` or `arm64`
 
 ## Downloading and running the container
 
