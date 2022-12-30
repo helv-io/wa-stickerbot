@@ -29,7 +29,7 @@ export const circleMeta: StickerMetadata = {
 // https://docs.openwa.dev/interfaces/api_model.configobject.html
 export const clientConfig: ConfigObject = {
   sessionId: process.env.WA_SESSION_ID,
-  popup: process.env.WA_POPUP ? +process.env.WA_POPUP : 13579,
+  popup: process.env.WA_POPUP ? +process.env.WA_POPUP : 3000,
   multiDevice: true,
   executablePath: '/usr/bin/chromium',
   sessionDataPath: '/data'

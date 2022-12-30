@@ -7,14 +7,6 @@ import fs from 'fs/promises'
 import { exec } from 'child_process'
 import { mp4StickerConversionOptions } from '../config'
 import util from 'util'
-import {
-  AudioConfig,
-  SpeechRecognizer,
-  ResultReason,
-  SpeechConfig,
-  CancellationDetails,
-  CancellationReason
-} from 'microsoft-cognitiveservices-speech-sdk'
 import { transcribeAudio } from '../utils/speechHandler'
 import { tmpdir } from 'os'
 import path from 'path'

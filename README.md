@@ -15,13 +15,13 @@ Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create
 
 ### Main commands
 
-`docker run -d --name wa-stickerbot -p 13579:13579 -v [/your/data/folder]:/data helvio/wa-stickerbot`
+`docker run -d --name wa-stickerbot -p 3000:3000 -v [/your/data/folder]:/data helvio/wa-stickerbot`
 
 ### How to scan the QR Code
 
 Once the container is running, you need to link your phone to it. To do so, you have a few options:
 
-- `http://localhost:13579/` to see a small page with the QR Code to scan.
+- `http://localhost:3000/` to see a small page with the QR Code to scan.
 - `docker logs -f wa-stickerbot` to open the live log. The QR will be printed there.
 
 ## Environment Variables

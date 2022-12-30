@@ -1,5 +1,3 @@
-#!/usr/bin/env ts-node
-
 import { create, Client, GroupChatId } from '@open-wa/wa-automate'
 
 import {
@@ -36,7 +34,7 @@ const start = async () => {
     isOwner = message.sender.id.split('@')[0] === botOptions.ownerNumber
     isAdmin = groupId
       ? (await waClient.getGroupAdmins(groupId)).indexOf(message.sender.id) !==
-        -1
+      -1
       : false
 
     // Refresh adminGroups

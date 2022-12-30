@@ -155,25 +155,6 @@ export const handleText = async (
         const giphyURLs = await getGiphys(searches.giphySearch)
         const tenorURLs = await getTenors(searches.tenorSearch)
 
-        if (giphyURLs.length) {
-          try {
-            await waClient.sendImageAsSticker(
-              message.chatId,
-              '../attributions/giphy.gif',
-              stickerMeta
-            )
-          } catch {}
-        }
-        if (tenorURLs.length) {
-          try {
-            await waClient.sendImageAsSticker(
-              message.chatId,
-              '../attributions/tenor.png',
-              stickerMeta
-            )
-          } catch {}
-        }
-
         giphyURLs.concat(tenorURLs).forEach(async (url) => {
           try {
             await waClient.sendStickerfromUrl(
