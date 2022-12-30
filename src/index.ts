@@ -1,4 +1,5 @@
 import { create, Client, GroupChatId } from '@open-wa/wa-automate'
+import express from 'express'
 
 import {
   Message,
@@ -101,7 +102,17 @@ const start = async () => {
   })
 }
 
-create(clientConfig).then((client) => {
+create(clientConfig).then(async (client) => {
+  // WhatsApp Client
   waClient = client
-  start()
+  await start()
+
+  // Web Server
+  const server = express()
+  server.get('/clean', async (req, res) => {
+    res.send(await waClient.clearAllChats())
+  })
+  await server.listen(3000, () => {
+    console.log('Web Server Started.')
+  })
 })
