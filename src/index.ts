@@ -112,12 +112,17 @@ create(clientConfig).then(async (client) => {
 
   // Clean (not delete) all chats
   server.get('/clean', async (_req, res) => {
-    res.send(await waClient.clearAllChats())
+    res.send(await waClient.clearAllChats()).end()
   })
 
   // Get all groups
   server.get('/groups', async (_req, res) => {
     res.json(await waClient.getAllGroups()).end()
+  })
+
+  // Get Client info
+  server.get('/client', async (_req, res) => {
+    res.json(await waClient).end()
   })
 
   await server.listen(3000, () => {
