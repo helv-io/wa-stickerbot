@@ -109,9 +109,17 @@ create(clientConfig).then(async (client) => {
 
   // Web Server
   const server = express()
-  server.get('/clean', async (req, res) => {
+
+  // Clean (not delete) all chats
+  server.get('/clean', async (_req, res) => {
     res.send(await waClient.clearAllChats())
   })
+
+  // Get all groups
+  server.get('/groups', async (_req, res) => {
+    res.json(await waClient.getAllGroups()).end()
+  })
+
   await server.listen(3000, () => {
     console.log('Web Server Started.')
   })
