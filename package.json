@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "build": "npm i --omit=dev && npx esbuild src/index.ts --minify --bundle --platform=node --outfile=dist/dist.js --packages=external"
   },
   "repository": {
@@ -42,10 +43,11 @@
     "@types/node": "^18.11.18",
     "@types/qs": "^6.9.7",
     "@types/sqlite3": "^3.1.8",
-    "@typescript-eslint/eslint-plugin": "^5.47.1",
-    "@typescript-eslint/parser": "^5.47.1",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
     "eslint": "^8.30.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsdoc": "^39.6.4",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-simple-import-sort": "^8.0.0",

@@ -1,15 +1,16 @@
-import { Message, MessageTypes } from '@open-wa/wa-automate'
-import { stickerMeta, circleMeta, botOptions } from '../config'
-import { addCount } from '../utils/dbHandler'
-import mime from 'mime-types'
-import { waClient } from '..'
-import fs from 'fs/promises'
 import { exec } from 'child_process'
-import { mp4StickerConversionOptions } from '../config'
-import util from 'util'
-import { transcribeAudio } from '../utils/speechHandler'
+import fs from 'fs/promises'
 import { tmpdir } from 'os'
 import path from 'path'
+import util from 'util'
+
+import { Message, MessageTypes } from '@open-wa/wa-automate'
+import mime from 'mime-types'
+
+import { circleMeta, mp4StickerConversionOptions, stickerMeta } from '../config'
+import { addCount } from '../handlers/dbHandler'
+import { transcribeAudio } from '../handlers/speechHandler'
+import { waClient } from '../index'
 
 const run = util.promisify(exec)
 
@@ -44,7 +45,7 @@ export const handleMedia = async (message: Message) => {
             getConversionOptions(i),
             stickerMeta
           )
-        } catch {}
+        } catch { }
 
         try {
           await waClient.sendMp4AsSticker(
@@ -53,7 +54,7 @@ export const handleMedia = async (message: Message) => {
             getConversionOptions(i),
             circleMeta
           )
-        } catch {}
+        } catch { }
         break
       } catch {
         console.log(`Video is too long. Reducing length.`)
@@ -102,10 +103,10 @@ export const handleMedia = async (message: Message) => {
         media.dataURL,
         stickerMeta
       )
-    } catch {}
+    } catch { }
     try {
       await waClient.sendImageAsSticker(message.from, media.dataURL, circleMeta)
-    } catch {}
+    } catch { }
   }
   return
 }

@@ -1,3 +1,8 @@
+import fs from 'fs/promises'
+import { tmpdir } from 'os'
+import path from 'path'
+
+import { Message } from '@open-wa/wa-automate'
 import {
   AudioConfig,
   AutoDetectSourceLanguageConfig,
@@ -5,13 +10,11 @@ import {
   SpeechRecognizer,
   SpeechSynthesizer
 } from 'microsoft-cognitiveservices-speech-sdk'
+
 import { botOptions } from '../config'
-import fs from 'fs/promises'
-import { Message } from '@open-wa/wa-automate'
-import { waClient } from '..'
+import { waClient } from '../index'
+
 import { ask } from './aiHandler'
-import { tmpdir } from 'os'
-import path from 'path'
 
 export const transcribeAudio = async (wav: string, message: Message) => {
   console.log(`Reconizing speech from "${message.sender.formattedName}`)
@@ -27,7 +30,7 @@ export const transcribeAudio = async (wav: string, message: Message) => {
     transcription.push(event.result.text)
   }
 
-  reco.speechEndDetected = async (_sender, _event) => {
+  reco.speechEndDetected = async () => {
     const id = await waClient.sendReplyWithMentions(
       message.from,
       transcription.join(' '),
@@ -61,7 +64,7 @@ export const synthesizeText = async (text: string, message: Message) => {
     ]),
     AudioConfig.fromAudioFileOutput(file)
   )
-  synt.speakTextAsync(text, async (_result) => {
+  synt.speakTextAsync(text, async () => {
     synt.close()
     await waClient.sendPtt(message.from, file, message.id)
     await fs.unlink(file)

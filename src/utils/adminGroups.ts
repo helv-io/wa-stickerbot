@@ -1,6 +1,7 @@
 import { GroupChatId, Message } from '@open-wa/wa-automate'
 import _ from 'lodash'
-import { waClient } from '..'
+
+import { waClient } from '../index'
 
 export let AdminGroups: GroupChatId[] = []
 

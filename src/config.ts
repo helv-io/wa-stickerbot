@@ -3,11 +3,12 @@ import {
   Mp4StickerConversionProcessOptions,
   StickerMetadata
 } from '@open-wa/wa-automate'
+import dotenv from 'dotenv'
+
 import { GiphySearch } from './types/Giphy'
 import { TenorSearch } from './types/Tenor'
 
 // Load OS Env Vars
-import dotenv from 'dotenv'
 dotenv.config()
 
 // Begin changes here

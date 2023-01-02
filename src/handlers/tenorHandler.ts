@@ -1,5 +1,5 @@
 import { TenorResponse, TenorSearch } from '../types/Tenor'
-import { paramSerializer } from './utils'
+import { paramSerializer } from '../utils/utils'
 
 const tenorURL = 'https://g.tenor.com/v1/search?'
 

@@ -1,7 +1,8 @@
 import { GroupChatId } from '@open-wa/wa-automate'
+
 import { waClient } from '..'
 import { botOptions } from '../config'
-import { AdminGroups } from './adminGroups'
+import { AdminGroups } from '../utils/adminGroups'
 
 export const handleWelcome = async () => {
   await waClient.onGlobalParticipantsChanged(async (event) => {

@@ -1,5 +1,5 @@
 import { GiphyResponse, GiphySearch } from '../types/Giphy'
-import { paramSerializer } from './utils'
+import { paramSerializer } from '../utils/utils'
 
 const giphyBaseUrl = 'https://api.giphy.com/v1'
 

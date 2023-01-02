@@ -1,6 +1,9 @@
 import qs from 'qs'
 
-export const paramSerializer = (p: any) => {
+import { GiphySearch } from '../types/Giphy'
+import { TenorSearch } from '../types/Tenor'
+
+export const paramSerializer = (p: TenorSearch | GiphySearch) => {
   return qs.stringify(p, { arrayFormat: 'brackets' })
 }
 

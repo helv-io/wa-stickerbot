@@ -1,4 +1,4 @@
-import { giphySearch, tenorSearch, botOptions } from '../config'
+import { botOptions, giphySearch, tenorSearch } from '../config'
 import { stickerRegExp } from '../handlers/textHandler'
 
 export const getStickerSearches = (message: string) => {

@@ -1,3 +1,8 @@
+import { GroupChatId, Message } from '@open-wa/wa-automate'
+import Jimp from 'jimp'
+
+import { isAdmin, isOwner, waClient } from '..'
+import { botOptions, stickerMeta } from '../config'
 import {
   addCount,
   addDonor,
@@ -5,16 +10,13 @@ import {
   getCount,
   getDonors,
   unban
-} from '../utils/dbHandler'
-import { getMemeList, makeMeme } from '../utils/memeHandler'
-import { getStickerSearches } from '../utils/stickerHandler'
-import { GroupChatId, Message } from '@open-wa/wa-automate'
-import { botOptions, stickerMeta } from '../config'
-import { getGiphys } from '../utils/giphyHandler'
-import { getTenors } from '../utils/tenorHandler'
-import { ask } from '../utils/aiHandler'
-import { isAdmin, isOwner, waClient } from '..'
-import Jimp from 'jimp'
+} from '../handlers/dbHandler'
+import { getGiphys } from '../handlers/giphyHandler'
+import { getMemeList, makeMeme } from '../handlers/memeHandler'
+import { getStickerSearches } from '../handlers/stickerHandler'
+import { getTenors } from '../handlers/tenorHandler'
+
+import { ask } from './aiHandler'
 
 export const handleText = async (
   message: Message,
@@ -106,8 +108,12 @@ export const handleText = async (
           console.log(`Sending (${text})`)
           addCount('Text')
 
-          const b64a: any = await (await fetch(textUrlA)).json()
-          const b64s: any = await (await fetch(textUrlS)).json()
+          const b64a: { status: number; result: string } = await (
+            await fetch(textUrlA)
+          ).json()
+          const b64s: { status: number; result: string } = await (
+            await fetch(textUrlS)
+          ).json()
 
           if (b64a.status === 200)
             await waClient.sendImageAsSticker(

@@ -1,16 +1,17 @@
-import { create, Client, GroupChatId } from '@open-wa/wa-automate'
-import express from 'express'
-
+/* eslint-disable import/no-unresolved */
+import { Client, create, GroupChatId } from '@open-wa/wa-automate'
 import {
   Message,
   MessageTypes
 } from '@open-wa/wa-automate/dist/api/model/message'
-import { AdminGroups, AdminGroupsManager } from './handlers/adminGroups'
-import { handleWelcome } from './handlers/welcomeHandler'
-import { getDonors, isBanned } from './utils/dbHandler'
+import express from 'express'
+
+import { botOptions, clientConfig } from './config'
+import { getDonors, isBanned } from './handlers/dbHandler'
 import { handleMedia } from './handlers/mediaHandler'
 import { handleText } from './handlers/textHandler'
-import { botOptions, clientConfig } from './config'
+import { handleWelcome } from './handlers/welcomeHandler'
+import { AdminGroups, AdminGroupsManager } from './utils/adminGroups'
 import { oneChanceIn } from './utils/utils'
 
 export let waClient: Client
@@ -35,7 +36,7 @@ const start = async () => {
     isOwner = message.sender.id.split('@')[0] === botOptions.ownerNumber
     isAdmin = groupId
       ? (await waClient.getGroupAdmins(groupId)).indexOf(message.sender.id) !==
-      -1
+        -1
       : false
 
     // Refresh adminGroups

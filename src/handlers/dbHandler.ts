@@ -1,6 +1,7 @@
-import { clientConfig } from '../config'
 import { Database, open } from 'sqlite'
 import sqlite3 from 'sqlite3'
+
+import { clientConfig } from '../config'
 
 let db: Database<sqlite3.Database, sqlite3.Statement>
 ;(async () => {
