@@ -1,7 +1,6 @@
 /* eslint-disable import/no-unresolved */
 
 import { ChatId, Client, create, GroupChatId } from '@open-wa/wa-automate';
-import { Button } from '@open-wa/wa-automate/dist/api/model/button';
 import {
   Message,
   MessageTypes
@@ -161,16 +160,6 @@ create(clientConfig).then(async (client) => {
 
   // Get Client info
   server.get('/client', async (_req, res) => {
-    res.json(await waClient).end()
-  })
-
-  // Send Test Buttons
-  server.get('/buttons', async (_req, res) => {
-    const buttons: Button[] = [
-      { id: 'y', text: 'Yes' },
-      { id: 'n', text: 'No' }
-    ]
-    await waClient.sendButtons('14847518009@c.us', 'Test Buttons', buttons, 'Title', 'Footer')
     res.json(await waClient).end()
   })
 
