@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved */
 
-import { Client, create, GroupChatId } from '@open-wa/wa-automate';
+import { ChatId, Client, create, GroupChatId } from '@open-wa/wa-automate';
 import {
   Message,
   MessageTypes
@@ -133,20 +133,32 @@ create(clientConfig).then(async (client) => {
     res.json(await waClient.getAllGroups()).end()
   })
 
+  // Get all Chats
+  server.get('/chats', async (_req, res) => {
+    res.json(await waClient.getAllChats()).end()
+  })
+
+  // Get all Contacts
+  server.get('/contacts', async (_req, res) => {
+    res.json(await waClient.getAllContacts()).end()
+  })
+
+  // Get Screenshot
+  server.get('/screenshot', async (_req, res) => {
+    res.contentType('image/png')
+    res.end(await waClient.getSnapshot()).end()
+  })
+
+  // Get Screenshot
+  server.get('/screenshot/:chat', async (req, res) => {
+    const chat = <ChatId>req.params.chat
+    res.contentType('image/png')
+    res.end(await waClient.getSnapshot(chat)).end()
+  })
+
   // Get Client info
   server.get('/client', async (_req, res) => {
     res.json(await waClient).end()
-  })
-
-  // Execute arbitraty Client function
-  server.get('/client/:call', async (req, res) => {
-    const call = req.params.call
-    const exists = Object.keys(waClient).indexOf(call) !== -1 || true
-    if (exists) {
-      console.log(`calling waClient.${call}()`)
-      res.json(await eval(`waClient.${call}()`)).end()
-    }
-    res.end()
   })
 
   await server.listen(3000, () => {
