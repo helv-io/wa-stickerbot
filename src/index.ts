@@ -36,7 +36,7 @@ const start = async () => {
     isOwner = message.sender.id.split('@')[0] === botOptions.ownerNumber
     isAdmin = groupId
       ? (await waClient.getGroupAdmins(groupId)).indexOf(message.sender.id) !==
-        -1
+      -1
       : false
 
     // Refresh adminGroups
@@ -110,6 +110,11 @@ create(clientConfig).then(async (client) => {
 
   // Web Server
   const server = express()
+
+  // Pipe console to response
+  server.get('/', (_req, res) => {
+    process.stdout.pipe(res)
+  })
 
   // Clean (not delete) all chats
   server.get('/clean', async (_req, res) => {
