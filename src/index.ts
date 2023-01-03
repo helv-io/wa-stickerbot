@@ -117,6 +117,17 @@ create(clientConfig).then(async (client) => {
     res.send(await waClient.clearAllChats()).end()
   })
 
+  // Clear (delete) all chats (except Group chats)
+  server.get('/clear', async (_req, res) => {
+    console.log('Deleting chats...')
+    const chats = await (await waClient.getAllChats()).filter(c => !c.isGroup)
+    await Promise.all(chats.map(async chat => {
+      await waClient.deleteChat(chat.id)
+    }))
+    console.log(`${chats.length} chats deleted.`)
+    res.end(`${chats.length} chats deleted.`)
+  })
+
   // Get all groups
   server.get('/groups', async (_req, res) => {
     res.json(await waClient.getAllGroups()).end()
