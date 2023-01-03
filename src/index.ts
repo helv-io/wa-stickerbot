@@ -146,16 +146,16 @@ create(clientConfig).then(async (client) => {
   // Get Screenshot
   server.get('/screenshot', async (_req, res) => {
     res.contentType('image/png')
-    const png = await waClient.getSnapshot()
-    res.end(png.split(';base64,').pop())
+    const png = (await waClient.getSnapshot()).split(';base64,').pop() || ''
+    res.end(Buffer.from(png, 'base64'))
   })
 
   // Get Screenshot
   server.get('/screenshot/:chat', async (req, res) => {
     const chat = <ChatId>req.params.chat
-    const png = await waClient.getSnapshot(chat)
+    const png = (await waClient.getSnapshot(chat)).split(';base64,').pop() || ''
     res.contentType('image/png')
-    res.end(png.split(';base64,').pop())
+    res.end(Buffer.from(png, 'base64'))
   })
 
   // Get Client info
