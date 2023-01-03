@@ -1,5 +1,4 @@
 /* eslint-disable import/no-unresolved */
-import * as http from 'http';
 
 import { Client, create, GroupChatId } from '@open-wa/wa-automate';
 import {
@@ -7,7 +6,6 @@ import {
   MessageTypes
 } from '@open-wa/wa-automate/dist/api/model/message';
 import express from 'express';
-import * as WebSocket from 'ws';
 
 import { botOptions, clientConfig } from './config';
 import { getDonors, isBanned } from './handlers/dbHandler';
@@ -111,34 +109,8 @@ create(clientConfig).then(async (client) => {
   waClient = client
   await start()
 
-  // Web (Socket) Server
+  // Web Server
   const server = express()
-  const wss = new WebSocket.Server({ server: http.createServer(server) })
-
-  // Duplicate console.log to stdout
-  const originalLog = console.log
-  console.log = (...args: object[]) => {
-    process.stdout.write(`${args.join(' ')}\n`)
-    originalLog.apply(console, args)
-  }
-
-  // Create and manage clients (Browsers)
-  const clients: WebSocket[] = []
-  wss.on('connection', (ws: WebSocket) => {
-    clients.push(ws)
-    console.log('Client added', ws)
-    ws.on('close', () => {
-      clients.splice(clients.indexOf(ws), 1)
-    })
-  })
-
-  // Pipe console to response
-  server.get('/', () => {
-    clients.forEach
-    process.stdout.on('data', (data: Buffer) => {
-      clients.forEach(client => client.send(data.toString()))
-    })
-  })
 
   // Clean (not delete) all chats
   server.get('/clean', async (_req, res) => {
