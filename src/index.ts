@@ -141,9 +141,12 @@ create(clientConfig).then(async (client) => {
   // Execute arbitraty Client function
   server.get('/client/:call', async (req, res) => {
     const call = req.params.call
-    const exists = Object.keys(waClient).indexOf(call) !== -1
-    if (exists)
+    const exists = Object.keys(waClient).indexOf(call) !== -1 || true
+    if (exists) {
+      console.log(`calling waClient.${call}()`)
       res.json(await eval(`waClient.${call}()`)).end()
+    }
+    res.end()
   })
 
   await server.listen(3000, () => {
