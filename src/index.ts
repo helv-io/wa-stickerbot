@@ -1,4 +1,6 @@
 /* eslint-disable import/no-unresolved */
+import crypto from 'crypto';
+
 import { Client, create, GroupChatId } from '@open-wa/wa-automate';
 import {
   Message,
@@ -116,7 +118,8 @@ create(clientConfig).then(async (client) => {
   // Pipe console to response
   server.get('/', (req) => {
     req.headers.upgrade = 'websocket'
-    req.headers['sec-websocket-key'] = 'dKHIfvLePsDExEU0/po52Q=='
+    req.headers['sec-websocket-key'] = crypto.randomBytes(16).toString('base64')
+    req.headers['sec-websocket-version'] = '13'
     wss.handleUpgrade(req, req.socket, Buffer.alloc(0), (ws) => {
       process.stdout.on('data', (data) => { ws.send(data) })
       process.stdout.on('end', () => { ws.close() })
