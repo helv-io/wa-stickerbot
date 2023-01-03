@@ -1,18 +1,19 @@
 /* eslint-disable import/no-unresolved */
-import { Client, create, GroupChatId } from '@open-wa/wa-automate'
+import { Client, create, GroupChatId } from '@open-wa/wa-automate';
 import {
   Message,
   MessageTypes
-} from '@open-wa/wa-automate/dist/api/model/message'
-import express from 'express'
+} from '@open-wa/wa-automate/dist/api/model/message';
+import express from 'express';
+import * as WebSocket from 'ws';
 
-import { botOptions, clientConfig } from './config'
-import { getDonors, isBanned } from './handlers/dbHandler'
-import { handleMedia } from './handlers/mediaHandler'
-import { handleText } from './handlers/textHandler'
-import { handleWelcome } from './handlers/welcomeHandler'
-import { AdminGroups, AdminGroupsManager } from './utils/adminGroups'
-import { oneChanceIn } from './utils/utils'
+import { botOptions, clientConfig } from './config';
+import { getDonors, isBanned } from './handlers/dbHandler';
+import { handleMedia } from './handlers/mediaHandler';
+import { handleText } from './handlers/textHandler';
+import { handleWelcome } from './handlers/welcomeHandler';
+import { AdminGroups, AdminGroupsManager } from './utils/adminGroups';
+import { oneChanceIn } from './utils/utils';
 
 export let waClient: Client
 export let isAdmin: boolean, isOwner: boolean
@@ -108,12 +109,16 @@ create(clientConfig).then(async (client) => {
   waClient = client
   await start()
 
-  // Web Server
+  // Web (Socket) Server
   const server = express()
+  const wss = new WebSocket.Server({ noServer: true })
 
   // Pipe console to response
-  server.get('/', (_req, res) => {
-    process.stdout.pipe(res)
+  server.get('/', req => {
+    wss.handleUpgrade(req, req.socket, Buffer.alloc(0), ws => {
+      process.stdout.on('data', data => ws.send(data))
+      process.stdout.on('end', () => ws.close())
+    })
   })
 
   // Clean (not delete) all chats
