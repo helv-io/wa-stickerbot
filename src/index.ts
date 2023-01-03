@@ -146,14 +146,13 @@ create(clientConfig).then(async (client) => {
   // Get Screenshot
   server.get('/screenshot', async (_req, res) => {
     res.contentType('image/png')
-    res.end(await waClient.getSnapshot()).end()
+    res.end(`<img src="${await waClient.getSnapshot()}" alt="Image">`)
   })
 
   // Get Screenshot
   server.get('/screenshot/:chat', async (req, res) => {
     const chat = <ChatId>req.params.chat
-    res.contentType('image/png')
-    res.end(await waClient.getSnapshot(chat)).end()
+    res.end(`<img src="${await waClient.getSnapshot(chat)}" alt="Image">`)
   })
 
   // Get Client info
