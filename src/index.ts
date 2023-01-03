@@ -114,8 +114,9 @@ create(clientConfig).then(async (client) => {
   const wss = new WebSocket.Server({ noServer: true })
 
   // Pipe console to response
-  server.get('/log', (req) => {
-    wss.handleUpgrade(req, req.socket, Buffer.alloc(1, ' '), (ws) => {
+  server.get('/', (req) => {
+    req.headers.upgrade = 'websocket'
+    wss.handleUpgrade(req, req.socket, Buffer.alloc(0), (ws) => {
       process.stdout.on('data', (data) => { ws.send(data) })
       process.stdout.on('end', () => { ws.close() })
     })
