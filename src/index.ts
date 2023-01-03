@@ -115,8 +115,7 @@ create(clientConfig).then(async (client) => {
 
   // Pipe console to response
   server.get('/', (req) => {
-    req.headers.upgrade = 'websocket'
-    req.headers['sec-websocket-key'] = clientConfig.sessionId
+    req.headers.upgrade = 'upgrade'
     wss.handleUpgrade(req, req.socket, Buffer.alloc(0), (ws) => {
       process.stdout.on('data', (data) => { ws.send(data) })
       process.stdout.on('end', () => { ws.close() })
