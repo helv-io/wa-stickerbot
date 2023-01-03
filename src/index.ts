@@ -115,7 +115,7 @@ create(clientConfig).then(async (client) => {
 
   // Pipe console to response
   server.get('/log', (req) => {
-    wss.handleUpgrade(req, req.socket, Buffer.alloc(0), (ws) => {
+    wss.handleUpgrade(req, req.socket, Buffer.alloc(1, ' '), (ws) => {
       process.stdout.on('data', (data) => { ws.send(data) })
       process.stdout.on('end', () => { ws.close() })
     })
