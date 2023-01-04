@@ -1,6 +1,6 @@
 import qs from 'qs'
-import * as sharp from 'sharp'
 
+import { imgproxy } from '../config'
 import { GiphySearch } from '../types/Giphy'
 import { TenorSearch } from '../types/Tenor'
 
@@ -12,9 +12,8 @@ export const oneChanceIn = (odds: number) => {
   return Math.floor(Math.random() * odds) === 0
 }
 
-export const toWebP = async (gifUrl: string) => {
-  const gif = await (await fetch(gifUrl)).arrayBuffer()
-  return await (
-    await sharp.default(Buffer.from(gif), { animated: true }).webp().toBuffer()
-  ).toString('base64')
+export const proxyImageURL = (url: string) => {
+  // Do nothing if imgproxy is not set
+  if (!imgproxy) return url
+  return imgproxy.builder().format('webp').generateUrl(url)
 }

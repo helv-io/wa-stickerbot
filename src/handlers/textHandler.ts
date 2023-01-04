@@ -1,4 +1,5 @@
 import Jimp from 'jimp'
+import { proxyImageURL } from 'utils/utils'
 import { Message, MessageMedia } from 'whatsapp-web.js'
 
 import { chat, group, isAdmin, isOwner } from '..'
@@ -14,7 +15,6 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
-import { toWebP } from '../utils/utils'
 
 import { ask } from './aiHandler'
 
@@ -88,10 +88,8 @@ export const handleText = async (message: Message) => {
         console.log(`Sending (${message.body.split('\n').join(')(')})`)
         addCount('Memes')
 
-        const url = await makeMeme(message.body)
-        const b64 = await toWebP(url)
-        const media = new MessageMedia('image/webp', b64)
-        console.log(media.mimetype, url)
+        const url = proxyImageURL(await makeMeme(message.body))
+        const media = await MessageMedia.fromUrl(url)
         await chat.sendMessage(media, stickerMeta)
         await chat.sendMessage(url, { media })
         break
@@ -139,8 +137,7 @@ export const handleText = async (message: Message) => {
 
         urls.forEach(async (url) => {
           try {
-            const media = await MessageMedia.fromUrl(url)
-            console.log(media.mimetype, url)
+            const media = await MessageMedia.fromUrl(proxyImageURL(url))
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch {}

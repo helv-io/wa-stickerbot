@@ -26,12 +26,12 @@
   "dependencies": {
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "imgproxy": "^1.0.0",
     "jimp": "^0.16.2",
     "microsoft-cognitiveservices-speech-sdk": "^1.24.1",
     "openai": "^3.1.0",
     "qrcode": "^1.5.1",
     "qs": "^6.11.0",
-    "sharp": "^0.31.3",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.4",
     "whatsapp-web.js": "^1.18.4"
@@ -42,7 +42,6 @@
     "@types/node": "^18.11.18",
     "@types/qrcode": "^1.5.0",
     "@types/qs": "^6.9.7",
-    "@types/sharp": "^0.31.1",
     "@types/sqlite3": "^3.1.8",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
