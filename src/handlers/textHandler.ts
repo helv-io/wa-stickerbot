@@ -141,7 +141,7 @@ export const handleText = async (message: Message) => {
             const media = new MessageMedia('image/gif', b64)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch { }
+          } catch {}
         })
         break
 
