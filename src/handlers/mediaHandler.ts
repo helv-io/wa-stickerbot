@@ -54,11 +54,13 @@ export const handleMedia = async (message: Message) => {
       // Delete files
       await fs.unlink(origFile)
       await fs.unlink(waveFile)
-    } else {
+    } else if (media.mimetype.startsWith('image'){
       // Sends as Image sticker
       console.log('IMAGE Sticker')
       addCount('Images')
       await chat.sendMessage(media, stickerMeta)
+    } else {
+      console.log('Unrecognized media', media.mimetype)
     }
   } catch (error) {
     console.log(error)
