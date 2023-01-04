@@ -54,7 +54,7 @@ export const handleMedia = async (message: Message) => {
       // Delete files
       await fs.unlink(origFile)
       await fs.unlink(waveFile)
-    } else if (media.mimetype.startsWith('image'){
+    } else if (media.mimetype.startsWith('image')) {
       // Sends as Image sticker
       console.log('IMAGE Sticker')
       addCount('Images')
