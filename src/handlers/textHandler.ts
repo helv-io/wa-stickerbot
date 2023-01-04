@@ -1,4 +1,4 @@
-import Jimp from 'jimp'
+import { attp } from 'utils/attp'
 import { Message, MessageMedia } from 'whatsapp-web.js'
 
 import { chat, group, isAdmin, isOwner } from '..'
@@ -97,35 +97,8 @@ export const handleText = async (message: Message) => {
         break
 
       case actions.TEXT:
-        const text = message.body.slice(6)
-        const size = 256
-        new Jimp(size, size, async (_err, image) => {
-          const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE)
-          image.print(
-            font,
-            0,
-            0,
-            {
-              text: text,
-              alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
-              alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
-            },
-            size,
-            size
-          )
-          const b64 =
-            (await image.getBase64Async(Jimp.MIME_PNG))
-              .split(';base64,')
-              .pop() || ''
-          try {
-            return await chat.sendMessage(
-              new MessageMedia('image/png', b64),
-              stickerMeta
-            )
-          } catch (err) {
-            console.log(err)
-          }
-        })
+        const text = attp(message.body.slice(6))
+        await chat.sendMessage(new MessageMedia('image/gif', text), stickerMeta)
         break
 
       case actions.STICKER:
