@@ -176,7 +176,7 @@ export const handleText = async (
 
       case actions.BUTTON:
         const buttons = new Buttons('body', [{ id: 'y', body: 'yes' }, { id: 'n', body: 'no' }], 'title', 'footer')
-        await message.reply(buttons)
+        await chat.sendMessage(buttons)
         break
     }
   }
