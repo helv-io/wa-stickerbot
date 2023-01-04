@@ -14,7 +14,6 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
-import { downloadToBase64 } from '../utils/utils'
 
 import { ask } from './aiHandler'
 
@@ -89,9 +88,10 @@ export const handleText = async (message: Message) => {
         addCount('Memes')
 
         const url = await makeMeme(message.body)
-        const b64 = await downloadToBase64(url)
-        const media = new MessageMedia('image/webp', b64)
+        const media = await MessageMedia.fromUrl(url)
+        console.log(url, media.mimetype)
         await chat.sendMessage(media, stickerMeta)
+        await chat.sendMessage(media, { caption: url })
         await chat.sendMessage(url, { media })
         break
 
@@ -137,11 +137,11 @@ export const handleText = async (message: Message) => {
 
         giphyURLs.concat(tenorURLs).forEach(async (url) => {
           try {
-            const b64 = await downloadToBase64(url)
-            const media = new MessageMedia('image/gif', b64)
+            const media = await MessageMedia.fromUrl(url)
+            console.log(url, media.mimetype)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch {}
+          } catch { }
         })
         break
 
