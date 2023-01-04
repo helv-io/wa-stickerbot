@@ -88,12 +88,16 @@ export const handleText = async (message: Message) => {
         console.log(`Sending (${message.body.split('\n').join(')(')})`)
         addCount('Memes')
 
-        const url = proxyImageURL(await makeMeme(message.body))
-        const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
-        console.log(media.mimetype, url)
-        media.mimetype = 'image/webp'
-        await chat.sendMessage(media, stickerMeta)
-        await chat.sendMessage(url, { media })
+        try {
+          const url = await makeMeme(message.body)
+          const proxyUrl = proxyImageURL(url)
+          const media = await MessageMedia.fromUrl(proxyUrl)
+          console.log(media.mimetype, url, proxyUrl)
+          await chat.sendMessage(media, stickerMeta)
+          await chat.sendMessage(url, { media })
+        } catch (error) {
+          console.error(error)
+        }
         break
 
       case actions.TEXT:
@@ -135,14 +139,13 @@ export const handleText = async (message: Message) => {
 
         const giphyURLs = await getGiphys(searches.giphySearch)
         const tenorURLs = await getTenors(searches.tenorSearch)
-        const stickers = giphyURLs.concat(tenorURLs)
+        const urls = giphyURLs.concat(tenorURLs)
 
-        stickers.forEach(async (sticker) => {
+        urls.forEach(async (url) => {
           try {
-            const url = proxyImageURL(sticker)
-            const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
-            console.log(media.mimetype, sticker, url)
-            media.mimetype = 'image/webp'
+            const proxyUrl = proxyImageURL(url)
+            const media = await MessageMedia.fromUrl(proxyUrl)
+            console.log(media.mimetype, url, proxyUrl)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch (error) {
