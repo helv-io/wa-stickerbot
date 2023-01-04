@@ -1,4 +1,5 @@
 import Jimp from 'jimp'
+import { downloadToBase64 } from 'utils/utils'
 import { Message, MessageMedia } from 'whatsapp-web.js'
 
 import { chat, group, isAdmin, isOwner } from '..'
@@ -88,11 +89,10 @@ export const handleText = async (message: Message) => {
         addCount('Memes')
 
         const url = await makeMeme(message.body)
-        const b64 = Buffer.from(
-          new Uint8Array(await (await fetch(url)).arrayBuffer())
-        ).toString('base64')
-        const media = new MessageMedia('image/gif', b64)
+        const b64 = await downloadToBase64(url)
+        const media = new MessageMedia('image/webp', b64)
         await chat.sendMessage(media, stickerMeta)
+        await chat.sendMessage(url, { media })
         break
 
       case actions.TEXT:
@@ -137,13 +137,11 @@ export const handleText = async (message: Message) => {
 
         giphyURLs.concat(tenorURLs).forEach(async (url) => {
           try {
-            const b64 = Buffer.from(
-              new Uint8Array(await (await fetch(url)).arrayBuffer())
-            ).toString('base64')
+            const b64 = await downloadToBase64(url)
             const media = new MessageMedia('image/gif', b64)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch {}
+          } catch { }
         })
         break
 
