@@ -40,7 +40,8 @@ RUN apt update && \
     lsb-release \
     xdg-utils \
     wget \
-    ffmpeg
+    ffmpeg \
+    chromium
 WORKDIR /usr/src/app
 COPY . .
 RUN npm run build

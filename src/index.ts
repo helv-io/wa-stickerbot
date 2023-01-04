@@ -1,5 +1,6 @@
 /* eslint-disable import/no-unresolved */
 import express from 'express';
+import { stringify } from 'flatted';
 import * as QRCode from 'qrcode';
 import { Chat, Client, ContactId, GroupChat, Message, MessageTypes } from 'whatsapp-web.js';
 
@@ -135,9 +136,9 @@ server.get('/chats', async (_req, res) => {
 })
 
 // Get Client info
-// server.get('/client', async (_req, res) => {
-//   res.end(JSON.stringify(waClient))
-// })
+server.get('/client', async (_req, res) => {
+  res.end(stringify(waClient))
+})
 
 // Get QR
 server.get('/qr', async (_req, res) => {
