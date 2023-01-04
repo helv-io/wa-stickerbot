@@ -1,7 +1,8 @@
-import { GroupChatId, Message } from '@open-wa/wa-automate'
-import Jimp from 'jimp'
 
-import { isAdmin, isOwner, waClient } from '..'
+import Jimp from 'jimp'
+import { Buttons, Message, MessageMedia } from 'whatsapp-web.js'
+
+import { chat, group, isAdmin, isOwner } from '..'
 import { botOptions, stickerMeta } from '../config'
 import {
   addCount,
@@ -19,42 +20,37 @@ import { getTenors } from '../handlers/tenorHandler'
 import { ask } from './aiHandler'
 
 export const handleText = async (
-  message: Message,
-  groupId: GroupChatId | null
+  message: Message
 ) => {
   // Get Action from Text
   const action = await getTextAction(message.body)
 
   if (action) {
     // Start typing
-    await waClient.simulateTyping(message.from, true)
+    await chat.sendStateTyping()
 
     switch (action) {
       case actions.INSTRUCTIONS:
         console.log('Sending instructions')
 
-        if (groupId) {
-          const groupInfo = await waClient.getGroupInfo(groupId)
-          await waClient.sendText(message.from, groupInfo.description)
+        if (chat.isGroup) {
+          await message.reply(group.description)
         } else {
-          await waClient.sendText(message.from, '¯\\_(ツ)_/¯')
+          await message.reply('¯\\_(ツ)_/¯')
         }
         break
 
       case actions.LINK:
-        if (!groupId) return
+        if (chat.isGroup) return
         console.log('Sending Link')
 
-        await waClient.sendText(
-          message.from,
-          await waClient.getGroupInviteLink(message.from)
-        )
+        await message.reply(await group.getInviteCode())
         break
 
       case actions.MEME_LIST:
         console.log('Sending meme list')
 
-        await waClient.sendText(message.from, await getMemeList())
+        await message.reply(await getMemeList())
         break
 
       case actions.STATS:
@@ -85,7 +81,7 @@ export const handleText = async (
           stats += `\n\n${await getDonors()}`
         }
 
-        await waClient.sendText(message.from, stats)
+        await message.reply(stats)
         break
 
       case actions.MEME:
@@ -93,64 +89,35 @@ export const handleText = async (
         addCount('Memes')
 
         const url = await makeMeme(message.body)
-        await waClient.sendImageAsSticker(message.from, url, stickerMeta)
+        const media = await MessageMedia.fromUrl(url)
+        console.log(media)
+        await chat.sendMessage(media, stickerMeta)
         break
 
       case actions.TEXT:
         const text = message.body.slice(6)
-        try {
-          const textUrlA = `https://api.xteam.xyz/attp?text=${encodeURIComponent(
-            text
-          )}`
-          const textUrlS = `https://api.xteam.xyz/ttp?text=${encodeURIComponent(
-            text
-          )}`
-          console.log(`Sending (${text})`)
-          addCount('Text')
-
-          const b64a: { status: number; result: string } = await (
-            await fetch(textUrlA)
-          ).json()
-          const b64s: { status: number; result: string } = await (
-            await fetch(textUrlS)
-          ).json()
-
-          if (b64a.status === 200)
-            await waClient.sendImageAsSticker(
-              message.from,
-              b64a.result,
-              stickerMeta
-            )
-          if (b64s.status === 200)
-            await waClient.sendImageAsSticker(
-              message.from,
-              b64s.result,
-              stickerMeta
-            )
-        } catch {
-          const size = 256
-          new Jimp(size, size, async (_err, image) => {
-            const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE)
-            image.print(
-              font,
-              0,
-              0,
-              {
-                text: text,
-                alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
-                alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
-              },
-              size,
-              size
-            )
-            return await waClient.sendImageAsSticker(
-              message.from,
-              await image.getBase64Async(Jimp.MIME_PNG),
-              stickerMeta
-            )
-          })
-        }
-
+        const size = 256
+        new Jimp(size, size, async (_err, image) => {
+          const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE)
+          image.print(
+            font,
+            0,
+            0,
+            {
+              text: text,
+              alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+              alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+            },
+            size,
+            size
+          )
+          const b64 = (await image.getBase64Async(Jimp.MIME_PNG)).split(';base64,').pop() || ''
+          try {
+            return await chat.sendMessage(new MessageMedia('image/png', b64), stickerMeta)
+          } catch (err) {
+            console.log(err)
+          }
+        })
         break
 
       case actions.STICKER:
@@ -162,15 +129,11 @@ export const handleText = async (
         const tenorURLs = await getTenors(searches.tenorSearch)
 
         giphyURLs.concat(tenorURLs).forEach(async (url) => {
+          console.log(url)
           try {
-            await waClient.sendStickerfromUrl(
-              message.chatId,
-              url,
-              undefined,
-              stickerMeta
-            )
+            await chat.sendMessage(await MessageMedia.fromUrl(url), stickerMeta)
             addCount('Stickers')
-          } catch {}
+          } catch { }
         })
         break
 
@@ -178,9 +141,9 @@ export const handleText = async (
         if (isOwner) {
           const name = message.body.slice(10)
           await addDonor(name)
-          await waClient.reply(message.from, `💰${name}`, message.id)
+          await message.reply(`💰${name}`)
           const donorList = await getDonors()
-          await waClient.sendText(message.from, donorList)
+          await chat.sendMessage(donorList)
         }
         break
 
@@ -188,7 +151,7 @@ export const handleText = async (
         if (isOwner || isAdmin) {
           const user = message.body.slice(4).replace(/\D/g, '')
           await ban(user)
-          await waClient.reply(message.chatId, `${user} banned`, message.id)
+          await message.reply(`${user} banned`)
         }
         break
 
@@ -196,22 +159,22 @@ export const handleText = async (
         if (isOwner || isAdmin) {
           const user = message.body.slice(6).replace(/\D/g, '')
           await unban(user)
-          await waClient.reply(message.chatId, `${user} unbanned`, message.id)
+          await message.reply(`${user} unbanned`)
         }
         break
 
       case actions.AI:
         const question = message.body.slice(5)
         console.log(question)
-        const response = `${message.sender.pushname.split(' ')[0]},${
-          (await ask(question, message.sender.id)) || ''
-        }`
-        await waClient.sendReplyWithMentions(
-          message.chatId,
-          response,
-          message.id
-        )
+        const name = (await message.getContact()).shortName
+        const response = `${name},${(await ask(question)) || ''}`
+        await message.reply(response)
         addCount('AI')
+        break
+
+      case actions.BUTTON:
+        const buttons = new Buttons('body', [{ id: 'y', body: 'yes' }, { id: 'n', body: 'no' }], 'title', 'footer')
+        await message.reply(buttons)
         break
     }
   }
@@ -228,6 +191,7 @@ export const getTextAction = async (message: string) => {
     if (message === 'link') return actions.LINK
     if (message === 'instrucoes' || message === 'rtfm')
       return actions.INSTRUCTIONS
+    if (message === 'button') return actions.BUTTON
     if (stickerRegExp.exec(message)) return actions.STICKER
     if (message.startsWith('meme ')) return actions.MEME
     if (message.startsWith('texto ')) return actions.TEXT
@@ -249,5 +213,6 @@ export enum actions {
   DONOR,
   AI,
   BAN,
-  UNBAN
+  UNBAN,
+  BUTTON
 }

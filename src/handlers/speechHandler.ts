@@ -1,23 +1,16 @@
 import fs from 'fs/promises'
-import { tmpdir } from 'os'
-import path from 'path'
 
-import { Message } from '@open-wa/wa-automate'
 import {
-  AudioConfig,
-  AutoDetectSourceLanguageConfig,
-  SpeechConfig,
-  SpeechRecognizer,
-  SpeechSynthesizer
+  AudioConfig, SpeechConfig,
+  SpeechRecognizer
 } from 'microsoft-cognitiveservices-speech-sdk'
+import { Message } from 'whatsapp-web.js'
 
 import { botOptions } from '../config'
-import { waClient } from '../index'
 
-import { ask } from './aiHandler'
 
 export const transcribeAudio = async (wav: string, message: Message) => {
-  console.log(`Reconizing speech from "${message.sender.formattedName}`)
+  console.log(`Reconizing speech from "${message.from}`)
   const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
   sConfig.speechRecognitionLanguage = botOptions.azureLanguage
   sConfig.speechSynthesisLanguage = botOptions.azureLanguage
@@ -31,24 +24,18 @@ export const transcribeAudio = async (wav: string, message: Message) => {
   }
 
   reco.speechEndDetected = async () => {
-    const id = await waClient.sendReplyWithMentions(
-      message.from,
-      transcription.join(' '),
-      message.id
+    await message.reply(
+      transcription.join(' ')
     )
     reco.stopContinuousRecognitionAsync()
     reco.close()
-
-    if (typeof id !== 'boolean') {
-      const ai = `${await ask(transcription.join(' '), message.sender.id)}`
-      await synthesizeText(ai, message)
-    }
   }
 
   // Recognize text and exit
   reco.startContinuousRecognitionAsync()
 }
 
+/*
 export const synthesizeText = async (text: string, message: Message) => {
   console.log(`Synthesizing: "${text}" in ${botOptions.azureLanguage}`)
   const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
@@ -70,3 +57,4 @@ export const synthesizeText = async (text: string, message: Message) => {
     await fs.unlink(file)
   })
 }
+*/

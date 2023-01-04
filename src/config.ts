@@ -1,9 +1,5 @@
-import {
-  ConfigObject,
-  Mp4StickerConversionProcessOptions,
-  StickerMetadata
-} from '@open-wa/wa-automate'
 import dotenv from 'dotenv'
+import { ClientOptions, LocalAuth, MessageSendOptions } from 'whatsapp-web.js'
 
 import { GiphySearch } from './types/Giphy'
 import { TenorSearch } from './types/Tenor'
@@ -11,29 +7,22 @@ import { TenorSearch } from './types/Tenor'
 // Load OS Env Vars
 dotenv.config()
 
-// Begin changes here
-
-// https://docs.openwa.dev/modules/api_model_media.html#stickermetadata
-export const stickerMeta: StickerMetadata = {
-  author: process.env.SB_AUTHOR || 'Helvio',
-  pack: process.env.SB_PACK || 'Sticker Bot',
-  keepScale: true
+// https://docs.wwebjs.dev/global.html#StickerMetadata
+export const stickerMeta: MessageSendOptions = {
+  sendMediaAsSticker: true,
+  stickerAuthor: process.env.SB_AUTHOR || 'Helvio',
+  stickerName: process.env.SB_PACK || 'Sticker Bot'
 }
 
-export const circleMeta: StickerMetadata = {
-  author: process.env.SB_AUTHOR || 'Helvio',
-  pack: process.env.SB_PACK || 'Sticker Bot',
-  keepScale: true,
-  circle: true
-}
-
-// https://docs.openwa.dev/interfaces/api_model.configobject.html
-export const clientConfig: ConfigObject = {
-  sessionId: process.env.WA_SESSION_ID,
-  popup: process.env.WA_POPUP ? +process.env.WA_POPUP : 3000,
-  multiDevice: true,
-  executablePath: '/usr/bin/chromium',
-  sessionDataPath: '/data'
+// https://docs.wwebjs.dev/Client.html#info
+export const clientConfig: ClientOptions = {
+  authStrategy: new LocalAuth(
+    { clientId: process.env.WA_SESSION_ID, dataPath: '/data' }
+  ),
+  takeoverOnConflict: true,
+  puppeteer: {
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  }
 }
 
 // Number of stickers when seraching for multiples
@@ -49,16 +38,6 @@ export const botOptions = {
   ownerNumber: process.env.SB_OWNER_NUMBER || '',
   azureKey: process.env.SPEECH_KEY || '',
   azureLanguage: process.env.SPEECH_LANGUAGE || 'pt-BR'
-}
-
-// https://docs.openwa.dev/modules/api_model_media.html#mp4stickerconversionprocessoptions
-export const mp4StickerConversionOptions: Mp4StickerConversionProcessOptions = {
-  crop: true,
-  fps: 10,
-  loop: 0,
-  log: true,
-  startTime: '00:00:00.0',
-  endTime: '00:00:15.0'
 }
 
 // https://developers.giphy.com/docs/api/endpoint#search

@@ -1,67 +1,68 @@
 /* eslint-disable import/no-unresolved */
-
-import { ChatId, Client, create, GroupChatId } from '@open-wa/wa-automate';
-import {
-  Message,
-  MessageTypes
-} from '@open-wa/wa-automate/dist/api/model/message';
 import express from 'express';
+import * as QRCode from 'qrcode';
+import { Chat, Client, ContactId, GroupChat, Message, MessageTypes } from 'whatsapp-web.js';
 
 import { botOptions, clientConfig } from './config';
 import { getDonors, isBanned } from './handlers/dbHandler';
 import { handleMedia } from './handlers/mediaHandler';
 import { handleText } from './handlers/textHandler';
-import { handleWelcome } from './handlers/welcomeHandler';
-import { AdminGroups, AdminGroupsManager } from './utils/adminGroups';
 import { oneChanceIn } from './utils/utils';
 
-export let waClient: Client
-export let isAdmin: boolean, isOwner: boolean
-export let groupId: GroupChatId | null
+export const waClient: Client = new Client(clientConfig)
+export let isAdmin: boolean, isOwner: boolean, amAdmin: boolean
+export let chat: Chat
+export let group: GroupChat
+export let sender: string
+export let me: ContactId
 
-console.log('Environment Variables:')
-console.log(process.env)
+let authQr = ''
 
 const start = async () => {
-  // Welcome Message
-  if (botOptions.welcomeMessage) {
-    handleWelcome()
-  }
-
   // Message Handlers
-  void waClient.onMessage(async (message: Message) => {
-    // Get groupId
-    groupId = message.isGroupMsg ? message.chat.groupMetadata.id : null
+  void waClient.on('message', async (message: Message) => {
+    await message.react('🤖')
+    // Do not act on self messages
+    if (message.fromMe)
+      return
 
-    // Test if the sender is an owner or admin
-    isOwner = message.sender.id.split('@')[0] === botOptions.ownerNumber
-    isAdmin = groupId
-      ? (await waClient.getGroupAdmins(groupId)).indexOf(message.sender.id) !==
-      -1
-      : false
+    // Who am I?
+    me = waClient.info.wid
 
-    // Refresh adminGroups
-    if (groupId) {
-      await AdminGroupsManager.refresh(message)
-    }
+    // Get Chat
+    chat = await message.getChat()
+    if (chat.isGroup)
+      group = <GroupChat>chat
+
+    // Set sender
+    sender = (await message.getContact()).id.user
+
+    // Test if the sender is an owner
+    isOwner = sender === botOptions.ownerNumber;
+
+    // Test if the sender is an admin
+    if (chat.isGroup)
+      isAdmin = group.participants.filter(p => p.id.user === sender).length > 0
+
+    // Test if I am an admin
+    if (chat.isGroup)
+      amAdmin = group.participants.filter(p => p.id === me)[0].isAdmin
 
     // Skips personal chats unless specified
-    if (!groupId) {
+    if (!chat.isGroup) {
       if (botOptions.groupsOnly) {
         return
       }
     } else {
       // Skips non-administered groups unless specified
-      if (botOptions.groupAdminOnly) {
-        if (!AdminGroups.includes(groupId)) {
-          return
-        }
+      if (botOptions.groupAdminOnly && !amAdmin) {
+        return
       }
     }
 
     // Delete messages of banned users, except Owner
-    if (!isOwner && (await isBanned(message.sender.id.replace(/\D/g, '')))) {
-      await waClient.deleteMessage(message.chatId, message.id)
+    if (!isOwner && (await isBanned(message.from.replace(/\D/g, '')))) {
+      await message.delete(true)
       return
     }
 
@@ -77,7 +78,7 @@ const start = async () => {
     }
 
     // Handle Text
-    await handleText(message, groupId)
+    await handleText(message)
 
     // One chance in X to send a Donation link (except if Admin or Owner)
     if (
@@ -89,81 +90,77 @@ const start = async () => {
       const donors = await getDonors()
       let msg = botOptions.donationLink
       if (donors) msg += `\n\n${await getDonors()}`
-      await waClient.sendText(message.from, msg)
+      await chat.sendMessage(msg)
     }
 
     // Stop typing
-    await waClient.simulateTyping(message.from, false)
-  })
-
-  // Click "Use Here" when another WhatsApp Web page is open
-  void waClient.onStateChanged((state) => {
-    if (state === 'CONFLICT' || state === 'UNLAUNCHED') {
-      void waClient.forceRefocus()
-    }
+    await chat.clearState()
   })
 }
 
-create(clientConfig).then(async (client) => {
-  // WhatsApp Client
-  waClient = client
+// Web Server
+const server = express()
+
+// Clean (not delete) all chats
+server.get('/clean', async (_req, res) => {
+  console.log('Deleting messages...')
+  const chats = await waClient.getChats()
+  await Promise.all(chats.map(async chat => {
+    await chat.clearMessages()
+  }))
+  console.log(`${chats.length} chats cleared.`)
+  res.end(`${chats.length} chats cleared.`)
+})
+
+// Clear (delete) all chats (except Group chats)
+server.get('/clear', async (_req, res) => {
+  console.log('Deleting chats...')
+  const chats = await (await waClient.getChats()).filter(c => !c.isGroup)
+  await Promise.all(chats.map(async chat => {
+    await chat.delete()
+  }))
+  console.log(`${chats.length} chats deleted.`)
+  res.end(`${chats.length} chats deleted.`)
+})
+
+// Get all groups
+server.get('/groups', async (_req, res) => {
+  const chats = (await waClient.getChats()).filter(c => c.isGroup)
+  res.json(chats).end()
+})
+
+// Get all Chats
+server.get('/chats', async (_req, res) => {
+  res.json(await waClient.getChats()).end()
+})
+
+// Get Client info
+// server.get('/client', async (_req, res) => {
+//   res.end(JSON.stringify(waClient))
+// })
+
+// Get QR
+server.get('/qr', async (_req, res) => {
+  const x = await (await QRCode.toDataURL(authQr || 'NONE')).split(';base64,').pop()
+  res.type('png')
+  res.end(Buffer.from(x || '', 'base64'))
+})
+
+server.listen(3000, () => {
+  console.log('Web Server Started.')
+  authQr = ''
+})
+
+waClient.initialize()
+waClient.on('ready', async () => {
   await start()
+})
 
-  // Web Server
-  const server = express()
+waClient.on('qr', qr => {
+  authQr = qr
+  console.log(qr)
+})
 
-  // Clean (not delete) all chats
-  server.get('/clean', async (_req, res) => {
-    res.send(await waClient.clearAllChats()).end()
-  })
-
-  // Clear (delete) all chats (except Group chats)
-  server.get('/clear', async (_req, res) => {
-    console.log('Deleting chats...')
-    const chats = await (await waClient.getAllChats()).filter(c => !c.isGroup)
-    await Promise.all(chats.map(async chat => {
-      await waClient.deleteChat(chat.id)
-    }))
-    console.log(`${chats.length} chats deleted.`)
-    res.end(`${chats.length} chats deleted.`)
-  })
-
-  // Get all groups
-  server.get('/groups', async (_req, res) => {
-    res.json(await waClient.getAllGroups()).end()
-  })
-
-  // Get all Chats
-  server.get('/chats', async (_req, res) => {
-    res.json(await waClient.getAllChats()).end()
-  })
-
-  // Get all Contacts
-  server.get('/contacts', async (_req, res) => {
-    res.json(await waClient.getAllContacts()).end()
-  })
-
-  // Get Screenshot
-  server.get('/screenshot', async (_req, res) => {
-    res.contentType('image/png')
-    const png = (await waClient.getSnapshot()).split(';base64,').pop() || ''
-    res.end(Buffer.from(png, 'base64'))
-  })
-
-  // Get Screenshot
-  server.get('/screenshot/:chat', async (req, res) => {
-    const chat = <ChatId>req.params.chat
-    const png = (await waClient.getSnapshot(chat)).split(';base64,').pop() || ''
-    res.contentType('image/png')
-    res.end(Buffer.from(png, 'base64'))
-  })
-
-  // Get Client info
-  server.get('/client', async (_req, res) => {
-    res.json(await waClient).end()
-  })
-
-  await server.listen(3000, () => {
-    console.log('Web Server Started.')
-  })
+waClient.on('ready', () => {
+  console.log('Client is ready!')
 })

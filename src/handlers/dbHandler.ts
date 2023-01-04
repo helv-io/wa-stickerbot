@@ -1,21 +1,20 @@
-import { Database, open } from 'sqlite'
-import sqlite3 from 'sqlite3'
+import { Database, open } from 'sqlite';
+import sqlite3 from 'sqlite3';
 
-import { clientConfig } from '../config'
 
 let db: Database<sqlite3.Database, sqlite3.Statement>
-;(async () => {
-  // open the database
-  db = await open({
-    filename: `/data/${clientConfig.sessionId || 'default'}.sqlite`,
-    driver: sqlite3.Database
-  })
-  await db.run('CREATE TABLE IF NOT EXISTS Usage (type TEXT, count NUM)')
-  await db.run(
-    'CREATE TABLE IF NOT EXISTS Donors (name TEXT, number TEXT, amount NUM)'
-  )
-  await db.run('CREATE TABLE IF NOT EXISTS Banned (user TEXT)')
-})()
+  ; (async () => {
+    // open the database
+    db = await open({
+      filename: `/data/${process.env.WA_SESSION_ID || 'default'}.sqlite`,
+      driver: sqlite3.Database
+    })
+    await db.run('CREATE TABLE IF NOT EXISTS Usage (type TEXT, count NUM)')
+    await db.run(
+      'CREATE TABLE IF NOT EXISTS Donors (name TEXT, number TEXT, amount NUM)'
+    )
+    await db.run('CREATE TABLE IF NOT EXISTS Banned (user TEXT)')
+  })()
 
 export const getCount = async (type: string) => {
   return (

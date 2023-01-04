@@ -3,9 +3,8 @@ import { Configuration, CreateCompletionRequest, OpenAIApi } from 'openai'
 const org = process.env.OPENAI_API_ORG
 const key = process.env.OPENAI_API_KEY
 
-export const ask = async (question: string, user: string) => {
+export const ask = async (question: string) => {
   if (org && key) {
-    console.log(user)
     const completionRequest: CreateCompletionRequest = {
       model: 'code-davinci-002',
       prompt: `//Human readable\nQ: ${question}\nA:`,
