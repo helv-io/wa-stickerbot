@@ -14,5 +14,7 @@ export const oneChanceIn = (odds: number) => {
 
 export const toWebP = async (gifUrl: string) => {
   const gif = await (await fetch(gifUrl)).arrayBuffer()
-  return await (await sharp.default(Buffer.from(gif)).webp().toBuffer()).toString('base64')
+  return await (
+    await sharp.default(Buffer.from(gif), { animated: true }).webp().toBuffer()
+  ).toString('base64')
 }
