@@ -91,7 +91,7 @@ export const handleText = async (message: Message) => {
         const url = await makeMeme(message.body)
         const webp = await convertGifToWebp(url)
         const media = new MessageMedia('image/webp', webp)
-        console.log(url, media.mimetype)
+        console.log(media.mimetype, url)
         await chat.sendMessage(media, stickerMeta)
         await chat.sendMessage(url, { media })
         break
@@ -139,7 +139,7 @@ export const handleText = async (message: Message) => {
         giphyURLs.forEach(async (url) => {
           try {
             const media = await MessageMedia.fromUrl(url)
-            console.log(url, media.mimetype)
+            console.log(media.mimetype, url)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch {}
@@ -148,7 +148,7 @@ export const handleText = async (message: Message) => {
           try {
             const webp = await convertGifToWebp(url)
             const media = new MessageMedia('image/webp', webp)
-            console.log(url, media.mimetype)
+            console.log(media.mimetype, url)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch {}
