@@ -143,7 +143,7 @@ export const handleText = async (message: Message) => {
             console.log(media.mimetype, sticker, url)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch { }
+          } catch {}
         })
         break
 
