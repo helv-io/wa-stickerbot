@@ -90,7 +90,7 @@ export const handleText = async (
 
         const url = await makeMeme(message.body)
         const media = await MessageMedia.fromUrl(url)
-        media.mimetype = 'image/gif'
+        media.mimetype = 'image/webp'
         await chat.sendMessage(media, stickerMeta)
         break
 
@@ -131,7 +131,7 @@ export const handleText = async (
         giphyURLs.concat(tenorURLs).forEach(async (url) => {
           try {
             const media = await MessageMedia.fromUrl(url)
-            media.mimetype = 'image/gif'
+            media.mimetype = 'image/webp'
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch { }
