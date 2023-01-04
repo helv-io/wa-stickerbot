@@ -22,7 +22,6 @@ let authQr = ''
 const start = async () => {
   // Message Handlers
   void waClient.on('message', async (message: Message) => {
-    await message.react('🤖')
     // Do not act on self messages
     if (message.fromMe)
       return
@@ -70,6 +69,9 @@ const start = async () => {
       await message.delete(true)
       return
     }
+
+    // Message is valid!
+    await message.react('🤖')
 
     // Handle Media
     if (
