@@ -41,7 +41,7 @@ RUN apt update && \
     xdg-utils \
     wget \
     ffmpeg \
-    chromium-browser
+    chromium
 WORKDIR /usr/src/app
 COPY . .
 RUN npm run build

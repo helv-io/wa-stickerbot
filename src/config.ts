@@ -21,7 +21,8 @@ export const clientConfig: ClientOptions = {
   ),
   takeoverOnConflict: true,
   puppeteer: {
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    executablePath: '/usr/bin/chromium'
   }
 }
 
