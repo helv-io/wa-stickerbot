@@ -91,6 +91,7 @@ export const handleText = async (message: Message) => {
         const url = proxyImageURL(await makeMeme(message.body))
         const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
         console.log(media.mimetype, url)
+        media.mimetype = 'image/webp'
         await chat.sendMessage(media, stickerMeta)
         await chat.sendMessage(url, { media })
         break
@@ -141,6 +142,7 @@ export const handleText = async (message: Message) => {
             const url = proxyImageURL(sticker)
             const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
             console.log(media.mimetype, sticker, url)
+            media.mimetype = 'image/webp'
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch (error) {
