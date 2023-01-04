@@ -1,11 +1,10 @@
 import Jimp from 'jimp'
-import { Buttons, Message, MessageMedia } from 'whatsapp-web.js'
+import { Message, MessageMedia } from 'whatsapp-web.js'
 
 import { chat, group, isAdmin, isOwner } from '..'
 import { botOptions, stickerMeta } from '../config'
 import {
   addCount,
-  addDonor,
   ban,
   getCount,
   getDonors,
@@ -89,8 +88,10 @@ export const handleText = async (message: Message) => {
         addCount('Memes')
 
         const url = await makeMeme(message.body)
-        const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
-        media.mimetype = 'image/gif'
+        const b64 = Buffer.from(
+          new Uint8Array(await (await fetch(url)).arrayBuffer())
+        ).toString('base64')
+        const media = new MessageMedia('image/gif', b64)
         await chat.sendMessage(media, stickerMeta)
         break
 
@@ -136,22 +137,14 @@ export const handleText = async (message: Message) => {
 
         giphyURLs.concat(tenorURLs).forEach(async (url) => {
           try {
-            const media = await MessageMedia.fromUrl(url)
-            media.mimetype = 'image/webp'
+            const b64 = Buffer.from(
+              new Uint8Array(await (await fetch(url)).arrayBuffer())
+            ).toString('base64')
+            const media = new MessageMedia('image/gif', b64)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch { }
+          } catch {}
         })
-        break
-
-      case actions.DONOR:
-        if (isOwner) {
-          const name = message.body.slice(10)
-          await addDonor(name)
-          await message.reply(`💰${name}`)
-          const donorList = await getDonors()
-          await chat.sendMessage(donorList)
-        }
         break
 
       case actions.BAN:
@@ -178,20 +171,6 @@ export const handleText = async (message: Message) => {
         await message.reply(response)
         addCount('AI')
         break
-
-      case actions.BUTTON:
-        const buttons = new Buttons(
-          'Do you like the 🤖?',
-          [
-            { body: 'Yes' },
-            { body: 'No' }
-          ],
-          'Survey',
-          'Thank you for your time!'
-        )
-        console.log(buttons)
-        console.log(await chat.sendMessage(buttons))
-        break
     }
   }
 }
@@ -205,13 +184,10 @@ export const getTextAction = async (message: string) => {
     if (message === 'stats') return actions.STATS
     if (message === 'memes') return actions.MEME_LIST
     if (message === 'link') return actions.LINK
-    if (message === 'instrucoes' || message === 'rtfm')
-      return actions.INSTRUCTIONS
-    if (message === 'button') return actions.BUTTON
+    if (message === 'rtfm') return actions.INSTRUCTIONS
     if (stickerRegExp.exec(message)) return actions.STICKER
     if (message.startsWith('meme ')) return actions.MEME
     if (message.startsWith('texto ')) return actions.TEXT
-    if (message.startsWith('add-donor ')) return actions.DONOR
     if (message.startsWith('bot, ')) return actions.AI
     if (message.startsWith('ban ')) return actions.BAN
     if (message.startsWith('unban ')) return actions.UNBAN
