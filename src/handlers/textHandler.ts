@@ -45,7 +45,7 @@ export const handleText = async (
         if (!chat.isGroup) return
         console.log('Sending Link')
 
-        await message.reply(await group.getInviteCode())
+        await message.reply(`https://chat.whatsapp.com/${await group.getInviteCode()}`)
         break
 
       case actions.MEME_LIST:
