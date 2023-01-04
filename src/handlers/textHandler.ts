@@ -28,6 +28,7 @@ export const handleText = async (
   if (action) {
     // Start typing
     await chat.sendStateTyping()
+    await message.react('🤖')
 
     switch (action) {
       case actions.INSTRUCTIONS:
@@ -89,7 +90,7 @@ export const handleText = async (
         addCount('Memes')
 
         const url = await makeMeme(message.body)
-        const media = await MessageMedia.fromUrl(url, {unsafeMime: true})
+        const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
         media.mimetype = 'image/gif'
         await chat.sendMessage(media, stickerMeta)
         break
@@ -167,7 +168,7 @@ export const handleText = async (
       case actions.AI:
         const question = message.body.slice(5)
         console.log(question)
-        const name = (await message.getContact()).shortName
+        const name = (await message.getContact()).pushname
         const response = `${name},${(await ask(question)) || ''}`
         await message.reply(response)
         addCount('AI')

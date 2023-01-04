@@ -70,9 +70,6 @@ const start = async () => {
       return
     }
 
-    // Message is valid!
-    await message.react('🤖')
-
     // Handle Media
     if (
       message.type === MessageTypes.IMAGE ||
@@ -81,6 +78,7 @@ const start = async () => {
       message.type === MessageTypes.VOICE ||
       message.type === MessageTypes.STICKER
     ) {
+      await message.react('🤖')
       handleMedia(message)
     }
 
