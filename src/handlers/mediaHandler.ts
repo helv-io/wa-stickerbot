@@ -60,14 +60,7 @@ export const handleMedia = async (message: Message) => {
       addCount('Images')
       await chat.sendMessage(media, stickerMeta)
     }
-
   } catch (error) {
     console.log(error)
   }
-}
-
-export interface WhatsappMedia {
-  filename: string
-  mediaData: Buffer
-  dataURL: string
 }

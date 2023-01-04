@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Helvio88/wa-stickerbot.git"
+    "url": "git+https://github.com/helv-io/wa-stickerbot.git"
   },
   "keywords": [
     "WhatsApp",
@@ -20,18 +20,16 @@
   "author": "Helvio Pedreschi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Helvio88/wa-stickerbot/issues"
+    "url": "https://github.com/helv-io/wa-stickerbot/issues"
   },
-  "homepage": "https://github.com/Helvio88/wa-stickerbot#readme",
+  "homepage": "https://github.com/helv-io/wa-stickerbot#readme",
   "dependencies": {
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "flatted": "^3.2.7",
     "jimp": "^0.16.2",
     "microsoft-cognitiveservices-speech-sdk": "^1.24.1",
     "openai": "^3.1.0",
     "qrcode": "^1.5.1",
-    "qrcode-terminal": "^0.12.0",
     "qs": "^6.11.0",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.4",
@@ -42,7 +40,6 @@
     "@types/mime-types": "^2.1.1",
     "@types/node": "^18.11.18",
     "@types/qrcode": "^1.5.0",
-    "@types/qrcode-terminal": "^0.12.0",
     "@types/qs": "^6.9.7",
     "@types/sqlite3": "^3.1.8",
     "@typescript-eslint/eslint-plugin": "^5.48.0",

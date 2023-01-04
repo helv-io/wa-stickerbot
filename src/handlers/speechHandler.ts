@@ -1,13 +1,13 @@
 import fs from 'fs/promises'
 
 import {
-  AudioConfig, SpeechConfig,
+  AudioConfig,
+  SpeechConfig,
   SpeechRecognizer
 } from 'microsoft-cognitiveservices-speech-sdk'
 import { Message } from 'whatsapp-web.js'
 
 import { botOptions } from '../config'
-
 
 export const transcribeAudio = async (wav: string, message: Message) => {
   console.log(`Reconizing speech from "${message.from}`)
@@ -24,9 +24,7 @@ export const transcribeAudio = async (wav: string, message: Message) => {
   }
 
   reco.speechEndDetected = async () => {
-    await message.reply(
-      transcription.join(' ')
-    )
+    await message.reply(transcription.join(' '))
     reco.stopContinuousRecognitionAsync()
     reco.close()
   }

@@ -16,9 +16,10 @@ export const stickerMeta: MessageSendOptions = {
 
 // https://docs.wwebjs.dev/Client.html#info
 export const clientConfig: ClientOptions = {
-  authStrategy: new LocalAuth(
-    { clientId: process.env.WA_SESSION_ID, dataPath: '/data' }
-  ),
+  authStrategy: new LocalAuth({
+    clientId: process.env.WA_SESSION_ID,
+    dataPath: '/data'
+  }),
   takeoverOnConflict: true,
   puppeteer: {
     args: ['--no-sandbox', '--disable-setuid-sandbox'],

@@ -1,4 +1,3 @@
-
 import Jimp from 'jimp'
 import { Buttons, Message, MessageMedia } from 'whatsapp-web.js'
 
@@ -19,9 +18,7 @@ import { getTenors } from '../handlers/tenorHandler'
 
 import { ask } from './aiHandler'
 
-export const handleText = async (
-  message: Message
-) => {
+export const handleText = async (message: Message) => {
   // Get Action from Text
   const action = await getTextAction(message.body)
 
@@ -45,7 +42,9 @@ export const handleText = async (
         if (!chat.isGroup) return
         console.log('Sending Link')
 
-        await message.reply(`https://chat.whatsapp.com/${await group.getInviteCode()}`)
+        await message.reply(
+          `https://chat.whatsapp.com/${await group.getInviteCode()}`
+        )
         break
 
       case actions.MEME_LIST:
@@ -112,9 +111,15 @@ export const handleText = async (
             size,
             size
           )
-          const b64 = (await image.getBase64Async(Jimp.MIME_PNG)).split(';base64,').pop() || ''
+          const b64 =
+            (await image.getBase64Async(Jimp.MIME_PNG))
+              .split(';base64,')
+              .pop() || ''
           try {
-            return await chat.sendMessage(new MessageMedia('image/png', b64), stickerMeta)
+            return await chat.sendMessage(
+              new MessageMedia('image/png', b64),
+              stickerMeta
+            )
           } catch (err) {
             console.log(err)
           }
@@ -135,7 +140,7 @@ export const handleText = async (
             media.mimetype = 'image/webp'
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch { }
+          } catch {}
         })
         break
 
@@ -175,7 +180,15 @@ export const handleText = async (
         break
 
       case actions.BUTTON:
-        const buttons = new Buttons('body', [{ id: 'y', body: 'yes' }, { id: 'n', body: 'no' }], 'title', 'footer')
+        const buttons = new Buttons(
+          'body',
+          [
+            { id: 'y', body: 'yes' },
+            { id: 'n', body: 'no' }
+          ],
+          'title',
+          'footer'
+        )
         await chat.sendMessage(buttons)
         break
     }
