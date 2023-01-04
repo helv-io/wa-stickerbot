@@ -7,6 +7,7 @@ import { botOptions, clientConfig } from './config'
 import { getDonors, isBanned } from './handlers/dbHandler'
 import { handleMedia } from './handlers/mediaHandler'
 import { handleText } from './handlers/textHandler'
+import { attp } from './utils/attp'
 import { oneChanceIn } from './utils/utils'
 
 export const waClient: Client = new Client(clientConfig)
@@ -136,6 +137,12 @@ server.get('/groups', async (_req, res) => {
 server.get('/chats', async (_req, res) => {
   if (!ready) return
   res.json(await waClient.getChats()).end()
+})
+
+// attp Test
+server.get('/attp/:text', async (req, res) => {
+  const text = req.params.text
+  res.type('gif').end(attp(text))
 })
 
 // Get QR
