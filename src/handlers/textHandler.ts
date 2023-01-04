@@ -14,6 +14,7 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
+import { toWebP } from '../utils/utils'
 
 import { ask } from './aiHandler'
 
@@ -88,7 +89,8 @@ export const handleText = async (message: Message) => {
         addCount('Memes')
 
         const url = await makeMeme(message.body)
-        const media = await MessageMedia.fromUrl(url)
+        const b64 = toWebP(url)
+        const media = new MessageMedia('image/webp', b64)
         console.log(media.mimetype, url)
         await chat.sendMessage(media, stickerMeta)
         await chat.sendMessage(url, { media })
@@ -141,7 +143,7 @@ export const handleText = async (message: Message) => {
             console.log(media.mimetype, url)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch {}
+          } catch { }
         })
         break
 
