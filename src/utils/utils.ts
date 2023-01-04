@@ -13,10 +13,7 @@ export const oneChanceIn = (odds: number) => {
 }
 
 export const proxyImageURL = (url: string) => {
-  console.log(imgproxy)
   // Do nothing if imgproxy is not set
   if (!imgproxy) return url
-  const proxyUrl = imgproxy.builder().format('webp').generateUrl(url)
-  console.log(url, proxyUrl)
-  return proxyUrl
+  return imgproxy.builder().format('webp').generateUrl(url)
 }

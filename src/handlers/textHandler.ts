@@ -89,10 +89,8 @@ export const handleText = async (message: Message) => {
         addCount('Memes')
 
         try {
-          const url = await makeMeme(message.body)
-          const proxyUrl = proxyImageURL(url)
-          const media = await MessageMedia.fromUrl(proxyUrl, { unsafeMime: true })
-          console.log(media.mimetype, url, proxyUrl)
+          const url = proxyImageURL(await makeMeme(message.body))
+          const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
           await chat.sendMessage(media, stickerMeta)
           await chat.sendMessage(url, { media })
         } catch (error) {
@@ -134,7 +132,6 @@ export const handleText = async (message: Message) => {
 
       case actions.STICKER:
         const searches = getStickerSearches(message.body)
-
         console.log('Sending Stickers for', searches.giphySearch.q)
 
         const giphyURLs = await getGiphys(searches.giphySearch)
@@ -143,9 +140,9 @@ export const handleText = async (message: Message) => {
 
         urls.forEach(async (url) => {
           try {
-            const proxyUrl = proxyImageURL(url)
-            const media = await MessageMedia.fromUrl(proxyUrl, { unsafeMime: true })
-            console.log(media.mimetype, url, proxyUrl)
+            const media = await MessageMedia.fromUrl(proxyImageURL(url), {
+              unsafeMime: true
+            })
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch (error) {
