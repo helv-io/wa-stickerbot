@@ -89,8 +89,8 @@ export const handleText = async (
         addCount('Memes')
 
         const url = await makeMeme(message.body)
-        const media = await MessageMedia.fromUrl(url)
-        media.mimetype = 'image/webp'
+        const media = await MessageMedia.fromUrl(url, {unsafeMime: true})
+        media.mimetype = 'image/gif'
         await chat.sendMessage(media, stickerMeta)
         break
 
