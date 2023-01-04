@@ -89,7 +89,7 @@ export const handleText = async (message: Message) => {
         addCount('Memes')
 
         const url = await makeMeme(message.body)
-        const b64 = toWebP(url)
+        const b64 = await toWebP(url)
         const media = new MessageMedia('image/webp', b64)
         console.log(media.mimetype, url)
         await chat.sendMessage(media, stickerMeta)
