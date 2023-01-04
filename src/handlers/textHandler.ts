@@ -140,7 +140,7 @@ export const handleText = async (message: Message) => {
             media.mimetype = 'image/webp'
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch {}
+          } catch { }
         })
         break
 
@@ -181,15 +181,16 @@ export const handleText = async (message: Message) => {
 
       case actions.BUTTON:
         const buttons = new Buttons(
-          'body',
+          'Do you like the 🤖?',
           [
-            { id: 'y', body: 'yes' },
-            { id: 'n', body: 'no' }
+            { body: 'Yes' },
+            { body: 'No' }
           ],
-          'title',
-          'footer'
+          'Survey',
+          'Thank you for your time!'
         )
-        await chat.sendMessage(buttons)
+        console.log(buttons)
+        console.log(await chat.sendMessage(buttons))
         break
     }
   }
