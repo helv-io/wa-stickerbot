@@ -42,7 +42,7 @@ export const handleText = async (
         break
 
       case actions.LINK:
-        if (chat.isGroup) return
+        if (!chat.isGroup) return
         console.log('Sending Link')
 
         await message.reply(await group.getInviteCode())
