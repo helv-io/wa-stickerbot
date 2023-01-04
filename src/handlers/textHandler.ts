@@ -14,7 +14,7 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
-import { proxyImageURL } from '../utils/utils'
+import { proxyImage } from '../utils/utils'
 
 import { ask } from './aiHandler'
 
@@ -89,10 +89,8 @@ export const handleText = async (message: Message) => {
         addCount('Memes')
 
         try {
-          const url = proxyImageURL(await makeMeme(message.body))
-          const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
+          const media = await proxyImage(await makeMeme(message.body))
           await chat.sendMessage(media, stickerMeta)
-          await chat.sendMessage(url, { media })
         } catch (error) {
           console.error(error)
         }
@@ -140,9 +138,7 @@ export const handleText = async (message: Message) => {
 
         urls.forEach(async (url) => {
           try {
-            const media = await MessageMedia.fromUrl(proxyImageURL(url), {
-              unsafeMime: true
-            })
+            const media = await proxyImage(url)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch (error) {
