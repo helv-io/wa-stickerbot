@@ -1,4 +1,3 @@
-import { attp } from 'utils/attp'
 import { Message, MessageMedia } from 'whatsapp-web.js'
 
 import { chat, group, isAdmin, isOwner } from '..'
@@ -14,6 +13,7 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
+import { attp } from '../utils/attp'
 import { proxyImage } from '../utils/utils'
 
 import { ask } from './aiHandler'
