@@ -31,7 +31,7 @@ export const attp = (text: string) => {
     y = x - totalHeight / 2
   })
 
-  return encoder.finish().toString('base64')
+  return encoder.finish()
 }
 
 const addLineBreaks = (text: string, limit = 15) => {

@@ -97,7 +97,7 @@ export const handleText = async (message: Message) => {
         break
 
       case actions.TEXT:
-        const text = attp(message.body.slice(6))
+        const text = attp(message.body.slice(6)).toString('base64')
         await chat.sendMessage(new MessageMedia('image/gif', text), stickerMeta)
         break
 
