@@ -1,5 +1,4 @@
 import Jimp from 'jimp'
-import { proxyImageURL } from 'utils/utils'
 import { Message, MessageMedia } from 'whatsapp-web.js'
 
 import { chat, group, isAdmin, isOwner } from '..'
@@ -15,6 +14,7 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
+import { proxyImageURL } from '../utils/utils'
 
 import { ask } from './aiHandler'
 
@@ -140,7 +140,7 @@ export const handleText = async (message: Message) => {
             const media = await MessageMedia.fromUrl(proxyImageURL(url))
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch {}
+          } catch { }
         })
         break
 
