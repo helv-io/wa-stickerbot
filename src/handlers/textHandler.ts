@@ -90,7 +90,6 @@ export const handleText = async (
 
         const url = await makeMeme(message.body)
         const media = await MessageMedia.fromUrl(url)
-        console.log(media)
         await chat.sendMessage(media, stickerMeta)
         break
 
@@ -129,7 +128,6 @@ export const handleText = async (
         const tenorURLs = await getTenors(searches.tenorSearch)
 
         giphyURLs.concat(tenorURLs).forEach(async (url) => {
-          console.log(url)
           try {
             await chat.sendMessage(await MessageMedia.fromUrl(url), stickerMeta)
             addCount('Stickers')

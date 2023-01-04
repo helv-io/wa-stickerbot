@@ -165,7 +165,6 @@ waClient.on('ready', async () => {
 
 waClient.on('qr', qr => {
   authQr = qr
-  console.log(qr)
 })
 
 waClient.on('ready', () => {

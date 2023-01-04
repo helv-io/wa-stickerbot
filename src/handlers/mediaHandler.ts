@@ -20,15 +20,13 @@ export const handleMedia = async (message: Message) => {
   const media = await message.downloadMedia()
   console.log(media.mimetype)
   try {
-    if (media.filename?.endsWith('.mp4')) {
+    if (media.mimetype.startsWith('video')) {
       // Sends as Video Sticker
-      console.log('MP4/GIF Sticker', media.filename)
+      console.log('MP4/GIF Sticker')
       addCount('Videos')
       await chat.sendMessage(media, stickerMeta)
-    } else if (
-      // Audio files
-      media.mimetype.startsWith('audio')
-    ) {
+    } else if (media.mimetype.startsWith('audio')) {
+      // Audio File
       // Extract base64 from Media and save to file
       const origFile = path.join(tmpdir(), `${message.id.id}.ogg`)
       const waveFile = path.join(tmpdir(), `${message.id.id}.wav`)
@@ -58,7 +56,7 @@ export const handleMedia = async (message: Message) => {
       await fs.unlink(waveFile)
     } else {
       // Sends as Image sticker
-      console.log('IMAGE Sticker', media)
+      console.log('IMAGE Sticker')
       addCount('Images')
       await chat.sendMessage(media, stickerMeta)
     }
