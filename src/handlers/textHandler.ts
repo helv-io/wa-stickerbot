@@ -1,4 +1,4 @@
-import { Message, MessageMedia } from 'whatsapp-web.js'
+import { Message } from 'whatsapp-web.js'
 
 import { chat, group, isAdmin, isOwner } from '..'
 import { botOptions, stickerMeta } from '../config'
@@ -13,7 +13,6 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
-import { attp } from '../utils/attp'
 import { proxyImage } from '../utils/utils'
 
 import { ask } from './aiHandler'
@@ -97,8 +96,10 @@ export const handleText = async (message: Message) => {
         break
 
       case actions.TEXT:
-        const text = attp(message.body.slice(6)).toString('base64')
-        await chat.sendMessage(new MessageMedia('image/gif', text), stickerMeta)
+        const text = message.body.slice(6)
+        const url = `https://api.helv.io/attp?text=${encodeURIComponent(text)}`
+        const media = await proxyImage(url)
+        await chat.sendMessage(media, stickerMeta)
         break
 
       case actions.STICKER:
