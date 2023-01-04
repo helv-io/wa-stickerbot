@@ -37,17 +37,20 @@ const start = async () => {
 
     // Set sender
     sender = (await message.getContact()).id.user
+    console.log('sender', sender)
 
     // Test if the sender is an owner
     isOwner = sender === botOptions.ownerNumber;
+    console.log('isOwner', isOwner)
 
     // Test if the sender is an admin
-    if (chat.isGroup)
-      isAdmin = group.participants.filter(p => p.id.user === sender).length > 0
+    // if (chat.isGroup)
+    //   isAdmin = group.participants.filter(p => p.isAdmin).length > 0
 
     // Test if I am an admin
-    if (chat.isGroup)
-      amAdmin = group.participants.filter(p => p.id === me)[0].isAdmin
+    // if (chat.isGroup)
+    //   amAdmin = group.participants.filter(p => p.id === me)[0].isAdmin
+    console.log('group.participants', group.participants)
 
     // Skips personal chats unless specified
     if (!chat.isGroup) {
