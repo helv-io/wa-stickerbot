@@ -1,4 +1,4 @@
-import Jimp from 'jimp/*'
+import Jimp from 'jimp'
 import qs from 'qs'
 
 import { GiphySearch } from '../types/Giphy'

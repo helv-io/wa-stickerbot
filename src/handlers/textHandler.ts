@@ -142,7 +142,7 @@ export const handleText = async (message: Message) => {
             console.log(media.mimetype, url)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch { }
+          } catch {}
         })
         tenorURLs.forEach(async (url) => {
           try {
@@ -151,7 +151,7 @@ export const handleText = async (message: Message) => {
             console.log(media.mimetype, url)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
-          } catch { }
+          } catch {}
         })
         break
 
