@@ -1,14 +1,7 @@
 /* eslint-disable import/no-unresolved */
 import express from 'express'
 import * as QRCode from 'qrcode'
-import {
-  Chat,
-  Client,
-  ContactId,
-  GroupChat,
-  Message,
-  MessageTypes
-} from 'whatsapp-web.js'
+import { Chat, Client, ContactId, GroupChat, Message } from 'whatsapp-web.js'
 
 import { botOptions, clientConfig } from './config'
 import { getDonors, isBanned } from './handlers/dbHandler'
@@ -75,19 +68,13 @@ const start = async () => {
     }
 
     // Handle Media
-    if (
-      message.type === MessageTypes.IMAGE ||
-      message.type === MessageTypes.VIDEO ||
-      message.type === MessageTypes.AUDIO ||
-      message.type === MessageTypes.VOICE ||
-      message.type === MessageTypes.STICKER
-    ) {
+    if (message.hasMedia) {
       await message.react('🤖')
       handleMedia(message)
+    } else {
+      // Handle Text
+      await handleText(message)
     }
-
-    // Handle Text
-    await handleText(message)
 
     // One chance in X to send a Donation link (except if Admin or Owner)
     if (
