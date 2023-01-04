@@ -44,13 +44,14 @@ const start = async () => {
     console.log('isOwner', isOwner)
 
     // Test if the sender is an admin
-    // if (chat.isGroup)
-    //   isAdmin = group.participants.filter(p => p.isAdmin).length > 0
+    if (chat.isGroup)
+      isAdmin = !!group.participants.find(p => p.isAdmin && p.id.user === sender)
+    console.log('isAdmin', isAdmin)
 
     // Test if I am an admin
-    // if (chat.isGroup)
-    //   amAdmin = group.participants.filter(p => p.id === me)[0].isAdmin
-    console.log('group.participants', group.participants)
+    if (chat.isGroup)
+      amAdmin = group.participants.filter(p => p.id.user === me.user)[0].isAdmin
+    console.log('amAdmin', amAdmin)
 
     // Skips personal chats unless specified
     if (!chat.isGroup) {
