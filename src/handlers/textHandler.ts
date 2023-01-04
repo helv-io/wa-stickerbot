@@ -90,6 +90,7 @@ export const handleText = async (message: Message) => {
 
         const url = proxyImageURL(await makeMeme(message.body))
         const media = await MessageMedia.fromUrl(url)
+        console.log(media.mimetype, url)
         await chat.sendMessage(media, stickerMeta)
         await chat.sendMessage(url, { media })
         break
@@ -133,11 +134,13 @@ export const handleText = async (message: Message) => {
 
         const giphyURLs = await getGiphys(searches.giphySearch)
         const tenorURLs = await getTenors(searches.tenorSearch)
-        const urls = giphyURLs.concat(tenorURLs)
+        const stickers = giphyURLs.concat(tenorURLs)
 
-        urls.forEach(async (url) => {
+        stickers.forEach(async (sticker) => {
           try {
-            const media = await MessageMedia.fromUrl(proxyImageURL(url))
+            const url = proxyImageURL(sticker)
+            const media = await MessageMedia.fromUrl(url)
+            console.log(media.mimetype, sticker, url)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch { }
