@@ -64,8 +64,7 @@ export const handleMedia = async (message: Message) => {
       addCount('Images')
       await chat.sendMessage(media, stickerMeta)
       console.log('Cropping', media.mimetype)
-      media.data = await autoCrop(media)
-      await chat.sendMessage(media, stickerMeta)
+      await chat.sendMessage(await autoCrop(media), stickerMeta)
     } else {
       console.log('Unrecognized media', media.mimetype)
     }
