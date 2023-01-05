@@ -11,11 +11,11 @@ export const handleMedia = async (message: Message) => {
   await (await message.getChat()).sendStateTyping()
 
   const media = await message.downloadMedia()
-  console.log(media.mimetype)
+  const contact = await message.getContact()
+  console.log(`${media.mimetype} (${contact.verifiedName})[${contact.number}]`)
   try {
     if (media.mimetype.startsWith('video')) {
       // Sends as Video Sticker
-      console.log('MP4/GIF Sticker')
       addCount('Videos')
       await chat.sendMessage(media, stickerMeta)
     } else if (media.mimetype.startsWith('audio')) {
@@ -33,13 +33,13 @@ export const handleMedia = async (message: Message) => {
       !media.mimetype.endsWith('webp')
     ) {
       // Sends as Image sticker
-      console.log('IMAGE Sticker')
       addCount('Images')
       await chat.sendMessage(await autoCrop(media), stickerMeta)
     } else {
       console.log('Unrecognized media', media.mimetype)
     }
   } catch (error) {
-    console.log(error)
+    console.log('MediHandler error')
+    console.error(error)
   }
 }
