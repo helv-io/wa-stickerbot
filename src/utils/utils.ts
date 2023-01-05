@@ -22,16 +22,16 @@ export const proxyImage = async (url: string) => {
 }
 
 export const autoCrop = async (media: MessageMedia) => {
-  console.log(media.data.substring(0, 500))
+  console.log(media.data.length, media.data.substring(0, 500))
   // Load the image into Jimp
   const image = await Jimp.read(Buffer.from(media.data, 'base64'))
 
   // Auto crop the image
-  const croppedImage = image.autocrop()
+  const croppedImage = image.autocrop({ cropOnlyFrames: false })
 
   // Convert the image to a base64 encoded string
   const retb64 = await (await croppedImage.getBase64Async(media.mimetype)).split(';base64,').pop() || ''
-  console.log(retb64.substring(0, 500))
+  console.log(retb64.length, retb64.substring(0, 500))
 
   // Change media object and return it
   media.data = retb64
