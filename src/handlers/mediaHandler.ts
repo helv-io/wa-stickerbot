@@ -44,10 +44,8 @@ export const handleMedia = async (message: Message) => {
         waveFile
       ].join(' ')
 
-      // Run and print outputs
-      const wave = await run(convertToWav)
-      console.log(wave.stdout)
-      console.error(wave.stderr)
+      // Run conversion
+      await run(convertToWav)
 
       // Send
       await transcribeAudio(waveFile, message)
