@@ -22,7 +22,7 @@ export const proxyImage = async (url: string) => {
 }
 
 export const autoCrop = async (b64: string) => {
-  console.log(b64)
+  console.log(b64.substring(0, 500))
   // Load the image into Jimp
   const image = await Jimp.read(Buffer.from(b64, 'base64'))
 
@@ -30,7 +30,7 @@ export const autoCrop = async (b64: string) => {
   const croppedImage = image.autocrop()
 
   const retb64 = await croppedImage.getBase64Async(Jimp.MIME_PNG)
-  console.log(retb64)
+  console.log(retb64.substring(0, 500))
   // Convert the image to a base64 encoded string
   return await retb64
 }
