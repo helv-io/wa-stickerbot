@@ -41,7 +41,8 @@ export const botOptions = {
   welcomeMessage: process.env.SB_WELCOME_MESSAGE,
   ownerNumber: process.env.SB_OWNER_NUMBER || '',
   azureKey: process.env.SPEECH_KEY || '',
-  azureLanguage: process.env.SPEECH_LANGUAGE || 'pt-BR'
+  azureLanguage: process.env.SPEECH_LANGUAGE || 'pt-BR',
+  azureVoice: process.env.SPEECH_VOICE || 'pt-BR-FabioNeural'
 }
 
 // https://developers.giphy.com/docs/api/endpoint#search
@@ -65,12 +66,12 @@ export const tenorSearch: TenorSearch = {
 
 export const imgproxy =
   process.env.IMGPROXY_URL &&
-  process.env.IMGPROXY_KEY &&
-  process.env.IMGPROXY_SALT
+    process.env.IMGPROXY_KEY &&
+    process.env.IMGPROXY_SALT
     ? new Imgproxy({
-        baseUrl: process.env.IMGPROXY_URL,
-        key: process.env.IMGPROXY_KEY,
-        salt: process.env.IMGPROXY_SALT,
-        encode: true
-      })
+      baseUrl: process.env.IMGPROXY_URL,
+      key: process.env.IMGPROXY_KEY,
+      salt: process.env.IMGPROXY_SALT,
+      encode: true
+    })
     : undefined

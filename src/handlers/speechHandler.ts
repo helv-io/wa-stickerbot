@@ -14,7 +14,7 @@ export const transcribeAudio = async (wav: string, message: Message) => {
   const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
   sConfig.speechRecognitionLanguage = botOptions.azureLanguage
   sConfig.speechSynthesisLanguage = botOptions.azureLanguage
-  sConfig.speechSynthesisVoiceName = 'pt-BR-FabioNeural'
+  sConfig.speechSynthesisVoiceName = botOptions.azureVoice
   const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wav))
   const reco = new SpeechRecognizer(sConfig, aConfig)
   const transcription: string[] = []
