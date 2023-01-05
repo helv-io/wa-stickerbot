@@ -62,9 +62,7 @@ export const handleMedia = async (message: Message) => {
       // Sends as Image sticker
       console.log('IMAGE Sticker')
       addCount('Images')
-      if (media.mimetype === 'image.jpeg')
-        await chat.sendMessage(await autoCrop(media), stickerMeta)
-      else await chat.sendMessage(media, stickerMeta)
+      await chat.sendMessage(await autoCrop(media), stickerMeta)
     } else {
       console.log('Unrecognized media', media.mimetype)
     }
