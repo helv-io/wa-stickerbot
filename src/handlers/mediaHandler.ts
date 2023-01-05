@@ -9,7 +9,7 @@ import { Message } from 'whatsapp-web.js'
 import { stickerMeta } from '../config'
 import { addCount } from '../handlers/dbHandler'
 import { transcribeAudio } from '../handlers/speechHandler'
-import { chat, isAdmin } from '../index'
+import { chat } from '../index'
 import { autoCrop } from '../utils/utils'
 
 const run = util.promisify(exec)
@@ -63,10 +63,9 @@ export const handleMedia = async (message: Message) => {
       console.log('IMAGE Sticker')
       addCount('Images')
       await chat.sendMessage(media, stickerMeta)
-      if (isAdmin) {
-        media.data = await autoCrop(media.data)
-        await chat.sendMessage(media, stickerMeta)
-      }
+      console.log('Cropping', media.mimetype)
+      media.data = await autoCrop(media)
+      await chat.sendMessage(media, stickerMeta)
     } else {
       console.log('Unrecognized media', media.mimetype)
     }
