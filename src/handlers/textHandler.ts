@@ -1,4 +1,5 @@
-import { Message, MessageMedia } from 'whatsapp-web.js'
+import { proxyImage } from 'utils/utils'
+import { Message } from 'whatsapp-web.js'
 
 import { chat, group, isAdmin, isOwner } from '..'
 import { botOptions, stickerMeta } from '../config'
@@ -87,7 +88,7 @@ export const handleText = async (message: Message) => {
         addCount('Memes')
 
         try {
-          const media = await MessageMedia.fromUrl(await makeMeme(message.body))
+          const media = await proxyImage(await makeMeme(message.body))
           await chat.sendMessage(media, stickerMeta)
         } catch (error) {
           console.error(error)
@@ -97,7 +98,7 @@ export const handleText = async (message: Message) => {
       case actions.TEXT:
         const text = message.body.slice(6)
         const url = `https://api.helv.io/attp?text=${encodeURIComponent(text)}`
-        const media = await MessageMedia.fromUrl(url)
+        const media = await proxyImage(url)
         await chat.sendMessage(media, stickerMeta)
         break
 
@@ -111,7 +112,7 @@ export const handleText = async (message: Message) => {
 
         urls.forEach(async (url) => {
           try {
-            const media = await MessageMedia.fromUrl(url)
+            const media = await proxyImage(url)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch (error) {
