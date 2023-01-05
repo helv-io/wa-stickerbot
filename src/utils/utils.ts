@@ -30,7 +30,10 @@ export const autoCrop = async (media: MessageMedia) => {
   const croppedImage = image.autocrop({ cropOnlyFrames: false })
 
   // Convert the image to a base64 encoded string
-  const retb64 = await (await croppedImage.getBase64Async(media.mimetype)).split(';base64,').pop() || ''
+  const retb64 =
+    (await (await croppedImage.getBase64Async(media.mimetype))
+      .split(';base64,')
+      .pop()) || ''
   console.log(retb64.length, retb64.substring(0, 500))
 
   // Change media object and return it
