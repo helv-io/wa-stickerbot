@@ -1,4 +1,4 @@
-import { Message } from 'whatsapp-web.js'
+import { Message, MessageMedia } from 'whatsapp-web.js'
 
 import { chat, group, isAdmin, isOwner } from '..'
 import { botOptions, stickerMeta } from '../config'
@@ -98,7 +98,7 @@ export const handleText = async (message: Message) => {
       case actions.TEXT:
         const text = message.body.slice(6)
         const url = `https://api.helv.io/attp?text=${encodeURIComponent(text)}`
-        const media = await proxyImage(url)
+        const media = await MessageMedia.fromUrl(url) //await proxyImage(url)
         await chat.sendMessage(media, stickerMeta)
         break
 
