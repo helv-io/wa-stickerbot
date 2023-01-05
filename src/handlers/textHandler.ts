@@ -1,4 +1,3 @@
-import { proxyImage } from 'utils/utils'
 import { Message } from 'whatsapp-web.js'
 
 import { chat, group, isAdmin, isOwner } from '..'
@@ -14,6 +13,7 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
+import { proxyImage } from '../utils/utils'
 
 import { ask } from './aiHandler'
 
