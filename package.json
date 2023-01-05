@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/helv-io/wa-stickerbot#readme",
   "dependencies": {
+    "@jimp/plugin-crop": "^0.16.2",
     "canvagif": "^0.1.14",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",

@@ -25,32 +25,8 @@ export const autoCrop = async (b64: string) => {
   // Load the image into Jimp
   const image = await Jimp.read(Buffer.from(b64, 'base64'))
 
-  // Find the boundaries of the region to keep
-  let top = 0
-  let bottom = image.getHeight()
-  let left = 0
-  let right = image.getWidth()
-  // Pixels with a value lower than this will be considered "empty"
-  const threshold = 128
-  for (let y = 0; y < image.getHeight(); y++) {
-    for (let x = 0; x < image.getWidth(); x++) {
-      const pixelColor = Jimp.intToRGBA(image.getPixelColor(x, y))
-      if (
-        pixelColor.r > threshold ||
-        pixelColor.g > threshold ||
-        pixelColor.b > threshold
-      ) {
-        // This pixel is not "empty", so update the boundaries
-        top = Math.min(top, y)
-        bottom = Math.max(bottom, y)
-        left = Math.min(left, x)
-        right = Math.max(right, x)
-      }
-    }
-  }
-
-  // Crop the image to the boundaries of the region
-  const croppedImage = image.crop(left, top, right - left, bottom - top);
+  // Auto crop the image
+  const croppedImage = image.autocrop()
 
   // Convert the image to a base64 encoded string
   return await croppedImage.getBase64Async(Jimp.MIME_PNG);
