@@ -11,6 +11,7 @@ RUN apt update && \
     libatk1.0-0 \
     libc6 \
     libcairo2 \
+    libcairo2-dev \
     libcups2 \
     libdbus-1-3 \
     libexpat1 \
