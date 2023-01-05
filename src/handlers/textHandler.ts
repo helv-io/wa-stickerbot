@@ -13,7 +13,6 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
-import { proxyImage } from '../utils/utils'
 
 import { ask } from './aiHandler'
 
@@ -88,7 +87,7 @@ export const handleText = async (message: Message) => {
         addCount('Memes')
 
         try {
-          const media = await proxyImage(await makeMeme(message.body))
+          const media = await MessageMedia.fromUrl(await makeMeme(message.body))
           await chat.sendMessage(media, stickerMeta)
         } catch (error) {
           console.error(error)
@@ -98,7 +97,7 @@ export const handleText = async (message: Message) => {
       case actions.TEXT:
         const text = message.body.slice(6)
         const url = `https://api.helv.io/attp?text=${encodeURIComponent(text)}`
-        const media = await MessageMedia.fromUrl(url) //await proxyImage(url)
+        const media = await MessageMedia.fromUrl(url)
         await chat.sendMessage(media, stickerMeta)
         break
 
@@ -112,7 +111,7 @@ export const handleText = async (message: Message) => {
 
         urls.forEach(async (url) => {
           try {
-            const media = await proxyImage(url)
+            const media = await MessageMedia.fromUrl(url)
             await chat.sendMessage(media, stickerMeta)
             addCount('Stickers')
           } catch (error) {

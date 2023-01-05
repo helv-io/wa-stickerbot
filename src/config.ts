@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-import Imgproxy from 'imgproxy'
 import { ClientOptions, LocalAuth, MessageSendOptions } from 'whatsapp-web.js'
 
 import { GiphySearch } from './types/Giphy'
@@ -62,15 +61,3 @@ export const tenorSearch: TenorSearch = {
   q: 'placeholder',
   type: 'gif'
 }
-
-export const imgproxy =
-  process.env.IMGPROXY_URL &&
-    process.env.IMGPROXY_KEY &&
-    process.env.IMGPROXY_SALT
-    ? new Imgproxy({
-      baseUrl: process.env.IMGPROXY_URL,
-      key: process.env.IMGPROXY_KEY,
-      salt: process.env.IMGPROXY_SALT,
-      encode: true
-    })
-    : undefined
