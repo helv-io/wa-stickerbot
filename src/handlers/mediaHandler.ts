@@ -12,7 +12,7 @@ export const handleMedia = async (message: Message) => {
 
   const media = await message.downloadMedia()
   const contact = await message.getContact()
-  console.log(`${media.mimetype} (${contact.verifiedName})[${contact.number}]`)
+  console.log(`${media.mimetype} (${contact.pushname})[${contact.number}]`)
   try {
     if (media.mimetype.startsWith('video')) {
       // Sends as Video Sticker
