@@ -1,36 +1,75 @@
+import { exec } from 'child_process'
 import fs from 'fs/promises'
+import { tmpdir } from 'os'
+import path from 'path'
+import util from 'util'
 
 import {
   AudioConfig,
   SpeechConfig,
   SpeechRecognizer
 } from 'microsoft-cognitiveservices-speech-sdk'
-import { Message } from 'whatsapp-web.js'
+import { MessageMedia } from 'whatsapp-web.js'
 
 import { botOptions } from '../config'
 
-export const transcribeAudio = async (wav: string, message: Message) => {
-  console.log(`Reconizing speech from "${message.from}`)
-  const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
-  sConfig.speechRecognitionLanguage = botOptions.azureLanguage
-  sConfig.speechSynthesisLanguage = botOptions.azureLanguage
-  sConfig.speechSynthesisVoiceName = botOptions.azureVoice
-  const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wav))
-  const reco = new SpeechRecognizer(sConfig, aConfig)
-  const transcription: string[] = []
+const run = util.promisify(exec)
 
-  reco.recognized = (_sender, event) => {
-    transcription.push(event.result.text)
+const convertAudio = async (media: MessageMedia) => {
+  try {
+    const origFile = path.join(tmpdir(), `${media.filename}.ogg`)
+    const waveFile = path.join(tmpdir(), `${media.filename}.wav`)
+    const b64 = media.data
+    await fs.writeFile(origFile, b64, { encoding: 'base64' })
+
+    const convertToWav = [
+      'ffmpeg',
+      '-i',
+      origFile,
+      '-ac 1',
+      '-af aresample=16000',
+      '-y',
+      waveFile
+    ].join(' ')
+
+    // Run conversion
+    await run(convertToWav)
+    await fs.unlink(origFile)
+    return waveFile
+  } catch (error) {
+    console.error(error)
+    return ''
   }
+}
 
-  reco.speechEndDetected = async () => {
-    await message.reply(transcription.join(' '))
-    reco.stopContinuousRecognitionAsync()
-    reco.close()
-  }
+export const transcribeAudio = async (media: MessageMedia) => {
+  return new Promise<string>(async (resolve) => {
+    const sConfig = SpeechConfig.fromSubscription(
+      botOptions.azureKey,
+      botOptions.azureRegion
+    )
+    sConfig.speechRecognitionLanguage = botOptions.azureLanguage
+    sConfig.speechSynthesisLanguage = botOptions.azureLanguage
+    sConfig.speechSynthesisVoiceName = botOptions.azureVoice
+    const wav = await convertAudio(media)
+    const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wav))
+    const reco = new SpeechRecognizer(sConfig, aConfig)
+    const transcription: string[] = []
 
-  // Recognize text and exit
-  reco.startContinuousRecognitionAsync()
+    reco.recognized = (_sender, event) => {
+      transcription.push(event.result.text)
+    }
+
+    reco.speechEndDetected = async () => {
+      reco.stopContinuousRecognitionAsync()
+      reco.close()
+      await fs.unlink(wav)
+      resolve(transcription.join(' '))
+    }
+
+    // Recognize text and exit
+    reco.startContinuousRecognitionAsync()
+  })
 }
 
 /*

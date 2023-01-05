@@ -1,9 +1,3 @@
-import { exec } from 'child_process'
-import fs from 'fs/promises'
-import { tmpdir } from 'os'
-import path from 'path'
-import util from 'util'
-
 import { Message } from 'whatsapp-web.js'
 
 import { stickerMeta } from '../config'
@@ -11,8 +5,6 @@ import { addCount } from '../handlers/dbHandler'
 import { transcribeAudio } from '../handlers/speechHandler'
 import { chat } from '../index'
 import { autoCrop } from '../utils/utils'
-
-const run = util.promisify(exec)
 
 export const handleMedia = async (message: Message) => {
   // Start typing
@@ -29,30 +21,13 @@ export const handleMedia = async (message: Message) => {
     } else if (media.mimetype.startsWith('audio')) {
       // Audio File
       // Extract base64 from Media and save to file
-      const origFile = path.join(tmpdir(), `${message.id.id}.ogg`)
-      const waveFile = path.join(tmpdir(), `${message.id.id}.wav`)
-      const b64 = media.data
-      await fs.writeFile(origFile, b64, { encoding: 'base64' })
+      media.filename = message.id.id
 
-      const convertToWav = [
-        'ffmpeg',
-        '-i',
-        origFile,
-        '-ac 1',
-        '-af aresample=16000',
-        '-y',
-        waveFile
-      ].join(' ')
+      // Transcribe
+      const transcription = await transcribeAudio(media)
 
-      // Run conversion
-      await run(convertToWav)
-
-      // Send
-      await transcribeAudio(waveFile, message)
-
-      // Delete files
-      await fs.unlink(origFile)
-      await fs.unlink(waveFile)
+      // Reply with transcription
+      message.reply(transcription)
     } else if (
       media.mimetype.startsWith('image') &&
       !media.mimetype.endsWith('webp')
