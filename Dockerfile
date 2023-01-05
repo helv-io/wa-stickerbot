@@ -1,6 +1,7 @@
 FROM node:latest
 RUN apt update && \
     apt install -y \
+    build-essential \
     ca-certificates \
     chromium \
     ffmpeg \
@@ -20,12 +21,16 @@ RUN apt update && \
     libgcc1 \
     libgconf-2-4 \
     libgdk-pixbuf2.0-0 \
+    libgif-dev \
     libglib2.0-0 \
     libgtk-3-0 \
+    libjpeg-dev \
     libnss3 \
     libnspr4 \
     libpango-1.0-0 \
+    libpango1.0-dev \
     libpangocairo-1.0-0 \
+    librsvg2-dev \
     libstdc++6 \
     libx11-6 \
     libx11-xcb1 \
