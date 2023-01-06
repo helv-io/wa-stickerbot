@@ -1,4 +1,6 @@
 
+import * as fs from 'fs/promises'
+
 import { Chat, GroupChat, Message, MessageMedia } from 'whatsapp-web.js'
 
 import { botOptions, stickerMeta } from '../config'
@@ -111,13 +113,11 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
           file = await synthesizeText(synth)
           const voiceMedia = await MessageMedia.fromFilePath(file)
           console.log(voiceMedia.filename, voiceMedia.filesize, voiceMedia.mimetype)
-          await message.reply(voiceMedia)
-          await message.reply(voiceMedia, undefined, { sendAudioAsVoice: true })
+          await message.reply(voiceMedia, undefined, { sendMediaAsDocument: true })
         } catch (error) {
           console.error(error)
         } finally {
-          console.log(file)
-          // await fs.unlink(file)
+          await fs.unlink(file)
         }
         break
 
