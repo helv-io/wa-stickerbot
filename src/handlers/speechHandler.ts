@@ -1,4 +1,5 @@
 import { exec } from 'child_process'
+import { createHash } from 'crypto'
 import fs from 'fs/promises'
 import { tmpdir } from 'os'
 import path from 'path'
@@ -6,8 +7,10 @@ import util from 'util'
 
 import {
   AudioConfig,
+  AutoDetectSourceLanguageConfig,
   SpeechConfig,
-  SpeechRecognizer
+  SpeechRecognizer,
+  SpeechSynthesizer
 } from 'microsoft-cognitiveservices-speech-sdk'
 import { MessageMedia } from 'whatsapp-web.js'
 
@@ -72,26 +75,26 @@ export const transcribeAudio = async (media: MessageMedia) => {
   })
 }
 
-/*
-export const synthesizeText = async (text: string, message: Message) => {
-  console.log(`Synthesizing: "${text}" in ${botOptions.azureLanguage}`)
-  const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
-  sConfig.speechSynthesisLanguage = botOptions.azureLanguage
-  sConfig.speechSynthesisVoiceName = 'pt-BR-FabioNeural'
-  const file = path.join(tmpdir(), `${message.id}.mp3`)
+export const synthesizeText = async (text: string) => {
+  return new Promise<string>(async (resolve) => {
+    console.log(`Synthesizing: "${text}" in ${botOptions.azureLanguage}`)
+    const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
+    sConfig.speechSynthesisLanguage = botOptions.azureLanguage
+    sConfig.speechSynthesisVoiceName = botOptions.azureVoice
+    const hash = createHash('sha256').update(text).digest('hex').slice(0, 8);
+    const file = path.join(tmpdir(), `${hash}.mp3`)
 
-  const synt = SpeechSynthesizer.FromConfig(
-    sConfig,
-    AutoDetectSourceLanguageConfig.fromLanguages([
-      'en-US',
-      botOptions.azureLanguage
-    ]),
-    AudioConfig.fromAudioFileOutput(file)
-  )
-  synt.speakTextAsync(text, async () => {
-    synt.close()
-    await waClient.sendPtt(message.from, file, message.id)
-    await fs.unlink(file)
+    const synt = SpeechSynthesizer.FromConfig(
+      sConfig,
+      AutoDetectSourceLanguageConfig.fromLanguages([
+        'en-US',
+        botOptions.azureLanguage
+      ]),
+      AudioConfig.fromAudioFileOutput(file)
+    )
+    synt.speakTextAsync(text, async () => {
+      synt.close()
+      resolve(file)
+    })
   })
 }
-*/

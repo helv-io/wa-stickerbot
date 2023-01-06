@@ -1,4 +1,6 @@
-import { Chat, GroupChat, Message } from 'whatsapp-web.js'
+import * as fs from 'fs/promises'
+
+import { Chat, GroupChat, Message, MessageMedia } from 'whatsapp-web.js'
 
 import { botOptions, stickerMeta } from '../config'
 import {
@@ -15,6 +17,7 @@ import { getTenors } from '../handlers/tenorHandler'
 import { proxyImage } from '../utils/utils'
 
 import { ask } from './aiHandler'
+import { synthesizeText } from './speechHandler'
 
 export const handleText = async (message: Message, chat: Chat, group: GroupChat | undefined, isOwner: boolean, isAdmin: boolean) => {
   // Get Action from Text
@@ -102,6 +105,20 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
         await message.reply(media, undefined, stickerMeta)
         break
 
+      case actions.SYNTH:
+        let file = ''
+        try {
+          const synth = message.body.slice(6)
+          file = await synthesizeText(synth)
+          const voiceMedia = await MessageMedia.fromFilePath(file)
+          await message.reply(voiceMedia, undefined, { sendAudioAsVoice: true })
+        } catch (error) {
+          console.error(error)
+        } finally {
+          await fs.unlink(file)
+        }
+        break
+
       case actions.STICKER:
         const searches = getStickerSearches(message.body)
         console.log('Sending Stickers for', searches.giphySearch.q)
@@ -163,6 +180,7 @@ export const getTextAction = async (message: string) => {
     if (message.startsWith('bot, ')) return actions.AI
     if (message.startsWith('ban ')) return actions.BAN
     if (message.startsWith('unban ')) return actions.UNBAN
+    if (message.startsWith('synth ')) return actions.SYNTH
   }
 }
 
@@ -176,5 +194,6 @@ export enum actions {
   TEXT = 'Text',
   AI = 'AI',
   BAN = 'Ban',
-  UNBAN = 'Unban'
+  UNBAN = 'Unban',
+  SYNTH = 'Speak'
 }
