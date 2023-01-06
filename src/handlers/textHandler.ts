@@ -124,7 +124,7 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
         if (isOwner || isAdmin) {
           const user = message.body.slice(4).replace(/\D/g, '')
           await ban(user)
-          await message.reply(`${user} banned`)
+          await message.react('👎')
         }
         break
 
@@ -132,7 +132,7 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
         if (isOwner || isAdmin) {
           const user = message.body.slice(6).replace(/\D/g, '')
           await unban(user)
-          await message.reply(`${user} unbanned`)
+          await message.react('👍')
         }
         break
 
