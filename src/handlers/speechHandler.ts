@@ -78,7 +78,7 @@ export const synthesizeText = async (text: string) => {
     sConfig.speechSynthesisLanguage = botOptions.azureLanguage
     sConfig.speechSynthesisVoiceName = botOptions.azureVoice
     const hash = createHash('sha256').update(text).digest('hex').slice(0, 8);
-    const file = path.join(tmpdir(), `${hash}.mp3`)
+    const file = path.join(tmpdir(), `${hash}.ogg`)
 
     const synt = SpeechSynthesizer.FromConfig(
       sConfig,
