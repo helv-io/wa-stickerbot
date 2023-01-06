@@ -1,4 +1,3 @@
-import * as fs from 'fs/promises'
 
 import { Chat, GroupChat, Message, MessageMedia } from 'whatsapp-web.js'
 
@@ -111,11 +110,13 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
           const synth = message.body.slice(6)
           file = await synthesizeText(synth)
           const voiceMedia = await MessageMedia.fromFilePath(file)
+          await message.reply(voiceMedia)
           await message.reply(voiceMedia, undefined, { sendAudioAsVoice: true })
         } catch (error) {
           console.error(error)
         } finally {
-          await fs.unlink(file)
+          console.log(file)
+          // await fs.unlink(file)
         }
         break
 
