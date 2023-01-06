@@ -1,10 +1,10 @@
-import { exec } from 'child_process'
 import { createHash } from 'crypto'
 import fs from 'fs/promises'
 import { tmpdir } from 'os'
 import path from 'path'
-import util from 'util'
+import { Readable } from 'stream'
 
+import ffmpeg from 'fluent-ffmpeg'
 import {
   AudioConfig,
   AutoDetectSourceLanguageConfig,
@@ -16,33 +16,29 @@ import { MessageMedia } from 'whatsapp-web.js'
 
 import { botOptions } from '../config'
 
-const run = util.promisify(exec)
-
 const convertAudio = async (media: MessageMedia) => {
-  try {
-    const origFile = path.join(tmpdir(), `${media.filename}.ogg`)
-    const waveFile = path.join(tmpdir(), `${media.filename}.wav`)
-    const b64 = media.data
-    await fs.writeFile(origFile, b64, { encoding: 'base64' })
+  return new Promise<string>(async (resolve, reject) => {
+    try {
+      const waveFile = path.join(tmpdir(), `${media.filename}.wav`)
+      const buffer = Buffer.from(media.data, 'base64')
+      const stream = new Readable()
+      stream.push(buffer)
+      stream.push(null)
 
-    const convertToWav = [
-      'ffmpeg',
-      '-i',
-      origFile,
-      '-ac 1',
-      '-af aresample=16000',
-      '-y',
-      waveFile
-    ].join(' ')
-
-    // Run conversion
-    await run(convertToWav)
-    await fs.unlink(origFile)
-    return waveFile
-  } catch (error) {
-    console.error(error)
-    return ''
-  }
+      ffmpeg().input(stream)
+        .outputOptions([
+          '-acodec pcm_s16le',
+          '-ar 16000',
+          '-ac 1'
+        ])
+        .saveToFile(waveFile)
+        .on('end', () => resolve(waveFile))
+        .run()
+    } catch (error) {
+      console.error(error)
+      reject(error)
+    }
+  })
 }
 
 export const transcribeAudio = async (media: MessageMedia) => {
