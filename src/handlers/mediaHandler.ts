@@ -12,11 +12,13 @@ export const handleMedia = async (message: Message) => {
 
   const media = await message.downloadMedia()
   const contact = await message.getContact()
+
+  // Log mimetype for statistics
+  await addCount(media.mimetype)
   console.log(`${media.mimetype} (${contact.pushname})[${contact.number}]`)
   try {
     if (media.mimetype.startsWith('video')) {
       // Sends as Video Sticker
-      addCount('Videos')
       await chat.sendMessage(media, stickerMeta)
     } else if (media.mimetype.startsWith('audio')) {
       // Audio File
@@ -32,8 +34,7 @@ export const handleMedia = async (message: Message) => {
       media.mimetype.startsWith('image') &&
       !media.mimetype.endsWith('webp')
     ) {
-      // Sends as Image sticker
-      addCount('Images')
+      // Sends as Image (autocropped) sticker
       await chat.sendMessage(await autoCrop(media), stickerMeta)
     } else {
       console.log('Unrecognized media', media.mimetype)
