@@ -5,7 +5,7 @@ import { addCount } from '../handlers/dbHandler'
 import { transcribeAudio } from '../handlers/speechHandler'
 import { autoCrop } from '../utils/utils'
 
-export const handleMedia = async (message: Message) => {
+export const handleMedia = async (message: Message, isAdmin: boolean) => {
   // Start typing
   await (await message.getChat()).sendStateTyping()
 
@@ -37,6 +37,11 @@ export const handleMedia = async (message: Message) => {
       await message.reply(await autoCrop(media), undefined, stickerMeta)
     } else {
       console.log('Unrecognized media', media.mimetype)
+      // Probably a sticker, send back as GIF
+      if (isAdmin) {
+        await message.reply(media, undefined, { sendVideoAsGif: true })
+        await message.reply(media, undefined, {})
+      }
     }
   } catch (error) {
     console.log('MediHandler error')
