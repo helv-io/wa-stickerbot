@@ -19,27 +19,21 @@ const convertAudio = async (media: MessageMedia) => {
   return new Promise<string>(async (resolve, reject) => {
     const waveFile = path.join(tmpdir(), `${media.filename}.wav`)
     const origFile = path.join(tmpdir(), `${media.filename}.ogg`)
-    try {
-      await fs.writeFile(origFile, media.data, { encoding: 'base64' })
+    await fs.writeFile(origFile, media.data, { encoding: 'base64' })
 
-      ffmpeg()
-        .input(origFile)
-        .outputOptions([
-          '-acodec pcm_s16le',
-          '-ar 16000',
-          '-ac 1'
-        ])
-        .on('end', async () => {
-          resolve(waveFile)
-        })
-        .save(waveFile)
-    } catch (error) {
-      console.error(error)
-      reject(error)
-    } finally {
-      console.log('Delete temp file', origFile)
-      await fs.unlink(origFile)
-    }
+    ffmpeg({ source: origFile })
+      .outputOptions([
+        '-acodec pcm_s16le',
+        '-ar 16000',
+        '-ac 1'
+      ])
+      .on('progress', (progress) => console.log(progress))
+      .on('error', (error) => reject(error))
+      .on('end', async () => {
+        await fs.unlink(origFile)
+        resolve(waveFile)
+      })
+      .save(waveFile)
   })
 }
 
