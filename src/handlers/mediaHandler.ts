@@ -3,7 +3,6 @@ import { Message } from 'whatsapp-web.js'
 import { stickerMeta } from '../config'
 import { addCount } from '../handlers/dbHandler'
 import { transcribeAudio } from '../handlers/speechHandler'
-import { chat } from '../index'
 import { autoCrop } from '../utils/utils'
 
 export const handleMedia = async (message: Message) => {
@@ -19,7 +18,7 @@ export const handleMedia = async (message: Message) => {
   try {
     if (media.mimetype.startsWith('video')) {
       // Sends as Video Sticker
-      await chat.sendMessage(media, stickerMeta)
+      await message.reply(media, undefined, stickerMeta)
     } else if (media.mimetype.startsWith('audio')) {
       // Audio File
       // Extract base64 from Media and save to file
@@ -35,7 +34,7 @@ export const handleMedia = async (message: Message) => {
       !media.mimetype.endsWith('webp')
     ) {
       // Sends as Image (autocropped) sticker
-      await chat.sendMessage(await autoCrop(media), stickerMeta)
+      await message.reply(await autoCrop(media), undefined, stickerMeta)
     } else {
       console.log('Unrecognized media', media.mimetype)
     }

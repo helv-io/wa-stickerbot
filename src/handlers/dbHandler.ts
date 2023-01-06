@@ -1,19 +1,19 @@
-import { Database, open } from 'sqlite'
-import sqlite3 from 'sqlite3'
+import { Database, open } from 'sqlite';
+import sqlite3 from 'sqlite3';
 
 let db: Database<sqlite3.Database, sqlite3.Statement>
-;(async () => {
-  // open the database
-  db = await open({
-    filename: `/data/${process.env.WA_SESSION_ID || 'default'}.sqlite`,
-    driver: sqlite3.Database
-  })
-  await db.run('CREATE TABLE IF NOT EXISTS Usage (type TEXT, count NUM)')
-  await db.run(
-    'CREATE TABLE IF NOT EXISTS Donors (name TEXT, number TEXT, amount NUM)'
-  )
-  await db.run('CREATE TABLE IF NOT EXISTS Banned (user TEXT)')
-})()
+  ; (async () => {
+    // open the database
+    db = await open({
+      filename: `/data/${process.env.WA_SESSION_ID || 'default'}.sqlite`,
+      driver: sqlite3.Database
+    })
+    await db.run('CREATE TABLE IF NOT EXISTS Usage (type TEXT, count NUM)')
+    await db.run(
+      'CREATE TABLE IF NOT EXISTS Donors (name TEXT, number TEXT, amount NUM)'
+    )
+    await db.run('CREATE TABLE IF NOT EXISTS Banned (user TEXT)')
+  })()
 
 export const getCount = async (type: string) => {
   return (
@@ -51,7 +51,7 @@ export const unban = (user: string) => {
   db.run('DELETE FROM Banned WHERE user = ?', user)
 }
 
-export const isBanned = async (user: string) => {
+export const isUserBanned = async (user: string) => {
   return (
     (await db.get('SELECT COUNT(0) ct FROM Banned WHERE user = ?', user)).ct > 0
   )

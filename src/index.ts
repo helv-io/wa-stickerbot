@@ -1,19 +1,14 @@
-/* eslint-disable import/no-unresolved */
 import express from 'express'
 import * as QRCode from 'qrcode'
-import { Chat, Client, ContactId, GroupChat, Message } from 'whatsapp-web.js'
+import { Client, ContactId, GroupChat, Message } from 'whatsapp-web.js'
 
 import { botOptions, clientConfig } from './config'
-import { getDonors, isBanned } from './handlers/dbHandler'
+import { addCount, getDonors, isUserBanned } from './handlers/dbHandler'
 import { handleMedia } from './handlers/mediaHandler'
 import { handleText } from './handlers/textHandler'
 import { oneChanceIn } from './utils/utils'
 
 export const waClient: Client = new Client(clientConfig)
-export let isAdmin: boolean, isOwner: boolean, amAdmin: boolean
-export let chat: Chat
-export let group: GroupChat
-export let sender: string
 export let me: ContactId
 
 let authQr = ''
@@ -24,33 +19,24 @@ const start = async () => {
   void waClient.on('message', async (message: Message) => {
     // Do not act on self messages
     if (message.fromMe) return
+    
+    // Log message type
+    addCount(message.type)
 
-    // Who am I?
-    me = waClient.info.wid
-
-    // Get Chat
-    chat = await message.getChat()
-    if (chat.isGroup) group = <GroupChat>chat
-
-    // Set sender
-    sender = (await message.getContact()).id.user
-
-    // Test if the sender is an owner
-    isOwner = sender === botOptions.ownerNumber
-
-    // Test if the sender is an admin
-    if (chat.isGroup)
-      isAdmin = !!group.participants.find(
-        (p) => p.isAdmin && p.id.user === sender
-      )
-
-    // Test if I am an admin
-    if (chat.isGroup)
-      amAdmin = group.participants.filter((p) => p.id.user === me.user)[0]
-        .isAdmin
+    // Define scoped variables
+    const chat = await message.getChat()
+    const group = chat.isGroup ? <GroupChat>chat : undefined
+    const sender = (await message.getContact()).id.user
+    const isOwner = sender === botOptions.ownerNumber // Is the sender the Owner of the Bot?
+    const isAdmin = group ? !!group.participants.find(
+      (p) => p.isAdmin && p.id.user === sender // Is the sender an Admin of the group?
+    ) : false
+    const amAdmin = group ? group.participants.filter((p) => p.id.user === me.user)[0]
+      .isAdmin : false // Am I an Admin of the group?
+    const isBanned = await isUserBanned(message.from.replace(/\D/g, ''))
 
     // Skips personal chats unless specified
-    if (!chat.isGroup) {
+    if (!group) {
       if (botOptions.groupsOnly) {
         return
       }
@@ -62,7 +48,8 @@ const start = async () => {
     }
 
     // Delete messages of banned users, except Owner
-    if (!isOwner && (await isBanned(message.from.replace(/\D/g, '')))) {
+    if (!isOwner && isBanned) {
+      console.log('Deleting message', message)
       await message.delete(true)
       return
     }
@@ -73,7 +60,7 @@ const start = async () => {
       handleMedia(message)
     } else {
       // Handle Text
-      await handleText(message)
+      await handleText(message, chat, group, isOwner, isAdmin)
     }
 
     // One chance in X to send a Donation link (except if Admin or Owner)
@@ -107,8 +94,9 @@ server.get('/clean', async (_req, res) => {
       await chat.clearMessages()
     })
   )
-  console.log(`${chats.length} chats cleared.`)
-  res.end(`${chats.length} chats cleared.`)
+  const result = `${chats.length} chats cleared.`
+  console.log(result)
+  res.end(result)
 })
 
 // Clear (delete) all chats (except Group chats)
@@ -140,6 +128,7 @@ server.get('/chats', async (_req, res) => {
 
 // Get QR
 server.get('/qr', async (_req, res) => {
+  if (ready) return res.end(waClient.info)
   const x = await (await QRCode.toDataURL(authQr || 'NONE'))
     .split(';base64,')
     .pop()
@@ -147,21 +136,16 @@ server.get('/qr', async (_req, res) => {
   res.end(Buffer.from(x || '', 'base64'))
 })
 
-server.listen(3000, () => {
-  console.log('Web Server Started.')
-  authQr = ''
-})
 
-waClient.initialize()
-waClient.on('ready', async () => {
-  await start()
-})
-
-waClient.on('qr', (qr) => {
-  authQr = qr
-})
-
+// waClient listeners
+waClient.on('ready', async () => await start())
+waClient.on('qr', (qr) => authQr = qr)
 waClient.on('ready', () => {
   ready = true
   console.log('Client is ready!')
+  me = waClient.info.wid
 })
+
+// Start Server and Client
+server.listen(3000, () => console.log('Web Server Started.'))
+waClient.initialize()

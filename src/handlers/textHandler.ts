@@ -1,6 +1,5 @@
-import { Message } from 'whatsapp-web.js'
+import { Chat, GroupChat, Message } from 'whatsapp-web.js'
 
-import { chat, group, isAdmin, isOwner } from '..'
 import { botOptions, stickerMeta } from '../config'
 import {
   addCount,
@@ -17,11 +16,13 @@ import { proxyImage } from '../utils/utils'
 
 import { ask } from './aiHandler'
 
-export const handleText = async (message: Message) => {
+export const handleText = async (message: Message, chat: Chat, group: GroupChat | undefined, isOwner: boolean, isAdmin: boolean) => {
   // Get Action from Text
   const action = await getTextAction(message.body)
 
   if (action) {
+    // Add to Statistics
+    addCount(action)
     // Start typing
     await chat.sendStateTyping()
     await message.react('🤖')
@@ -30,7 +31,7 @@ export const handleText = async (message: Message) => {
       case actions.INSTRUCTIONS:
         console.log('Sending instructions')
 
-        if (chat.isGroup) {
+        if (group) {
           await message.reply(group.description)
         } else {
           await message.reply('¯\\_(ツ)_/¯')
@@ -38,7 +39,7 @@ export const handleText = async (message: Message) => {
         break
 
       case actions.LINK:
-        if (!chat.isGroup) return
+        if (!group) return
         console.log('Sending Link')
 
         await message.reply(
@@ -85,11 +86,10 @@ export const handleText = async (message: Message) => {
 
       case actions.MEME:
         console.log(`Sending (${message.body.split('\n').join(')(')})`)
-        addCount('Memes')
 
         try {
           const media = await proxyImage(await makeMeme(message.body))
-          await chat.sendMessage(media, stickerMeta)
+          await message.reply(media, undefined, stickerMeta)
         } catch (error) {
           console.error(error)
         }
@@ -99,7 +99,7 @@ export const handleText = async (message: Message) => {
         const text = message.body.slice(6)
         const url = `https://api.helv.io/attp?text=${encodeURIComponent(text)}`
         const media = await proxyImage(url)
-        await chat.sendMessage(media, stickerMeta)
+        await message.reply(media, undefined, stickerMeta)
         break
 
       case actions.STICKER:
@@ -114,7 +114,6 @@ export const handleText = async (message: Message) => {
           try {
             const media = await proxyImage(url)
             await chat.sendMessage(media, stickerMeta)
-            addCount('Stickers')
           } catch (error) {
             console.error(error)
           }
@@ -143,7 +142,6 @@ export const handleText = async (message: Message) => {
         const name = (await message.getContact()).pushname
         const response = `${name},${(await ask(question)) || ''}`
         await message.reply(response)
-        addCount('AI')
         break
     }
   }
@@ -169,16 +167,14 @@ export const getTextAction = async (message: string) => {
 }
 
 export enum actions {
-  MEME_LIST = 1,
-  MEME,
-  INSTRUCTIONS,
-  STICKER,
-  LINK,
-  STATS,
-  TEXT,
-  DONOR,
-  AI,
-  BAN,
-  UNBAN,
-  BUTTON
+  MEME_LIST = 'Meme List',
+  MEME = 'Memes',
+  INSTRUCTIONS = 'Instructions',
+  STICKER = 'Stickers',
+  LINK = 'Link',
+  STATS = 'Statistics',
+  TEXT = 'Text',
+  AI = 'AI',
+  BAN = 'Ban',
+  UNBAN = 'Unban'
 }
