@@ -22,17 +22,17 @@ const convertAudio = async (media: MessageMedia) => {
     try {
       await fs.writeFile(origFile, media.data, { encoding: 'base64' })
 
-      ffmpeg().input(origFile)
+      ffmpeg()
+        .input(origFile)
         .outputOptions([
           '-acodec pcm_s16le',
           '-ar 16000',
           '-ac 1'
         ])
-        .saveToFile(waveFile)
         .on('end', async () => {
           resolve(waveFile)
         })
-        .run()
+        .save(waveFile)
     } catch (error) {
       console.error(error)
       reject(error)
