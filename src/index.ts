@@ -49,7 +49,6 @@ const start = async () => {
 
     // Delete messages of banned users, except Owner
     if (!isOwner && isBanned) {
-      console.log('Deleting message', message)
       await message.delete(true)
       return
     }
