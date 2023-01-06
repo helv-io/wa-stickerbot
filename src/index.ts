@@ -19,7 +19,7 @@ const start = async () => {
   void waClient.on('message', async (message: Message) => {
     // Do not act on self messages
     if (message.fromMe) return
-    
+
     // Log message type
     addCount(message.type)
 
@@ -33,7 +33,7 @@ const start = async () => {
     ) : false
     const amAdmin = group ? group.participants.filter((p) => p.id.user === me.user)[0]
       .isAdmin : false // Am I an Admin of the group?
-    const isBanned = await isUserBanned(message.from.replace(/\D/g, ''))
+    const isBanned = await isUserBanned(sender.replace(/\D/g, ''))
 
     // Skips personal chats unless specified
     if (!group) {
