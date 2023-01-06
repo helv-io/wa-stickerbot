@@ -111,6 +111,7 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
         try {
           const synth = message.body.slice(6)
           file = await synthesizeText(synth)
+          console.log(file)
           const voiceMedia = await MessageMedia.fromFilePath(file)
           console.log(voiceMedia.filename, voiceMedia.data.length, voiceMedia.mimetype)
           await message.reply(voiceMedia)
@@ -118,6 +119,7 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
         } catch (error) {
           console.error(error)
         } finally {
+          console.log('Deleting file', file)
           await fs.unlink(file)
         }
         break

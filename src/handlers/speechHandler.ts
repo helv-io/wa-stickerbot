@@ -17,17 +17,18 @@ import { botOptions } from '../config'
 
 const convertAudio = async (media: MessageMedia) => {
   return new Promise<string>(async (resolve, reject) => {
+    // Initialize the temporary files
     const waveFile = path.join(tmpdir(), `${media.filename}.wav`)
     const origFile = path.join(tmpdir(), `${media.filename}.ogg`)
     await fs.writeFile(origFile, media.data, { encoding: 'base64' })
 
+    // Azure requires PCM 16K with 1 channel
     ffmpeg({ source: origFile })
       .outputOptions([
         '-acodec pcm_s16le',
         '-ar 16000',
         '-ac 1'
       ])
-      .on('progress', (progress) => console.log(progress))
       .on('error', (error) => reject(error))
       .on('end', async () => {
         await fs.unlink(origFile)
@@ -38,53 +39,55 @@ const convertAudio = async (media: MessageMedia) => {
 }
 
 export const transcribeAudio = async (media: MessageMedia) => {
+  // Since the Transcription is an asynchronous streaming service,
+  // the whole function must be wrapped as a Promise
   return new Promise<string>(async (resolve) => {
-    let wavFile = ''
-    try {
-      wavFile = await convertAudio(media)
-      const sConfig = SpeechConfig.fromSubscription(
-        botOptions.azureKey,
-        botOptions.azureRegion
-      )
-      sConfig.speechRecognitionLanguage = botOptions.azureLanguage
-      sConfig.speechSynthesisLanguage = botOptions.azureLanguage
-      sConfig.speechSynthesisVoiceName = botOptions.azureVoice
-      const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wavFile))
-      const reco = new SpeechRecognizer(sConfig, aConfig)
-      const transcription: string[] = []
+    // Convert ogg file to wav
+    const wavFile = await convertAudio(media)
 
-      reco.recognized = (_sender, event) => {
-        transcription.push(event.result.text)
-      }
+    // Initialize Azure SDK Speech Recognition Object from
+    // Environment Vars and wav file
+    const sConfig = SpeechConfig.fromSubscription(
+      botOptions.azureKey,
+      botOptions.azureRegion
+    )
+    sConfig.speechRecognitionLanguage = botOptions.azureLanguage
+    sConfig.speechSynthesisLanguage = botOptions.azureLanguage
+    sConfig.speechSynthesisVoiceName = botOptions.azureVoice
+    const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wavFile))
+    const reco = new SpeechRecognizer(sConfig, aConfig)
 
-      reco.speechEndDetected = async () => {
-        reco.stopContinuousRecognitionAsync()
-        reco.close()
-        resolve(transcription.join(' '))
-      }
+    // Initialize a transcription string array
+    // Audio recognition happens in chunks
+    const transcription: string[] = []
 
-      // Recognize text and exit
-      reco.startContinuousRecognitionAsync()
-    } catch (error) {
-      console.error(error)
-    } finally {
-      if (wavFile) {
-        console.log('Delete temp file', wavFile)
-        await fs.unlink(wavFile)
-      }
+    // Append recognized chunk to array
+    reco.recognized = (_sender, event) => transcription.push(event.result.text)
+
+    // When recognition ends, close the Speech Recognizer
+    reco.speechEndDetected = async () => {
+      reco.stopContinuousRecognitionAsync()
+      reco.close()
+      // Delete audio file and return transcription
+      await fs.unlink(wavFile)
+      resolve(transcription.join(' '))
     }
+
+    // Start the recognition
+    reco.startContinuousRecognitionAsync()
   })
 }
 
 export const synthesizeText = async (text: string) => {
-  return new Promise<string>(async (resolve) => {
+  return new Promise<string>(async (resolve, reject) => {
     try {
       console.log(`Synthesizing: "${text}" in ${botOptions.azureLanguage}`)
       const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
       sConfig.speechSynthesisLanguage = botOptions.azureLanguage
       sConfig.speechSynthesisVoiceName = botOptions.azureVoice
       const hash = createHash('sha256').update(text).digest('hex').slice(0, 8);
-      const file = path.join(tmpdir(), `${hash}.ogg`)
+      const mp3file = path.join(tmpdir(), `${hash}.mp3`)
+      const oggfile = path.join(tmpdir(), `${hash}.ogg`)
 
       const synt = SpeechSynthesizer.FromConfig(
         sConfig,
@@ -92,14 +95,26 @@ export const synthesizeText = async (text: string) => {
           'en-US',
           botOptions.azureLanguage
         ]),
-        AudioConfig.fromAudioFileOutput(file)
+        AudioConfig.fromAudioFileOutput(mp3file)
       )
       synt.speakTextAsync(text, async () => {
         synt.close()
-        resolve(file)
+        resolve(new Promise<string>(async (resolve, reject) => {
+          ffmpeg({ source: mp3file })
+            .outputOptions([
+              '-c:a libopus'
+            ])
+            .on('error', (error) => reject(error))
+            .on('end', async () => {
+              await fs.unlink(mp3file)
+              resolve(oggfile)
+            })
+            .save(oggfile)
+        }))
       })
     } catch (error) {
       console.error(error)
+      reject(error)
     }
   })
 }
