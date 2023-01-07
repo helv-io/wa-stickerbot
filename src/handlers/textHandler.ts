@@ -1,8 +1,9 @@
 
 import * as fs from 'fs/promises'
 
-import { Chat, GroupChat, Message, MessageMedia } from 'whatsapp-web.js'
+import { Chat, Contact, GroupChat, Message, MessageMedia } from 'whatsapp-web.js'
 
+import { waClient } from '..'
 import { botOptions, stickerMeta } from '../config'
 import {
   addCount,
@@ -161,6 +162,23 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
         const response = `${name},${(await ask(question)) || ''}`
         await message.reply(response)
         break
+
+      case actions.ALL:
+        if (group) {
+          const broadcast = message.body.slice(4)
+          console.log('Broadcast', broadcast)
+          const contacts: Contact[] = []
+          let mentions = ''
+          for (const participant of group.participants) {
+            const contact = await waClient.getContactById(participant.id._serialized);
+
+            contacts.push(contact);
+            mentions += `@${participant.id.user} `;
+          }
+          group.sendMessage(broadcast, { mentions: contacts })
+          await chat.sendMessage(`${mentions} ${broadcast}`, { mentions })
+        }
+        break
     }
   }
 }
@@ -182,6 +200,7 @@ export const getTextAction = async (message: string) => {
     if (message.startsWith('ban ')) return actions.BAN
     if (message.startsWith('unban ')) return actions.UNBAN
     if (message.startsWith('synth ')) return actions.SYNTH
+    if (message.startsWith('@all ')) return actions.ALL
   }
 }
 
@@ -196,5 +215,6 @@ export enum actions {
   AI = 'AI',
   BAN = 'Ban',
   UNBAN = 'Unban',
-  SYNTH = 'Speak'
+  SYNTH = 'Speak',
+  ALL = 'Broadcast'
 }
