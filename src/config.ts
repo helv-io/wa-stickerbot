@@ -11,6 +11,7 @@ dotenv.config()
 // https://docs.wwebjs.dev/global.html#StickerMetadata
 export const stickerMeta: MessageSendOptions = {
   sendMediaAsSticker: true,
+  quotedMessageId: undefined,
   stickerAuthor: process.env.SB_AUTHOR || 'Helvio',
   stickerName: process.env.SB_PACK || 'Sticker Bot'
 }
@@ -67,12 +68,12 @@ export const tenorSearch: TenorSearch = {
 
 export const imgproxy =
   process.env.IMGPROXY_URL &&
-  process.env.IMGPROXY_KEY &&
-  process.env.IMGPROXY_SALT
+    process.env.IMGPROXY_KEY &&
+    process.env.IMGPROXY_SALT
     ? new Imgproxy({
-        baseUrl: process.env.IMGPROXY_URL,
-        key: process.env.IMGPROXY_KEY,
-        salt: process.env.IMGPROXY_SALT,
-        encode: true
-      })
+      baseUrl: process.env.IMGPROXY_URL,
+      key: process.env.IMGPROXY_KEY,
+      salt: process.env.IMGPROXY_SALT,
+      encode: true
+    })
     : undefined
