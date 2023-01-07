@@ -1,11 +1,11 @@
-import { Message } from 'whatsapp-web.js'
+import { Chat, Message } from 'whatsapp-web.js'
 
 import { stickerMeta } from '../config'
 import { addCount } from '../handlers/dbHandler'
 import { transcribeAudio } from '../handlers/speechHandler'
 import { autoCrop } from '../utils/utils'
 
-export const handleMedia = async (message: Message, isAdmin: boolean) => {
+export const handleMedia = async (message: Message, chat: Chat, isAdmin: boolean) => {
   // Start typing
   await (await message.getChat()).sendStateTyping()
 
@@ -18,7 +18,7 @@ export const handleMedia = async (message: Message, isAdmin: boolean) => {
   try {
     if (media.mimetype.startsWith('video')) {
       // Sends as Video Sticker
-      await message.reply(media, undefined, stickerMeta)
+      await chat.sendMessage(media, stickerMeta)
     } else if (media.mimetype.startsWith('audio')) {
       // Audio File
       // Extract base64 from Media and save to file
@@ -34,13 +34,13 @@ export const handleMedia = async (message: Message, isAdmin: boolean) => {
       !media.mimetype.endsWith('webp')
     ) {
       // Sends as Image (autocropped) sticker
-      await message.reply(await autoCrop(media), undefined, stickerMeta)
+      await chat.sendMessage(await autoCrop(media), stickerMeta)
     } else {
       console.log('Unrecognized media', media.mimetype)
       // Probably a sticker, send back as GIF
       if (isAdmin) {
-        await message.reply(media, undefined, { sendVideoAsGif: true })
-        await message.reply(media, undefined, {})
+        await chat.sendMessage(media, { sendVideoAsGif: true })
+        await chat.sendMessage(media)
       }
     }
   } catch (error) {

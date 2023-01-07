@@ -11,7 +11,6 @@ dotenv.config()
 // https://docs.wwebjs.dev/global.html#StickerMetadata
 export const stickerMeta: MessageSendOptions = {
   sendMediaAsSticker: true,
-  quotedMessageId: undefined,
   stickerAuthor: process.env.SB_AUTHOR || 'Helvio',
   stickerName: process.env.SB_PACK || 'Sticker Bot'
 }

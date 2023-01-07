@@ -103,7 +103,7 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
         const text = message.body.slice(6)
         const url = `https://api.helv.io/attp?text=${encodeURIComponent(text)}`
         const media = await proxyImage(url)
-        await message.reply(media, undefined, stickerMeta)
+        await chat.sendMessage(media, stickerMeta)
         break
 
       case actions.SYNTH:
