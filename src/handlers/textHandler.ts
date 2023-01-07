@@ -176,7 +176,7 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
             mentions += `@${participant.id.user} `;
           }
           group.sendMessage(broadcast, { mentions: contacts })
-          await chat.sendMessage(`${mentions} ${broadcast}`, { mentions })
+          await chat.sendMessage(`${mentions} ${broadcast}`, { mentions: contacts })
         }
         break
     }
