@@ -175,7 +175,7 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
             contacts.push(contact);
             mentions += `@${participant.id.user} `;
           }
-          group.sendMessage(broadcast, { mentions: contacts })
+          await message.delete(true)
           await chat.sendMessage(`${mentions.trim()}\n${broadcast}`, { mentions: contacts })
         }
         break
