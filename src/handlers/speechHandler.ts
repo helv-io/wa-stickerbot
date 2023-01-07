@@ -86,8 +86,8 @@ export const synthesizeText = async (text: string) => {
       sConfig.speechSynthesisLanguage = botOptions.azureLanguage
       sConfig.speechSynthesisVoiceName = botOptions.azureVoice
       const hash = createHash('sha256').update(text).digest('hex').slice(0, 8);
-      const mp3file = path.join(tmpdir(), `${hash}.mp3`)
-      const oggfile = path.join(tmpdir(), `${hash}.ogg`)
+      // const mp3file = path.join(tmpdir(), `${hash}.mp3`)
+      const oggfile = path.join(tmpdir(), `${hash}.opus`)
 
       const synt = SpeechSynthesizer.FromConfig(
         sConfig,
@@ -95,22 +95,23 @@ export const synthesizeText = async (text: string) => {
           'en-US',
           botOptions.azureLanguage
         ]),
-        AudioConfig.fromAudioFileOutput(mp3file)
+        AudioConfig.fromAudioFileOutput(oggfile)
       )
       synt.speakTextAsync(text, async () => {
         synt.close()
-        resolve(new Promise<string>(async (resolve, reject) => {
-          ffmpeg({ source: mp3file })
-            .outputOptions([
-              '-c:a libopus'
-            ])
-            .on('error', (error) => reject(error))
-            .on('end', async () => {
-              await fs.unlink(mp3file)
-              resolve(oggfile)
-            })
-            .save(oggfile)
-        }))
+        resolve(oggfile)
+        // resolve(new Promise<string>(async (resolve, reject) => {
+        //   ffmpeg({ source: mp3file })
+        //     .outputOptions([
+        //       '-c:a libopus'
+        //     ])
+        //     .on('error', (error) => reject(error))
+        //     .on('end', async () => {
+        //       await fs.unlink(mp3file)
+        //       resolve(oggfile)
+        //     })
+        //     .save(oggfile)
+        // }))
       })
     } catch (error) {
       console.error(error)
