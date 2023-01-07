@@ -113,7 +113,6 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
           const synth = message.body.slice(6)
           file = await synthesizeText(synth)
           const voiceMedia = await MessageMedia.fromFilePath(file)
-          voiceMedia.mimetype = 'audio/ogg; codecs=opus'
           await message.reply(voiceMedia, undefined, { sendAudioAsVoice: true })
         } catch (error) {
           console.error(error)
