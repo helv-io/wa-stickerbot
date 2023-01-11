@@ -41,7 +41,7 @@ export const handleMedia = async (message: Message, chat: Chat) => {
       await chat.sendMessage(await autoCrop(media), stickerMeta)
     } else {
       // Probably a sticker, send back as GIF
-      await fs.writeFile(path.join(tmpdir(), 'stickers', `${message.id}.webp`), media.data)
+      await fs.writeFile(path.join(tmpdir(), 'stickers', `${message.id.id}.webp`), media.data)
       await chat.sendMessage(media)
     }
   } catch (error) {
