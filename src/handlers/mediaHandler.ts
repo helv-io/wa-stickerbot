@@ -1,4 +1,3 @@
-import * as fs from 'fs/promises'
 import { tmpdir } from 'os'
 import path from 'path'
 
@@ -44,11 +43,16 @@ export const handleMedia = async (message: Message, chat: Chat) => {
       try {
         // Probably a sticker, send back as GIF
         const gif = path.join(tmpdir(), `${message.id.id}.gif`)
+        const mp4 = path.join(tmpdir(), `${message.id.id}.mp4`)
         const webp = Buffer.from(media.data, 'base64')
         const im = gm.subClass({ imageMagick: true })
         im(webp).write(gif, async () => {
           await chat.sendMessage(MessageMedia.fromFilePath(gif))
-          await fs.unlink(gif)
+          // await fs.unlink(gif)
+        })
+        im(webp).write(mp4, async () => {
+          await chat.sendMessage(MessageMedia.fromFilePath(mp4))
+          // await fs.unlink(mp4)
         })
       } catch (error) {
         console.error(error)
