@@ -159,11 +159,15 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
         break
 
       case actions.AI:
-        const question = message.body.slice(5)
-        console.log(question)
-        const name = (await message.getContact()).pushname
-        const response = `${name},${(await ask(question)) || ''}`
-        await message.reply(response)
+        try {
+          const question = message.body.slice(5)
+          console.log(question)
+          const name = (await message.getContact()).pushname
+          const response = `${name},${(await ask(question)) || ''}`
+          await message.reply(response)
+        } catch (e) {
+          await message.reply('👎')
+        }
         break
 
       case actions.ALL:
