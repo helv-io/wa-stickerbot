@@ -7,6 +7,7 @@ RUN apt update && \
     ffmpeg \
     fonts-liberation \
     gconf-service \
+    imagemagick \
     libappindicator1 \
     libasound2 \
     libatk1.0-0 \

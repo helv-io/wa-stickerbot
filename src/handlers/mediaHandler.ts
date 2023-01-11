@@ -2,7 +2,8 @@ import * as fs from 'fs/promises'
 import { tmpdir } from 'os'
 import path from 'path'
 
-import { Chat, Message } from 'whatsapp-web.js'
+import gm from 'gm'
+import { Chat, Message, MessageMedia } from 'whatsapp-web.js'
 
 import { stickerMeta } from '../config'
 import { addCount } from '../handlers/dbHandler'
@@ -40,9 +41,18 @@ export const handleMedia = async (message: Message, chat: Chat) => {
       // Sends as Image (autocropped) sticker
       await chat.sendMessage(await autoCrop(media), stickerMeta)
     } else {
-      // Probably a sticker, send back as GIF
-      await fs.writeFile(path.join(tmpdir(), `${message.id.id}.webp`), media.data, { encoding: 'base64' })
-      await chat.sendMessage(media)
+      try {
+        // Probably a sticker, send back as GIF
+        const gif = path.join(tmpdir(), `${message.id.id}.gif`)
+        const webp = Buffer.from(media.data, 'base64')
+        const im = gm.subClass({ imageMagick: true })
+        im(webp).write(gif, async () => {
+          await chat.sendMessage(MessageMedia.fromFilePath(gif))
+          await fs.unlink(gif)
+        })
+      } catch (error) {
+        console.error(error)
+      }
     }
   } catch (error) {
     console.log('MediHandler error')
