@@ -56,7 +56,7 @@ const start = async () => {
     // Handle Media
     if (message.hasMedia) {
       await message.react('🤖')
-      handleMedia(message, chat, isAdmin)
+      handleMedia(message, chat)
     } else {
       // Handle Text
       await handleText(message, chat, group, isOwner, isAdmin)

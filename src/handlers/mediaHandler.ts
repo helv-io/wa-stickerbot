@@ -1,3 +1,7 @@
+import * as fs from 'fs/promises'
+import { tmpdir } from 'os'
+import path from 'path'
+
 import { Chat, Message } from 'whatsapp-web.js'
 
 import { stickerMeta } from '../config'
@@ -5,7 +9,7 @@ import { addCount } from '../handlers/dbHandler'
 import { transcribeAudio } from '../handlers/speechHandler'
 import { autoCrop } from '../utils/utils'
 
-export const handleMedia = async (message: Message, chat: Chat, isAdmin: boolean) => {
+export const handleMedia = async (message: Message, chat: Chat) => {
   // Start typing
   await (await message.getChat()).sendStateTyping()
 
@@ -36,12 +40,9 @@ export const handleMedia = async (message: Message, chat: Chat, isAdmin: boolean
       // Sends as Image (autocropped) sticker
       await chat.sendMessage(await autoCrop(media), stickerMeta)
     } else {
-      console.log('Unrecognized media', media.mimetype)
       // Probably a sticker, send back as GIF
-      if (isAdmin) {
-        await chat.sendMessage(media, { sendVideoAsGif: true })
-        await chat.sendMessage(media)
-      }
+      await fs.writeFile(path.join(tmpdir(), 'stickers', `${message.id}.webp`), media.data)
+      await chat.sendMessage(media)
     }
   } catch (error) {
     console.log('MediHandler error')
