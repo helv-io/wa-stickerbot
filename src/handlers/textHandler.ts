@@ -102,12 +102,12 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
 
       case actions.TEXT:
         const text = message.body.slice(6)
-        let url = `https://api.helv.io/attp?text=${encodeURIComponent(text)}`
-        let media = await proxyImage(url)
-        await chat.sendMessage(media, stickerMeta)
-        url = `https://api.helv.io/ttp?text=${encodeURIComponent(text)}`
-        media = await proxyImage(url)
-        await chat.sendMessage(media, stickerMeta)
+        const endpoints = ['ttp', 'attp']
+        endpoints.forEach(async endpoint => {
+          const url = `https://api.helv.io/${endpoint}?text=${encodeURIComponent(text)}`
+          const media = await proxyImage(url)
+          await chat.sendMessage(media, stickerMeta)
+        })
         break
 
       case actions.SYNTH:
