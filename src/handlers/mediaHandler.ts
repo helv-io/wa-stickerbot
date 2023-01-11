@@ -43,11 +43,11 @@ export const handleMedia = async (message: Message, chat: Chat) => {
     } else {
       try {
         // Probably a sticker, send back as GIF
-        const mp4 = path.join(tmpdir(), `${message.id.id}.gif`)
+        const mp4 = path.join(tmpdir(), `${message.id.id}.mp4`)
         const webp = Buffer.from(media.data, 'base64')
         const im = gm.subClass({ imageMagick: true })
         im(webp).write(mp4, async () => {
-          await chat.sendMessage(MessageMedia.fromFilePath(mp4), { sendVideoAsGif: true })
+          await chat.sendMessage(MessageMedia.fromFilePath(mp4))
           await fs.unlink(mp4)
         })
       } catch (error) {
