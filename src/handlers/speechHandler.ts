@@ -118,7 +118,7 @@ export const synthesizeText = async (text: string) => {
 }
 
 export const detectLanguage = async (text: string) => {
-  const client = new TextAnalyticsClient(botOptions.azureTextRegion, new AzureKeyCredential(botOptions.azureTextKey));
+  const client = new TextAnalyticsClient(botOptions.azureTextEndpoint, new AzureKeyCredential(botOptions.azureTextKey));
 
   const results = await client.detectLanguage([text]);
 

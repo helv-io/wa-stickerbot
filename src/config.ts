@@ -43,9 +43,8 @@ export const botOptions = {
   ownerNumber: process.env.SB_OWNER_NUMBER || '',
   azureSpeechRegion: process.env.SPEECH_REGION || 'eastus',
   azureSpeechKey: process.env.SPEECH_KEY || '',
-  azureTextRegion: process.env.TEXT_REGION || 'eastus',
+  azureTextEndpoint: process.env.TEXT_ENDPOINT || 'https://text-analisys.cognitiveservices.azure.com/',
   azureTextKey: process.env.TEXT_KEY || ''
-
 }
 
 // https://developers.giphy.com/docs/api/endpoint#search
