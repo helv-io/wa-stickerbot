@@ -3,6 +3,7 @@ import fs from 'fs/promises'
 import { tmpdir } from 'os'
 import path from 'path'
 
+import { AzureKeyCredential, TextAnalyticsClient } from '@azure/ai-text-analytics'
 import ffmpeg from 'fluent-ffmpeg'
 import {
   AudioConfig,
@@ -48,12 +49,12 @@ export const transcribeAudio = async (media: MessageMedia) => {
     // Initialize Azure SDK Speech Recognition Object from
     // Environment Vars and wav file
     const sConfig = SpeechConfig.fromSubscription(
-      botOptions.azureKey,
-      botOptions.azureRegion
+      botOptions.azureSpeechKey,
+      botOptions.azureSpeechRegion
     )
-    sConfig.speechRecognitionLanguage = botOptions.azureLanguage
-    sConfig.speechSynthesisLanguage = botOptions.azureLanguage
-    sConfig.speechSynthesisVoiceName = botOptions.azureVoice
+    const language = AutoDetectSourceLanguageConfig.fromLanguages(botOptions.enabledLanguages)
+    console.log(language)
+    // sConfig.speechSynthesisLanguage = language.mode
     const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wavFile))
     const reco = new SpeechRecognizer(sConfig, aConfig)
 
@@ -81,20 +82,17 @@ export const transcribeAudio = async (media: MessageMedia) => {
 export const synthesizeText = async (text: string) => {
   return new Promise<string>(async (resolve, reject) => {
     try {
-      console.log(`Synthesizing: "${text}" in ${botOptions.azureLanguage}`)
-      const sConfig = SpeechConfig.fromSubscription(botOptions.azureKey, 'eastus')
-      sConfig.speechSynthesisLanguage = botOptions.azureLanguage
-      sConfig.speechSynthesisVoiceName = botOptions.azureVoice
+      const lang = await detectLanguage(text)
+      console.log(`Synthesizing: "${text}" in ${lang}`)
+      const sConfig = SpeechConfig.fromSubscription(botOptions.azureSpeechKey, botOptions.azureSpeechRegion)
+      sConfig.speechSynthesisLanguage = lang
       const hash = createHash('sha256').update(text).digest('hex').slice(0, 8);
       const mp3file = path.join(tmpdir(), `${hash}.mp3`)
       const oggfile = path.join(tmpdir(), `${hash}.opus`)
 
       const synt = SpeechSynthesizer.FromConfig(
         sConfig,
-        AutoDetectSourceLanguageConfig.fromLanguages([
-          'en-US',
-          botOptions.azureLanguage
-        ]),
+        AutoDetectSourceLanguageConfig.fromLanguages(botOptions.enabledLanguages),
         AudioConfig.fromAudioFileOutput(mp3file)
       )
       synt.speakTextAsync(text, async () => {
@@ -117,4 +115,23 @@ export const synthesizeText = async (text: string) => {
       reject(error)
     }
   })
+}
+
+export const detectLanguage = async (text: string) => {
+  const client = new TextAnalyticsClient(botOptions.azureTextRegion, new AzureKeyCredential(botOptions.azureTextKey));
+
+  const results = await client.detectLanguage([text]);
+
+  for (const result of results) {
+    if (!result.error) {
+      const primaryLanguage = result.primaryLanguage;
+      console.log(
+        `\tDetected language: ${primaryLanguage.name} (ISO 6391 code: ${primaryLanguage.iso6391Name})`
+      );
+      return primaryLanguage.iso6391Name
+    } else {
+      console.error("\tError:", result.error);
+    }
+  }
+  return botOptions.enabledLanguages[0]
 }

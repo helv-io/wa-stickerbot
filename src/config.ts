@@ -35,15 +35,17 @@ export const clientConfig: ClientOptions = {
 export const botOptions = {
   donationLink: process.env.SB_DONATION || 'pix@helv.io',
   donationChance: +(process.env.SB_DONATION_MESSAGE_CHANCE || 30),
+  enabledLanguages: process.env.ENABLED_LANGUAGES?.replaceAll(' ', '').split(',') || ['en-US', 'pt-BR'],
   stickers: +(process.env.SB_STICKERS || 10),
   groupAdminOnly: JSON.parse(process.env.SB_GROUP_ADMIN_ONLY || 'false'),
   groupsOnly: JSON.parse(process.env.SB_GROUPS_ONLY || 'false'),
   welcomeMessage: process.env.SB_WELCOME_MESSAGE,
   ownerNumber: process.env.SB_OWNER_NUMBER || '',
-  azureRegion: process.env.SPEECH_REGION || 'eastus',
-  azureKey: process.env.SPEECH_KEY || '',
-  azureLanguage: process.env.SPEECH_LANGUAGE || 'pt-BR',
-  azureVoice: process.env.SPEECH_VOICE || 'pt-BR-FabioNeural'
+  azureSpeechRegion: process.env.SPEECH_REGION || 'eastus',
+  azureSpeechKey: process.env.SPEECH_KEY || '',
+  azureTextRegion: process.env.TEXT_REGION || 'eastus',
+  azureTextKey: process.env.TEXT_KEY || ''
+
 }
 
 // https://developers.giphy.com/docs/api/endpoint#search
