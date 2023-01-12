@@ -51,13 +51,14 @@ export const transcribeAudio = async (media: MessageMedia) => {
       botOptions.azureSpeechKey,
       botOptions.azureSpeechRegion
     )
-    const language = AutoDetectSourceLanguageConfig.fromLanguages(
-      botOptions.enabledLanguages
-    )
-    console.log(language)
-    // sConfig.speechSynthesisLanguage = language.mode
+
+    // Read wav file and create recognizer
     const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wavFile))
-    const reco = SpeechRecognizer.FromConfig(sConfig, language, aConfig)
+    const reco = SpeechRecognizer.FromConfig(
+      sConfig,
+      AutoDetectSourceLanguageConfig.fromLanguages(botOptions.enabledLanguages),
+      aConfig
+    )
 
     // Initialize a transcription string array
     // Audio recognition happens in chunks
@@ -83,24 +84,31 @@ export const transcribeAudio = async (media: MessageMedia) => {
 export const synthesizeText = async (text: string) => {
   return new Promise<string>(async (resolve, reject) => {
     try {
+      // Detect the text language to properly synthesize
       const lang = await detectTextLanguage(text)
       console.log(`Synthesizing: "${text}" in ${lang}`)
+
+      // Create a Speech Configuration
       const sConfig = SpeechConfig.fromSubscription(
         botOptions.azureSpeechKey,
         botOptions.azureSpeechRegion
       )
+
+      // Set the langage
       sConfig.speechSynthesisLanguage = lang
+
+      // Setup up filenames based on text hash
       const hash = createHash('sha256').update(text).digest('hex').slice(0, 8)
       const mp3file = path.join(tmpdir(), `${hash}.mp3`)
       const oggfile = path.join(tmpdir(), `${hash}.opus`)
 
-      const synt = SpeechSynthesizer.FromConfig(
+      // Creates the Synthesizer based on inputs and expected outputs
+      const synt = new SpeechSynthesizer(
         sConfig,
-        AutoDetectSourceLanguageConfig.fromLanguages(
-          botOptions.enabledLanguages
-        ),
         AudioConfig.fromAudioFileOutput(mp3file)
       )
+
+      // Synthesize to ogg file and return it
       synt.speakTextAsync(text, async () => {
         synt.close()
         resolve(
@@ -124,24 +132,23 @@ export const synthesizeText = async (text: string) => {
 }
 
 export const detectTextLanguage = async (text: string) => {
+  // Initialize Azure Text Client
   const client = new TextAnalyticsClient(
     botOptions.azureTextEndpoint,
     new AzureKeyCredential(botOptions.azureTextKey)
   )
 
-  const results = await client.detectLanguage([text])
+  // Send single text to have its language recognized
+  const result = (await client.detectLanguage([text]))[0]
 
-  for (const result of results) {
-    if (!result.error) {
-      const primaryLanguage = result.primaryLanguage
-      return (
-        botOptions.enabledLanguages.find((lang) =>
-          lang.startsWith(primaryLanguage.iso6391Name)
-        ) || botOptions.enabledLanguages[0]
-      )
-    } else {
-      console.error('\tError:', result.error)
-    }
-  }
+  // Return the ln-RG format of the recognized language
+  if (!result.error)
+    return (
+      botOptions.enabledLanguages.find((lang) =>
+        lang.startsWith(result.primaryLanguage.iso6391Name)
+      ) || botOptions.enabledLanguages[0]
+    )
+
+  // Or the first config language if there's an error
   return botOptions.enabledLanguages[0]
 }
