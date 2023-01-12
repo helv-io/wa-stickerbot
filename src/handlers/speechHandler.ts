@@ -45,6 +45,8 @@ export const transcribeAudio = async (media: MessageMedia) => {
     // Convert ogg file to wav
     const wavFile = await convertAudio(media)
 
+    console.debug(wavFile, await fs.lstat(wavFile))
+
     // Initialize Azure SDK Speech Recognition Object from
     // Environment Vars and wav file
     const sConfig = SpeechConfig.fromSubscription(
@@ -65,7 +67,12 @@ export const transcribeAudio = async (media: MessageMedia) => {
     const transcription: string[] = []
 
     // Append recognized chunk to array
-    reco.recognized = (_sender, event) => transcription.push(event.result.text)
+    reco.recognized = async (_sender, event) => {
+      transcription.push(event.result.text)
+
+      console.debug(transcription)
+      console.debug(_sender, event)
+    }
 
     // When recognition ends, close the Speech Recognizer
     reco.speechEndDetected = async () => {
@@ -78,6 +85,8 @@ export const transcribeAudio = async (media: MessageMedia) => {
 
     // Start the recognition
     reco.startContinuousRecognitionAsync()
+
+    console.debug(reco)
   })
 }
 
