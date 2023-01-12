@@ -28,11 +28,14 @@ const start = async () => {
     const group = chat.isGroup ? <GroupChat>chat : undefined
     const sender = (await message.getContact()).id.user
     const isOwner = sender === botOptions.ownerNumber // Is the sender the Owner of the Bot?
-    const isAdmin = group ? !!group.participants.find(
-      (p) => p.isAdmin && p.id.user === sender // Is the sender an Admin of the group?
-    ) : false
-    const amAdmin = group ? group.participants.filter((p) => p.id.user === me.user)[0]
-      .isAdmin : false // Am I an Admin of the group?
+    const isAdmin = group
+      ? !!group.participants.find(
+          (p) => p.isAdmin && p.id.user === sender // Is the sender an Admin of the group?
+        )
+      : false
+    const amAdmin = group
+      ? group.participants.filter((p) => p.id.user === me.user)[0].isAdmin
+      : false // Am I an Admin of the group?
     const isBanned = await isUserBanned(sender.replace(/\D/g, ''))
 
     // Skips personal chats unless specified
@@ -135,10 +138,9 @@ server.get('/qr', async (_req, res) => {
   res.end(Buffer.from(x || '', 'base64'))
 })
 
-
 // waClient listeners
 waClient.on('ready', async () => await start())
-waClient.on('qr', (qr) => authQr = qr)
+waClient.on('qr', (qr) => (authQr = qr))
 waClient.on('ready', () => {
   ready = true
   console.log('Client is ready!')

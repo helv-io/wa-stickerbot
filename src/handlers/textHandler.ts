@@ -1,7 +1,12 @@
-
 import * as fs from 'fs/promises'
 
-import { Chat, Contact, GroupChat, Message, MessageMedia } from 'whatsapp-web.js'
+import {
+  Chat,
+  Contact,
+  GroupChat,
+  Message,
+  MessageMedia
+} from 'whatsapp-web.js'
 
 import { waClient } from '..'
 import { botOptions, stickerMeta } from '../config'
@@ -21,7 +26,13 @@ import { proxyImage } from '../utils/utils'
 import { ask } from './aiHandler'
 import { synthesizeText } from './speechHandler'
 
-export const handleText = async (message: Message, chat: Chat, group: GroupChat | undefined, isOwner: boolean, isAdmin: boolean) => {
+export const handleText = async (
+  message: Message,
+  chat: Chat,
+  group: GroupChat | undefined,
+  isOwner: boolean,
+  isAdmin: boolean
+) => {
   // Get Action from Text
   const action = await getTextAction(message.body)
 
@@ -103,8 +114,10 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
       case actions.TEXT:
         const text = message.body.slice(6)
         const endpoints = ['ttp', 'attp']
-        endpoints.forEach(async endpoint => {
-          const url = `https://api.helv.io/${endpoint}?text=${encodeURIComponent(text)}`
+        endpoints.forEach(async (endpoint) => {
+          const url = `https://api.helv.io/${endpoint}?text=${encodeURIComponent(
+            text
+          )}`
           const media = await proxyImage(url)
           await chat.sendMessage(media, stickerMeta)
         })
@@ -177,13 +190,17 @@ export const handleText = async (message: Message, chat: Chat, group: GroupChat 
           const contacts: Contact[] = []
           let mentions = ''
           for (const participant of group.participants) {
-            const contact = await waClient.getContactById(participant.id._serialized);
+            const contact = await waClient.getContactById(
+              participant.id._serialized
+            )
 
-            contacts.push(contact);
-            mentions += `@${participant.id.user} `;
+            contacts.push(contact)
+            mentions += `@${participant.id.user} `
           }
           await message.delete(true)
-          await chat.sendMessage(`${mentions.trim()}\n${broadcast}`, { mentions: contacts })
+          await chat.sendMessage(`${mentions.trim()}\n${broadcast}`, {
+            mentions: contacts
+          })
         }
         break
     }

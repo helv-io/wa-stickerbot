@@ -3,7 +3,10 @@ import fs from 'fs/promises'
 import { tmpdir } from 'os'
 import path from 'path'
 
-import { AzureKeyCredential, TextAnalyticsClient } from '@azure/ai-text-analytics'
+import {
+  AzureKeyCredential,
+  TextAnalyticsClient
+} from '@azure/ai-text-analytics'
 import ffmpeg from 'fluent-ffmpeg'
 import {
   AudioConfig,
@@ -25,11 +28,7 @@ const convertAudio = async (media: MessageMedia) => {
 
     // Azure requires PCM 16K with 1 channel
     ffmpeg({ source: origFile })
-      .outputOptions([
-        '-acodec pcm_s16le',
-        '-ar 16000',
-        '-ac 1'
-      ])
+      .outputOptions(['-acodec pcm_s16le', '-ar 16000', '-ac 1'])
       .on('error', (error) => reject(error))
       .on('end', async () => {
         await fs.unlink(origFile)
@@ -52,11 +51,13 @@ export const transcribeAudio = async (media: MessageMedia) => {
       botOptions.azureSpeechKey,
       botOptions.azureSpeechRegion
     )
-    const language = AutoDetectSourceLanguageConfig.fromLanguages(botOptions.enabledLanguages)
+    const language = AutoDetectSourceLanguageConfig.fromLanguages(
+      botOptions.enabledLanguages
+    )
     console.log(language)
     // sConfig.speechSynthesisLanguage = language.mode
     const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wavFile))
-    const reco = new SpeechRecognizer(sConfig, aConfig)
+    const reco = SpeechRecognizer.FromConfig(sConfig, language, aConfig)
 
     // Initialize a transcription string array
     // Audio recognition happens in chunks
@@ -82,34 +83,38 @@ export const transcribeAudio = async (media: MessageMedia) => {
 export const synthesizeText = async (text: string) => {
   return new Promise<string>(async (resolve, reject) => {
     try {
-      const detectedLanguage = await detectLanguage(text)
-      const lang = botOptions.enabledLanguages.find(lang => lang.startsWith(detectedLanguage)) || botOptions.enabledLanguages[0]
+      const lang = await detectTextLanguage(text)
       console.log(`Synthesizing: "${text}" in ${lang}`)
-      const sConfig = SpeechConfig.fromSubscription(botOptions.azureSpeechKey, botOptions.azureSpeechRegion)
+      const sConfig = SpeechConfig.fromSubscription(
+        botOptions.azureSpeechKey,
+        botOptions.azureSpeechRegion
+      )
       sConfig.speechSynthesisLanguage = lang
-      const hash = createHash('sha256').update(text).digest('hex').slice(0, 8);
+      const hash = createHash('sha256').update(text).digest('hex').slice(0, 8)
       const mp3file = path.join(tmpdir(), `${hash}.mp3`)
       const oggfile = path.join(tmpdir(), `${hash}.opus`)
 
       const synt = SpeechSynthesizer.FromConfig(
         sConfig,
-        AutoDetectSourceLanguageConfig.fromLanguages(botOptions.enabledLanguages),
+        AutoDetectSourceLanguageConfig.fromLanguages(
+          botOptions.enabledLanguages
+        ),
         AudioConfig.fromAudioFileOutput(mp3file)
       )
       synt.speakTextAsync(text, async () => {
         synt.close()
-        resolve(new Promise<string>(async (resolve, reject) => {
-          ffmpeg({ source: mp3file })
-            .outputOptions([
-              '-c:a libopus'
-            ])
-            .on('error', (error) => reject(error))
-            .on('end', async () => {
-              await fs.unlink(mp3file)
-              resolve(oggfile)
-            })
-            .save(oggfile)
-        }))
+        resolve(
+          new Promise<string>(async (resolve, reject) => {
+            ffmpeg({ source: mp3file })
+              .outputOptions(['-c:a libopus'])
+              .on('error', (error) => reject(error))
+              .on('end', async () => {
+                await fs.unlink(mp3file)
+                resolve(oggfile)
+              })
+              .save(oggfile)
+          })
+        )
       })
     } catch (error) {
       console.error(error)
@@ -118,20 +123,24 @@ export const synthesizeText = async (text: string) => {
   })
 }
 
-export const detectLanguage = async (text: string) => {
-  const client = new TextAnalyticsClient(botOptions.azureTextEndpoint, new AzureKeyCredential(botOptions.azureTextKey));
+export const detectTextLanguage = async (text: string) => {
+  const client = new TextAnalyticsClient(
+    botOptions.azureTextEndpoint,
+    new AzureKeyCredential(botOptions.azureTextKey)
+  )
 
-  const results = await client.detectLanguage([text]);
+  const results = await client.detectLanguage([text])
 
   for (const result of results) {
     if (!result.error) {
-      const primaryLanguage = result.primaryLanguage;
-      console.log(
-        `\tDetected language: ${primaryLanguage.name} (ISO 6391 code: ${primaryLanguage.iso6391Name})`
-      );
-      return primaryLanguage.iso6391Name
+      const primaryLanguage = result.primaryLanguage
+      return (
+        botOptions.enabledLanguages.find((lang) =>
+          lang.startsWith(primaryLanguage.iso6391Name)
+        ) || botOptions.enabledLanguages[0]
+      )
     } else {
-      console.error("\tError:", result.error);
+      console.error('\tError:', result.error)
     }
   }
   return botOptions.enabledLanguages[0]

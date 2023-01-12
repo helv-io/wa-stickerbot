@@ -35,7 +35,9 @@ export const clientConfig: ClientOptions = {
 export const botOptions = {
   donationLink: process.env.SB_DONATION || 'pix@helv.io',
   donationChance: +(process.env.SB_DONATION_MESSAGE_CHANCE || 30),
-  enabledLanguages: process.env.ENABLED_LANGUAGES?.replaceAll(' ', '').split(',') || ['en-US', 'pt-BR'],
+  enabledLanguages: process.env.ENABLED_LANGUAGES?.replaceAll(' ', '').split(
+    ','
+  ) || ['en-US', 'pt-BR'],
   stickers: +(process.env.SB_STICKERS || 10),
   groupAdminOnly: JSON.parse(process.env.SB_GROUP_ADMIN_ONLY || 'false'),
   groupsOnly: JSON.parse(process.env.SB_GROUPS_ONLY || 'false'),
@@ -43,7 +45,9 @@ export const botOptions = {
   ownerNumber: process.env.SB_OWNER_NUMBER || '',
   azureSpeechRegion: process.env.SPEECH_REGION || 'eastus',
   azureSpeechKey: process.env.SPEECH_KEY || '',
-  azureTextEndpoint: process.env.TEXT_ENDPOINT || 'https://text-analisys.cognitiveservices.azure.com/',
+  azureTextEndpoint:
+    process.env.TEXT_ENDPOINT ||
+    'https://text-analisys.cognitiveservices.azure.com/',
   azureTextKey: process.env.TEXT_KEY || ''
 }
 
@@ -68,12 +72,12 @@ export const tenorSearch: TenorSearch = {
 
 export const imgproxy =
   process.env.IMGPROXY_URL &&
-    process.env.IMGPROXY_KEY &&
-    process.env.IMGPROXY_SALT
+  process.env.IMGPROXY_KEY &&
+  process.env.IMGPROXY_SALT
     ? new Imgproxy({
-      baseUrl: process.env.IMGPROXY_URL,
-      key: process.env.IMGPROXY_KEY,
-      salt: process.env.IMGPROXY_SALT,
-      encode: true
-    })
+        baseUrl: process.env.IMGPROXY_URL,
+        key: process.env.IMGPROXY_KEY,
+        salt: process.env.IMGPROXY_SALT,
+        encode: true
+      })
     : undefined
