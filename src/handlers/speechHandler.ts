@@ -82,7 +82,8 @@ export const transcribeAudio = async (media: MessageMedia) => {
 export const synthesizeText = async (text: string) => {
   return new Promise<string>(async (resolve, reject) => {
     try {
-      const lang = await detectLanguage(text)
+      const detectedLanguage = await detectLanguage(text)
+      const lang = botOptions.enabledLanguages.find(lang => lang.startsWith(detectedLanguage)) || botOptions.enabledLanguages[0]
       console.log(`Synthesizing: "${text}" in ${lang}`)
       const sConfig = SpeechConfig.fromSubscription(botOptions.azureSpeechKey, botOptions.azureSpeechRegion)
       sConfig.speechSynthesisLanguage = lang
