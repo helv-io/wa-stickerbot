@@ -45,15 +45,12 @@ export const transcribeAudio = async (media: MessageMedia) => {
     // Convert ogg file to wav
     const wavFile = await convertAudio(media)
 
-    console.debug(wavFile, await fs.lstat(wavFile))
-
     // Initialize Azure SDK Speech Recognition Object from
     // Environment Vars and wav file
     const sConfig = SpeechConfig.fromSubscription(
       botOptions.azureSpeechKey,
       botOptions.azureSpeechRegion
     )
-    console.debug("Speech configuration: ", sConfig)
 
     // Read wav file and create recognizer
     const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wavFile))
@@ -62,34 +59,26 @@ export const transcribeAudio = async (media: MessageMedia) => {
       AutoDetectSourceLanguageConfig.fromLanguages(botOptions.enabledLanguages),
       aConfig
     )
-    console.debug("Recognizer created")
 
     // Initialize a transcription string array
     // Audio recognition happens in chunks
     const transcription: string[] = []
 
     // Append recognized chunk to array
-    reco.recognized = async (_sender, event) => {
-      transcription.push(event.result.text)
+    reco.recognized = async (_sender, event) => transcription.push(event.result.text)
 
-      console.debug(transcription)
-      console.debug(_sender, event)
-    }
 
     // When recognition ends, close the Speech Recognizer
     reco.speechEndDetected = async () => {
       reco.stopContinuousRecognitionAsync()
       reco.close()
-      console.debug("Recognition ended")
       // Delete audio file and return transcription
       await fs.unlink(wavFile)
-      console.debug("Deleted audio file")
       resolve(transcription.join(' '))
     }
 
     // Start the recognition
     reco.startContinuousRecognitionAsync()
-    console.debug("Started recognition")
   })
 }
 
