@@ -53,6 +53,7 @@ export const transcribeAudio = async (media: MessageMedia) => {
       botOptions.azureSpeechKey,
       botOptions.azureSpeechRegion
     )
+    console.debug("Speech configuration: ", sConfig)
 
     // Read wav file and create recognizer
     const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wavFile))
@@ -61,6 +62,7 @@ export const transcribeAudio = async (media: MessageMedia) => {
       AutoDetectSourceLanguageConfig.fromLanguages(botOptions.enabledLanguages),
       aConfig
     )
+    console.debug("Recognizer created")
 
     // Initialize a transcription string array
     // Audio recognition happens in chunks
@@ -78,15 +80,16 @@ export const transcribeAudio = async (media: MessageMedia) => {
     reco.speechEndDetected = async () => {
       reco.stopContinuousRecognitionAsync()
       reco.close()
+      console.debug("Recognition ended")
       // Delete audio file and return transcription
       await fs.unlink(wavFile)
+      console.debug("Deleted audio file")
       resolve(transcription.join(' '))
     }
 
     // Start the recognition
     reco.startContinuousRecognitionAsync()
-
-    console.debug(reco)
+    console.debug("Started recognition")
   })
 }
 
