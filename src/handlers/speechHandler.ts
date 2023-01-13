@@ -65,8 +65,8 @@ export const transcribeAudio = async (media: MessageMedia) => {
     const transcription: string[] = []
 
     // Append recognized chunk to array
-    reco.recognized = async (_sender, event) => transcription.push(event.result.text)
-
+    reco.recognized = async (_sender, event) =>
+      transcription.push(event.result.text)
 
     // When recognition ends, close the Speech Recognizer
     reco.speechEndDetected = async () => {
