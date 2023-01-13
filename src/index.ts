@@ -132,7 +132,7 @@ server.get('/chats', async (_req, res) => {
 // Get QR
 server.get('/qr', async (_req, res) => {
   if (ready || !authQr) {
-    res.end(waClient.info)
+    res.end(waClient.info.wid.user)
     return
   }
   const x = await (await QRCode.toDataURL(authQr)).split(';base64,').pop()
@@ -143,10 +143,8 @@ server.get('/qr', async (_req, res) => {
 // waClient listeners
 waClient.on('ready', async () => await start())
 waClient.on('qr', (qr) => {
-  if (!ready) {
-    authQr = qr
-    qrcodeTerm.generate(qr, { small: true })
-  }
+  authQr = qr
+  qrcodeTerm.generate(qr, { small: true })
 })
 waClient.on('ready', () => {
   ready = true
