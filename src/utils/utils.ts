@@ -26,7 +26,7 @@ export const autoCrop = async (media: MessageMedia) => {
   const image = await Jimp.read(Buffer.from(media.data, 'base64'))
 
   // Auto crop the image
-  const croppedImage = image.autocrop({ cropOnlyFrames: false, tolerance: 0.01 })
+  const croppedImage = image.autocrop({ cropOnlyFrames: false, tolerance: 0.001 })
 
   // Convert the image to a base64 encoded string
   const retb64 =
