@@ -30,8 +30,8 @@ const start = async () => {
     const isOwner = sender === botOptions.ownerNumber // Is the sender the Owner of the Bot?
     const isAdmin = group
       ? !!group.participants.find(
-          (p) => p.isAdmin && p.id.user === sender // Is the sender an Admin of the group?
-        )
+        (p) => p.isAdmin && p.id.user === sender // Is the sender an Admin of the group?
+      )
       : false
     const amAdmin = group
       ? group.participants.filter((p) => p.id.user === me.user)[0].isAdmin
@@ -130,10 +130,11 @@ server.get('/chats', async (_req, res) => {
 
 // Get QR
 server.get('/qr', async (_req, res) => {
-  if (ready) return res.end(waClient.info)
-  const x = await (await QRCode.toDataURL(authQr || 'NONE'))
-    .split(';base64,')
-    .pop()
+  if (ready || !authQr) {
+    res.end(waClient.info)
+    return
+  }
+  const x = await (await QRCode.toDataURL(authQr)).split(';base64,').pop()
   res.type('png')
   res.end(Buffer.from(x || '', 'base64'))
 })
@@ -143,6 +144,7 @@ waClient.on('ready', async () => await start())
 waClient.on('qr', (qr) => (authQr = qr))
 waClient.on('ready', () => {
   ready = true
+  authQr = ''
   console.log('Client is ready!')
   me = waClient.info.wid
 })

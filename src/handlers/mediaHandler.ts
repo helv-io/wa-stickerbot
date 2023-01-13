@@ -8,7 +8,6 @@ import { Chat, Message, MessageMedia } from 'whatsapp-web.js'
 import { stickerMeta } from '../config'
 import { addCount } from '../handlers/dbHandler'
 import { transcribeAudio } from '../handlers/speechHandler'
-import { autoCrop } from '../utils/utils'
 
 export const handleMedia = async (message: Message, chat: Chat) => {
   // Start typing
@@ -34,25 +33,27 @@ export const handleMedia = async (message: Message, chat: Chat) => {
 
       // Reply with transcription
       message.reply(transcription)
-    } else if (
-      media.mimetype.startsWith('image') &&
-      !media.mimetype.endsWith('webp')
-    ) {
-      // Sends as Image (autocropped) sticker
-      await chat.sendMessage(await autoCrop(media), stickerMeta)
-    } else {
-      try {
-        // Probably a sticker, send back as GIF
-        const mp4 = path.join(tmpdir(), `${message.id.id}.mp4`)
-        const webp = Buffer.from(media.data, 'base64')
-        const im = gm.subClass({ imageMagick: true })
-        im(webp).write(mp4, async () => {
-          await chat.sendMessage(MessageMedia.fromFilePath(mp4))
-          await fs.unlink(mp4)
-        })
-      } catch (error) {
-        console.error(error)
+    } else if (media.mimetype.startsWith('image')) {
+      if (!media.mimetype.endsWith('webp')) {
+        // Image to Sticker
+        await chat.sendMessage(media, stickerMeta)
       }
+      // Sticker to Image
+      else {
+        try {
+          const mp4 = path.join(tmpdir(), `${message.id.id}.mp4`)
+          const webp = Buffer.from(media.data, 'base64')
+          const im = gm.subClass({ imageMagick: true })
+          im(webp).write(mp4, async () => {
+            await chat.sendMessage(MessageMedia.fromFilePath(mp4))
+            await fs.unlink(mp4)
+          })
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    } else {
+      console.info(`Unknown Media Type: ${media.mimetype}`)
     }
   } catch (error) {
     console.log('MediHandler error')
