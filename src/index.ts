@@ -1,5 +1,6 @@
 import express from 'express'
 import * as QRCode from 'qrcode'
+import * as qrcodeTerm from 'qrcode-terminal'
 import { Client, ContactId, GroupChat, Message } from 'whatsapp-web.js'
 
 import { botOptions, clientConfig } from './config'
@@ -141,7 +142,12 @@ server.get('/qr', async (_req, res) => {
 
 // waClient listeners
 waClient.on('ready', async () => await start())
-waClient.on('qr', (qr) => (authQr = qr))
+waClient.on('qr', (qr) => {
+  if (!ready) {
+    authQr = qr
+    qrcodeTerm.generate(qr, { small: true })
+  }
+})
 waClient.on('ready', () => {
   ready = true
   authQr = ''
