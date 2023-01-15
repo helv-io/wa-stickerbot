@@ -38,7 +38,7 @@
     "qs": "^6.11.0",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.4",
-    "whatsapp-web.js": "^1.18.4"
+    "whatsapp-web.js": "Helvio88/whatsapp-web.js"
   },
   "devDependencies": {
     "@types/express": "^4.17.15",
