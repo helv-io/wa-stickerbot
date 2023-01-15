@@ -52,8 +52,6 @@ RUN apt update && \
 WORKDIR /usr/src/app
 COPY . .
 RUN npm run build
-# TEMP FIX to fix Legacy error
-# RUN sed -i 's/\.LegacyPhoneFeatures;/?.LegacyPhoneFeatures;/' ./node_modules/whatsapp-web.js/src/util/Injected.js
 EXPOSE 3000
 VOLUME ["/data"]
 ENTRYPOINT ["node"]
