@@ -38,7 +38,7 @@
     "qs": "^6.11.0",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.4",
-    "whatsapp-web.js": "pedroslopez/whatsapp-web.js"
+    "whatsapp-web.js": "pedroslopez/whatsapp-web.js#d2479f3"
   },
   "devDependencies": {
     "@types/express": "^4.17.15",
