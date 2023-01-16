@@ -3,9 +3,7 @@ import * as fs from 'fs/promises'
 import {
   Chat,
   Contact,
-  GroupChat,
-  List,
-  Message,
+  GroupChat, Message,
   MessageMedia
 } from 'whatsapp-web.js'
 
@@ -204,26 +202,6 @@ export const handleText = async (
           })
         }
         break
-
-      case actions.BUTTONS:
-        const list = new List(
-          'List body',
-          'Button Text',
-          [
-            {
-              title: 'Section Title',
-              rows: [
-                { rowId: 'Custom ID', title: 'List Item 1', description: 'desc' },
-                { rowId: 'oGSRoD', title: 'List Item 2', description: '' }
-              ]
-            }
-          ],
-          'Title here',
-          'Now Footer'
-        )
-        console.log(list)
-        await chat.sendMessage(list)
-        break
     }
   }
 }
@@ -238,7 +216,6 @@ export const getTextAction = async (message: string) => {
     if (message === 'memes') return actions.MEME_LIST
     if (message === 'link') return actions.LINK
     if (message === 'rtfm') return actions.INSTRUCTIONS
-    if (message === 'buttons') return actions.BUTTONS
     if (stickerRegExp.exec(message)) return actions.STICKER
     if (message.startsWith('meme ')) return actions.MEME
     if (message.startsWith('texto ')) return actions.TEXT
@@ -262,6 +239,5 @@ export enum actions {
   BAN = 'Ban',
   UNBAN = 'Unban',
   SYNTH = 'Speak',
-  ALL = 'Broadcast',
-  BUTTONS = 'Buttons'
+  ALL = 'Broadcast'
 }
