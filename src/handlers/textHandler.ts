@@ -1,6 +1,7 @@
 import * as fs from 'fs/promises'
 
 import {
+  Buttons,
   Chat,
   Contact,
   GroupChat,
@@ -203,6 +204,20 @@ export const handleText = async (
           })
         }
         break
+
+      case actions.BUTTON:
+        const buttons = new Buttons(
+          'Main message here?',
+          [
+            { id: 'a', body: 'A' },
+            { id: 'b', body: 'B' }
+          ],
+          'This is the title!',
+          'And the footer goes here.'
+        )
+        console.log(buttons)
+        await chat.sendMessage(buttons)
+        break
     }
   }
 }
@@ -217,6 +232,7 @@ export const getTextAction = async (message: string) => {
     if (message === 'memes') return actions.MEME_LIST
     if (message === 'link') return actions.LINK
     if (message === 'rtfm') return actions.INSTRUCTIONS
+    if (message === 'buttons') return actions.BUTTONS
     if (stickerRegExp.exec(message)) return actions.STICKER
     if (message.startsWith('meme ')) return actions.MEME
     if (message.startsWith('texto ')) return actions.TEXT
@@ -240,5 +256,6 @@ export enum actions {
   BAN = 'Ban',
   UNBAN = 'Unban',
   SYNTH = 'Speak',
-  ALL = 'Broadcast'
+  ALL = 'Broadcast',
+  BUTTONS = 'Buttons'
 }

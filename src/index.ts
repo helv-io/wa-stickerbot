@@ -31,8 +31,8 @@ const start = async () => {
     const isOwner = sender === botOptions.ownerNumber // Is the sender the Owner of the Bot?
     const isAdmin = group
       ? !!group.participants.find(
-        (p) => p.isAdmin && p.id.user === sender // Is the sender an Admin of the group?
-      )
+          (p) => p.isAdmin && p.id.user === sender // Is the sender an Admin of the group?
+        )
       : false
     const amAdmin = group
       ? group.participants.filter((p) => p.id.user === me.user)[0].isAdmin
