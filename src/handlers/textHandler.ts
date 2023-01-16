@@ -218,7 +218,7 @@ export const handleText = async (
         )
         console.log(buttons)
         await chat.sendMessage(buttons)
-        const list = new List('List body', 'Button Text', ['Section 1', 'Section 2'], 'Title here', 'Now Footer')
+        const list = new List('List body', 'Button Text', ['Option1'], 'Title here', 'Now Footer')
         console.log(list)
         await chat.sendMessage(list)
         break
