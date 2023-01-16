@@ -205,7 +205,7 @@ export const handleText = async (
         }
         break
 
-      case actions.BUTTON:
+      case actions.BUTTONS:
         const buttons = new Buttons(
           'Main message here?',
           [
