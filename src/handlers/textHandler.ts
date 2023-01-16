@@ -5,6 +5,7 @@ import {
   Chat,
   Contact,
   GroupChat,
+  List,
   Message,
   MessageMedia
 } from 'whatsapp-web.js'
@@ -217,6 +218,9 @@ export const handleText = async (
         )
         console.log(buttons)
         await chat.sendMessage(buttons)
+        const list = new List('List body', 'Button Text', ['Section 1', 'Section 2'], 'Title here', 'Now Footer')
+        console.log(list)
+        await chat.sendMessage(list)
         break
     }
   }
