@@ -3,7 +3,8 @@ import * as fs from 'fs/promises'
 import {
   Chat,
   Contact,
-  GroupChat, Message,
+  GroupChat,
+  Message,
   MessageMedia
 } from 'whatsapp-web.js'
 
