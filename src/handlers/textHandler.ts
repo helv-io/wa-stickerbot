@@ -1,7 +1,6 @@
 import * as fs from 'fs/promises'
 
 import {
-  Buttons,
   Chat,
   Contact,
   GroupChat,
@@ -207,18 +206,21 @@ export const handleText = async (
         break
 
       case actions.BUTTONS:
-        const buttons = new Buttons(
-          'Main message here?',
+        const list = new List(
+          'List body',
+          'Button Text',
           [
-            { id: 'a', body: 'A' },
-            { id: 'b', body: 'B' }
+            {
+              title: 'Section Title',
+              rows: [
+                { rowId: 'Custom ID', title: 'List Item 1', description: 'desc' },
+                { rowId: 'oGSRoD', title: 'List Item 2', description: '' }
+              ]
+            }
           ],
-          'This is the title!',
-          'And the footer goes here.'
+          'Title here',
+          'Now Footer'
         )
-        console.log(buttons)
-        await chat.sendMessage(buttons)
-        const list = new List('List body', 'Button Text', ['Option1'], 'Title here', 'Now Footer')
         console.log(list)
         await chat.sendMessage(list)
         break
