@@ -120,12 +120,11 @@ export const handleText = async (
               text
             )}`
             const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
-            console.log(media)
-            media.mimetype = 'image/webp'
             await chat.sendMessage(media, stickerMeta)
           })
         } catch (e) {
           console.error(e)
+          await chat.sendMessage('👎')
         }
         break
 
