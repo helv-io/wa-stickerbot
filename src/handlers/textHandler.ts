@@ -118,7 +118,7 @@ export const handleText = async (
           const url = `https://api.helv.io/${endpoint}?text=${encodeURIComponent(
             text
           )}`
-          const media = await proxyImage(url)
+          const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
           await chat.sendMessage(media, stickerMeta)
         })
         break
