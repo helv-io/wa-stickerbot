@@ -104,8 +104,10 @@ export const handleText = async (
         console.log(`Sending (${message.body.split('\n').join(')(')})`)
 
         try {
-          const media = await MessageMedia.fromUrl(await makeMeme(message.body))
+          const url = await makeMeme(message.body)
+          const media = await MessageMedia.fromUrl(url)
           media.data = <string>await convertToWebp(media.data)
+          console.log(url)
           console.log(media)
           media.mimetype = 'image/webp'
           media.filename = 'B.webp'
