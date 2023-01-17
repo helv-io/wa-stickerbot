@@ -112,16 +112,21 @@ export const handleText = async (
         break
 
       case actions.TEXT:
-        const text = message.body.slice(6)
-        const endpoints = ['ttp', 'attp']
-        endpoints.forEach(async (endpoint) => {
-          const url = `https://api.helv.io/${endpoint}?text=${encodeURIComponent(
-            text
-          )}&type=webp`
-          const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
-          media.mimetype = 'image/webp'
-          await chat.sendMessage(media, stickerMeta)
-        })
+        try {
+          const text = message.body.slice(6)
+          const endpoints = ['ttp', 'attp']
+          endpoints.forEach(async (endpoint) => {
+            const url = `https://api.helv.io/${endpoint}?text=${encodeURIComponent(
+              text
+            )}`
+            const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
+            console.log(media)
+            media.mimetype = 'image/webp'
+            await chat.sendMessage(media, stickerMeta)
+          })
+        } catch (e) {
+          console.error(e)
+        }
         break
 
       case actions.SYNTH:
