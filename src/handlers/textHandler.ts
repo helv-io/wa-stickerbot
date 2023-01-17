@@ -117,8 +117,9 @@ export const handleText = async (
         endpoints.forEach(async (endpoint) => {
           const url = `https://api.helv.io/${endpoint}?text=${encodeURIComponent(
             text
-          )}`
+          )}&type=webp`
           const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
+          media.mimetype = 'image/webp'
           await chat.sendMessage(media, stickerMeta)
         })
         break
