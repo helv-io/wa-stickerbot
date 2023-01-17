@@ -21,7 +21,7 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
-import { proxyImage } from '../utils/utils'
+import { convertToWebp, proxyImage } from '../utils/utils'
 
 import { ask } from './aiHandler'
 import { synthesizeText } from './speechHandler'
@@ -104,7 +104,8 @@ export const handleText = async (
         console.log(`Sending (${message.body.split('\n').join(')(')})`)
 
         try {
-          const media = await proxyImage(await makeMeme(message.body))
+          const media = await MessageMedia.fromUrl(await makeMeme(message.body))
+          media.data = <string>await convertToWebp(media.data)
           await message.reply(media, undefined, stickerMeta)
         } catch (error) {
           console.error(error)

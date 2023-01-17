@@ -1,4 +1,5 @@
 import qs from 'qs'
+import sharp from 'sharp'
 import { MessageMedia } from 'whatsapp-web.js'
 
 import { imgproxy } from '../config'
@@ -18,4 +19,19 @@ export const proxyImage = async (url: string) => {
   if (!imgproxy) return await MessageMedia.fromUrl(url, { unsafeMime: true })
   const proxyUrl = imgproxy.builder().format('webp').generateUrl(url)
   return await MessageMedia.fromUrl(proxyUrl, { unsafeMime: true })
+}
+
+// Convert a Buffer or Base64 image to webp. Return same type as input.
+export const convertToWebp = async (img: Buffer | string) => {
+  let inputBuffer = true
+  if (typeof img === 'string') {
+    img = Buffer.from(img, 'base64')
+    inputBuffer = false
+  }
+
+  const buffer = await sharp(img, { animated: true }).webp().toBuffer()
+
+  if (inputBuffer)
+    return buffer
+  return buffer.toString('base64')
 }
