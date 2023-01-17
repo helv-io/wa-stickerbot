@@ -10,13 +10,13 @@ export const getTenors = async (search: TenorSearch) => {
     const tenors: TenorResponse = await (await fetch(tenorURL + params)).json()
 
     const urls: string[] = []
-    tenors.results.forEach((tenor) =>
+    for (const tenor of tenors.results)
       urls.push(
         tenor.media[0].gif.size <= 1400000
           ? tenor.media[0].gif.url
           : tenor.media[0].tinygif.url
       )
-    )
+
     return urls
   } catch (e) {
     console.error(e)

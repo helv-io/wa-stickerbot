@@ -115,13 +115,13 @@ export const handleText = async (
         try {
           const text = message.body.slice(6)
           const endpoints = ['ttp', 'attp']
-          endpoints.forEach(async (endpoint) => {
+          for (const endpoint of endpoints) {
             const url = `https://api.helv.io/${endpoint}?text=${encodeURIComponent(
               text
             )}`
             const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
             await chat.sendMessage(media, stickerMeta)
-          })
+          }
         } catch (e) {
           console.error(e)
           await chat.sendMessage('👎')
@@ -150,14 +150,14 @@ export const handleText = async (
         const tenorURLs = await getTenors(searches.tenorSearch)
         const urls = giphyURLs.concat(tenorURLs)
 
-        urls.forEach(async (url) => {
+        for (const url of urls) {
           try {
             const media = await proxyImage(url)
             await chat.sendMessage(media, stickerMeta)
           } catch (error) {
             console.error(error)
           }
-        })
+        }
         break
 
       case actions.BAN:

@@ -14,11 +14,11 @@ export const makeMeme = async (body: string) => {
   const meme = memes.find((m) => m.id.toLowerCase() === memeId)
 
   if (meme && memeLines.length === meme.lines) {
-    memeLines.forEach((line, i, arr) => {
+    for (let i = 0; i < memeLines.length; i++) {
       // Replace special characters
       // https://memegen.link/#special-characters
-      arr[i] = encodeURIComponent(
-        line
+      memeLines[i] = encodeURIComponent(
+        memeLines[i]
           .replaceAll('?', '~q')
           .replaceAll('&', '~a')
           .replaceAll('%', '~p')
@@ -32,7 +32,7 @@ export const makeMeme = async (body: string) => {
           .replaceAll('_', '__')
           .replaceAll(' ', '_')
       )
-    })
+    }
     const url = `${memeMakeURL}/${meme.id}/${memeLines.join('/')}.gif`
     return url
   }
@@ -42,9 +42,8 @@ export const makeMeme = async (body: string) => {
 export const getMemeList = async () => {
   const memes = (await getMemes()).sort((a, b) => (a.name > b.name ? 1 : -1))
   let response = ''
-  memes.forEach(
-    (meme) => (response += `${meme.name} (${meme.id}) [${meme.lines}]\n`)
-  )
+  for (const meme of memes)
+    response += `${meme.name} (${meme.id}) [${meme.lines}]\n`
   return response
 }
 

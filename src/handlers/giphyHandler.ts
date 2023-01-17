@@ -21,14 +21,14 @@ export const getGiphys = async (search: GiphySearch) => {
     const giphys = gifs.data.concat(stickers.data)
 
     const urls: string[] = []
-    giphys.forEach((giphy) =>
+    for (const giphy of giphys)
       urls.push(
         (giphy.images.original.webp_size <= '1400000'
           ? giphy.images.original.webp
           : giphy.images.fixed_width.webp
         ).replace(/media[0-9]/, 'i')
       )
-    )
+
     return urls
   } catch (e) {
     console.error(e)
