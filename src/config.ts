@@ -24,8 +24,7 @@ export const clientConfig: ClientOptions = {
   ffmpegPath: '/usr/bin/ffmpeg',
   takeoverOnConflict: true,
   puppeteer: {
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    executablePath: '/usr/bin/chromium'
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
   }
 }
 

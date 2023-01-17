@@ -21,7 +21,7 @@ Can also search for GIFs and Stickers through GIPHY and Tenor, as well as create
 
 Once the container is running, you need to link your phone to it. To do so, you have a few options:
 
-- `http://localhost:3000/` to see a small page with the QR Code to scan.
+- `http://localhost:3000/qr` to see a small page with the QR Code to scan.
 - `docker logs -f wa-stickerbot` to open the live log. The QR will be printed there.
 
 ## Environment Variables
@@ -31,7 +31,6 @@ All variables are optional
 | Variable                   | Description                           | Default     |
 | -------------------------- | ------------------------------------- | ----------- |
 | WA_SESSION_ID              | Session ID / File Names               | session     |
-| WA_POPUP                   | TCP port for QR image                 | false       |
 | GIPHY_API                  | [Giphy] API Key                       | (blank)     |
 | GIPHY_LANGUAGE             | [Giphy Language] code                 | pt          |
 | TENOR_API                  | [Tenor] API Key                       | (blank)     |

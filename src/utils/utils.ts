@@ -15,7 +15,7 @@ export const oneChanceIn = (odds: number) => {
 
 export const proxyImage = async (url: string) => {
   // Do nothing if imgproxy is not set
-  if (!imgproxy) return await MessageMedia.fromUrl(url)
+  if (!imgproxy) return await MessageMedia.fromUrl(url, { unsafeMime: true })
   const proxyUrl = imgproxy.builder().format('webp').generateUrl(url)
   return await MessageMedia.fromUrl(proxyUrl, { unsafeMime: true })
 }
