@@ -29,9 +29,11 @@ export const convertToWebp = async (img: Buffer | string) => {
     inputBuffer = false
   }
 
-  const buffer = await sharp(img, { animated: true }).webp().toBuffer()
+  const buffer = await sharp(img, { animated: true })
+    .resize(512, 512, { fit: 'inside' })
+    .webp()
+    .toBuffer()
 
-  if (inputBuffer)
-    return buffer
+  if (inputBuffer) return buffer
   return buffer.toString('base64')
 }

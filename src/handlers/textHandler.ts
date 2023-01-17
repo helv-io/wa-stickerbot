@@ -108,7 +108,6 @@ export const handleText = async (
           const media = await MessageMedia.fromUrl(url)
           media.data = <string>await convertToWebp(media.data)
           await message.reply(media, undefined, stickerMeta)
-          await message.reply(await MessageMedia.fromUrl(url))
         } catch (error) {
           console.error(error)
         }
