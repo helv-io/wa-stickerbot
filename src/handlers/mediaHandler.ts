@@ -56,7 +56,7 @@ export const handleMedia = async (message: Message, chat: Chat) => {
       console.info(`Unknown Media Type: ${media.mimetype}`)
     }
   } catch (error) {
-    console.log('MediHandler error')
+    console.log('MediaHandler error')
     console.error(error)
   }
 }

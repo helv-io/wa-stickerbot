@@ -106,6 +106,8 @@ export const handleText = async (
         try {
           const media = await MessageMedia.fromUrl(await makeMeme(message.body))
           media.data = <string>await convertToWebp(media.data)
+          console.log(media)
+          media.mimetype = 'image/webp'
           await message.reply(media, undefined, stickerMeta)
         } catch (error) {
           console.error(error)
