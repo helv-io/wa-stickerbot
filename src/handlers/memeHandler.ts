@@ -33,7 +33,7 @@ export const makeMeme = async (body: string) => {
           .replaceAll(' ', '_')
       )
     }
-    const url = `${memeMakeURL}/${meme.id}/${memeLines.join('/')}.gif`
+    const url = `${memeMakeURL}/${meme.id}/${memeLines.join('/')}.webp`
     return url
   }
   return ''
