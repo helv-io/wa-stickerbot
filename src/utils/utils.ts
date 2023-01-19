@@ -47,14 +47,16 @@ export const roundImage = async (media: MessageMedia) => {
 
   media.data = (
     await sharp(img, { animated: true })
+      .webp()
       .resize(512, 512, { fit: 'cover' })
       .composite([
         {
           input: badge,
-          blend: 'dest-in'
+          blend: 'dest-in',
+          tile: true,
+          gravity: 'northwest'
         }
       ])
-      .webp()
       .toBuffer()
   ).toString('base64')
 

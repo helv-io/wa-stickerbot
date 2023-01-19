@@ -24,6 +24,8 @@ export const handleMedia = async (message: Message, chat: Chat) => {
     if (media.mimetype.startsWith('video')) {
       // Sends as Video Sticker
       await chat.sendMessage(media, stickerMeta)
+      // Badge mode
+      await chat.sendMessage(await roundImage(media), stickerMeta)
     } else if (media.mimetype.startsWith('audio')) {
       // Audio File
       // Extract base64 from Media and save to file
@@ -38,7 +40,7 @@ export const handleMedia = async (message: Message, chat: Chat) => {
       if (!media.mimetype.endsWith('webp')) {
         // Image to Sticker
         await chat.sendMessage(media, stickerMeta)
-        // Rounded corners
+        // Badge mode
         await chat.sendMessage(await roundImage(media), stickerMeta)
       }
       // Sticker to Image
