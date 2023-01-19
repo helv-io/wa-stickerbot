@@ -3,6 +3,7 @@ import { tmpdir } from 'os'
 import path from 'path'
 
 import gm from 'gm'
+import { roundImage } from 'utils/utils'
 import { Chat, Message, MessageMedia } from 'whatsapp-web.js'
 
 import { stickerMeta } from '../config'
@@ -37,6 +38,8 @@ export const handleMedia = async (message: Message, chat: Chat) => {
       if (!media.mimetype.endsWith('webp')) {
         // Image to Sticker
         await chat.sendMessage(media, stickerMeta)
+        // Rounded corners
+        await chat.sendMessage(await roundImage(media), stickerMeta)
       }
       // Sticker to Image
       else {
