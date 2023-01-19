@@ -3,7 +3,6 @@ RUN apt update && \
     apt install -y \
     build-essential \
     ca-certificates \
-    chromium \
     ffmpeg \
     fonts-liberation \
     gconf-service \
@@ -49,6 +48,14 @@ RUN apt update && \
     lsb-release \
     wget \
     xdg-utils
+RUN if [ `arch` = 'x86_64' ]; \
+    then \
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+        dpkg -i google-chrome-stable_current_amd64.deb && \
+        rm google-chrome-stable_current_amd64.deb \
+    else \
+        apt install -y chromium; \
+    fi
 WORKDIR /usr/src/app
 COPY . .
 RUN npm run build

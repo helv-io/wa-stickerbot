@@ -25,7 +25,7 @@ export const clientConfig: ClientOptions = {
   takeoverOnConflict: true,
   puppeteer: {
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    executablePath: '/usr/bin/chromium'
+    executablePath: process.arch == 'x64' ? '/usr/bin/google-chrome' : '/usr/bin/chromium'
   }
 }
 
