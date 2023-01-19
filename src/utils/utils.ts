@@ -71,6 +71,7 @@ export const badge = async (media: MessageMedia) => {
   media.filename = media.filename?.replace(extension, 'webp')
   console.log('Converted to badge')
   console.log(media)
+  await fs.writeFile('/tmp/test.webp', media.data, { encoding: 'base64' })
 
   // All done, return the modified media object
   return media
@@ -79,13 +80,11 @@ export const badge = async (media: MessageMedia) => {
 // Use ffmpeg to convert mp4 to gif so it can be used with sharp
 const mp4ToGif = async (media: MessageMedia) => {
   console.log('Converting mp4 to gif')
-  // Read media data as Buffer
-  const buffer = Buffer.from(media.data, 'base64')
 
   // Create a file path and save the mp4
   const mp4File = path.join(tmpdir(), media.filename || 'tmp.mp4')
   console.log(mp4File)
-  await fs.writeFile(mp4File, buffer)
+  await fs.writeFile(mp4File, media.data, { encoding: 'base64' })
 
   // Use ffmpeg to convert the file and return new file path (gif)
   const gifFile = await new Promise<string>(async (resolve, reject) => {
