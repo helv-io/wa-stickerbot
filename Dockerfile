@@ -4,7 +4,6 @@ RUN apt update && \
     build-essential \
     ca-certificates \
     chromium \
-    firefox-esr \
     ffmpeg \
     fonts-liberation \
     gconf-service \
