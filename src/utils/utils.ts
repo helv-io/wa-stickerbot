@@ -80,7 +80,7 @@ export const badge = async (media: MessageMedia) => {
 // Use ffmpeg to convert mp4 to gif so it can be used with sharp
 const mp4ToGif = async (media: MessageMedia) => {
   console.log('Converting mp4 to gif')
-  await fs.writeFile('/tmp/temp.mp4', media.data, { encoding: 'base64' })
+  await fs.writeFile('/tmp/test.mp4', media.data, { encoding: 'base64' })
 
   // Create a file path and save the mp4
   const mp4File = path.join(tmpdir(), media.filename || 'tmp.mp4')
@@ -101,12 +101,13 @@ const mp4ToGif = async (media: MessageMedia) => {
   })
   console.log(gifFile)
   // Replace media.data with gif data and adjust size/mime
-  media.data = await fs.readFile(gifFile, 'base64')
+  media.data = await fs.readFile(gifFile, { encoding: 'base64' })
   media.filesize = media.data.length
   media.mimetype = 'image/gif'
   media.filename = media.filename?.replace('.mp4', '.gif')
 
   // Delete gif file
+  await fs.writeFile('/tmp/test.gif', media.data, { encoding: 'base64' })
   await fs.unlink(gifFile)
   // Return the new media object
   return media
