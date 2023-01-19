@@ -8,7 +8,7 @@ import { Chat, Message, MessageMedia } from 'whatsapp-web.js'
 import { stickerMeta } from '../config'
 import { addCount } from '../handlers/dbHandler'
 import { transcribeAudio } from '../handlers/speechHandler'
-import { roundImage } from '../utils/utils'
+import { badge } from '../utils/utils'
 
 export const handleMedia = async (message: Message, chat: Chat) => {
   // Start typing
@@ -26,7 +26,7 @@ export const handleMedia = async (message: Message, chat: Chat) => {
       // Sends as Video Sticker
       await chat.sendMessage(media, stickerMeta)
       // Badge mode
-      await chat.sendMessage(await roundImage(media), stickerMeta)
+      await chat.sendMessage(await badge(media), stickerMeta)
     } else if (media.mimetype.startsWith('audio')) {
       // Transcribe
       const transcription = await transcribeAudio(media)
@@ -38,7 +38,7 @@ export const handleMedia = async (message: Message, chat: Chat) => {
         // Image to Sticker
         await chat.sendMessage(media, stickerMeta)
         // Badge mode
-        await chat.sendMessage(await roundImage(media), stickerMeta)
+        await chat.sendMessage(await badge(media), stickerMeta)
       }
       // Sticker to Image
       else {

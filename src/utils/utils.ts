@@ -28,10 +28,14 @@ export const proxyImage = async (url: string) => {
   return await MessageMedia.fromUrl(proxyUrl, { unsafeMime: true })
 }
 
-// Make MessageMedia into round image.
-export const roundImage = async (media: MessageMedia) => {
+// Make MessageMedia into badge.
+export const badge = async (media: MessageMedia) => {
+  console.log('Pre Convert')
+  console.log(media)
   // Convert to GIF if it's MP4
   if (media.filename?.toLowerCase().endsWith('mp4')) media = await mp4ToGif(media)
+  console.log('Post Convert')
+  console.log(media)
 
   // Read media as Buffer
   const img = Buffer.from(media.data, 'base64')
@@ -67,11 +71,13 @@ export const roundImage = async (media: MessageMedia) => {
 
 // Use ffmpeg to convert mp4 to gif so it can be used with sharp
 const mp4ToGif = async (media: MessageMedia) => {
+  console.log('Converting mp4 to gif')
   // Read media data as Buffer
   const buffer = Buffer.from(media.data, 'base64')
 
   // Create a file path and save the mp4
   const mp4File = path.join(tmpdir(), media.filename || 'tmp.mp4')
+  console.log(mp4File)
   await fs.writeFile(mp4File, buffer)
 
   // Use ffmpeg to convert the file and return new file path (gif)
@@ -80,11 +86,13 @@ const mp4ToGif = async (media: MessageMedia) => {
       .on('error', (error) => reject(error))
       .on('end', async () => {
         // Delete the mp4 when conversion ends
+        console.log(mp4File.replace('.mp4', '.gif'))
         await fs.unlink(mp4File)
         resolve(mp4File.replace('.mp4', '.gif'))
       })
       .save(mp4File.replace('.mp4', '.gif'))
   })
+  console.log(gifFile)
   // Replace media.data with gif data and adjust size/mime
   media.data = await fs.readFile(gifFile, 'base64')
   media.filesize = media.data.length
