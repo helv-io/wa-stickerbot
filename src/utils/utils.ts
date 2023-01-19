@@ -31,27 +31,21 @@ export const proxyImage = async (url: string) => {
 // Make MessageMedia into badge.
 export const badge = async (media: MessageMedia) => {
   let extension = media.mimetype.split('/')[1].toLowerCase()
-  console.log('Pre Convert')
-  console.log(media)
   // Convert to GIF if it's MP4
   if (extension === 'mp4') {
     media = await mp4ToGif(media)
     extension = 'gif'
   }
-  console.log('Post Convert')
-  console.log(media)
 
   // Read media as Buffer
   const img = Buffer.from(media.data, 'base64')
-  console.log('read media buffer')
 
   // Badge overlay
   const badge = Buffer.from(
-    '<svg><rect x="0" y="0" width="512" height="512" rx="256" ry="256"/></svg>'
+    '<svg><circle cx="256" cy="256" r="256"/></svg>'
   )
 
   // Convert to (animated) webp badge and update media metadata
-  console.log('Converting to badge')
   media.data = (
     await sharp(img, { animated: true })
       .webp()
@@ -69,9 +63,6 @@ export const badge = async (media: MessageMedia) => {
   media.filesize = media.data.length
   media.mimetype = 'image/webp'
   media.filename = media.filename?.replace(extension, 'webp')
-  console.log('Converted to badge')
-  console.log(media)
-  await fs.writeFile('/tmp/test.webp', media.data, { encoding: 'base64' })
 
   // All done, return the modified media object
   return media
@@ -79,12 +70,9 @@ export const badge = async (media: MessageMedia) => {
 
 // Use ffmpeg to convert mp4 to gif so it can be used with sharp
 const mp4ToGif = async (media: MessageMedia) => {
-  console.log('Converting mp4 to gif')
-  await fs.writeFile('/tmp/test.mp4', media.data, { encoding: 'base64' })
 
   // Create a file path and save the mp4
-  const mp4File = path.join(tmpdir(), media.filename || 'tmp.mp4')
-  console.log(mp4File)
+  const mp4File = path.join(tmpdir(), media.filename || '')
   await fs.writeFile(mp4File, media.data, { encoding: 'base64' })
 
   // Use ffmpeg to convert the file and return new file path (gif)
@@ -93,13 +81,11 @@ const mp4ToGif = async (media: MessageMedia) => {
       .on('error', (error) => reject(error))
       .on('end', async () => {
         // Delete the mp4 when conversion ends
-        console.log(mp4File.replace('.mp4', '.gif'))
         await fs.unlink(mp4File)
-        resolve(mp4File.replace('.mp4', '.gif'))
+        resolve(mp4File.replace('mp4', 'gif'))
       })
-      .save(mp4File.replace('.mp4', '.gif'))
+      .save(mp4File.replace('mp4', 'gif'))
   })
-  console.log(gifFile)
   // Replace media.data with gif data and adjust size/mime
   media.data = await fs.readFile(gifFile, { encoding: 'base64' })
   media.filesize = media.data.length
@@ -107,7 +93,6 @@ const mp4ToGif = async (media: MessageMedia) => {
   media.filename = media.filename?.replace('.mp4', '.gif')
 
   // Delete gif file
-  await fs.writeFile('/tmp/test.gif', media.data, { encoding: 'base64' })
   await fs.unlink(gifFile)
   // Return the new media object
   return media
