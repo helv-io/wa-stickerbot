@@ -3,12 +3,12 @@ import { tmpdir } from 'os'
 import path from 'path'
 
 import gm from 'gm'
-import { roundImage } from 'utils/utils'
 import { Chat, Message, MessageMedia } from 'whatsapp-web.js'
 
 import { stickerMeta } from '../config'
 import { addCount } from '../handlers/dbHandler'
 import { transcribeAudio } from '../handlers/speechHandler'
+import { roundImage } from '../utils/utils'
 
 export const handleMedia = async (message: Message, chat: Chat) => {
   // Start typing
