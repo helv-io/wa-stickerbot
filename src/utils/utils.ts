@@ -41,17 +41,22 @@ export const convertToWebp = async (img: Buffer | string) => {
 // Make MessageMedia into round image.
 export const roundImage = async (media: MessageMedia) => {
   const img = Buffer.from(media.data, 'base64')
-  const round = Buffer.from('<svg><rect x="0" y="0" width="512" height="512" rx="256" ry="256"/></svg>')
+  const badge = Buffer.from(
+    '<svg><rect x="0" y="0" width="512" height="512" rx="256" ry="256"/></svg>'
+  )
 
-  media.data = (await sharp(img, { animated: true })
-    .resize(512, 512, { fit: 'inside' })
-    .composite([{
-      input: round,
-      blend: 'dest-in'
-    }])
-    .webp()
-    .toBuffer())
-    .toString('base64')
+  media.data = (
+    await sharp(img, { animated: true })
+      .resize(512, 512, { fit: 'cover' })
+      .composite([
+        {
+          input: badge,
+          blend: 'dest-in'
+        }
+      ])
+      .webp()
+      .toBuffer()
+  ).toString('base64')
 
   media.filesize = media.data.length
 
