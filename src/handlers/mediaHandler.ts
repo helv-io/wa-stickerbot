@@ -1,14 +1,10 @@
-import * as fs from 'fs/promises'
-import { tmpdir } from 'os'
-import path from 'path'
 
-import gm from 'gm'
-import { Chat, Message, MessageMedia } from 'whatsapp-web.js'
+import { Chat, Message } from 'whatsapp-web.js'
 
 import { stickerMeta } from '../config'
 import { addCount } from '../handlers/dbHandler'
 import { transcribeAudio } from '../handlers/speechHandler'
-import { badge } from '../utils/utils'
+import { badge, stickerToGif } from '../utils/utils'
 
 export const handleMedia = async (message: Message, chat: Chat) => {
   // Start typing
@@ -42,17 +38,7 @@ export const handleMedia = async (message: Message, chat: Chat) => {
       }
       // Sticker to Image
       else {
-        try {
-          const mp4 = path.join(tmpdir(), `${message.id.id}.mp4`)
-          const webp = Buffer.from(media.data, 'base64')
-          const im = gm.subClass({ imageMagick: true })
-          im(webp).write(mp4, async () => {
-            await chat.sendMessage(MessageMedia.fromFilePath(mp4))
-            await fs.unlink(mp4)
-          })
-        } catch (error) {
-          console.error(error)
-        }
+        chat.sendMessage(await stickerToGif(media))
       }
     } else {
       console.info(`Unknown Media Type: ${media.mimetype}`)

@@ -28,6 +28,18 @@ export const proxyImage = async (url: string) => {
   return await MessageMedia.fromUrl(proxyUrl, { unsafeMime: true })
 }
 
+export const stickerToGif = async (media: MessageMedia) => {
+  const buffer = Buffer.from(media.data, 'base64')
+  media.data = (await sharp(buffer, { animated: true })
+    .gif()
+    .toBuffer()).toString('base64')
+  media.filename = 'sticker.gif'
+  media.mimetype = 'image/gif'
+  media.filesize = media.data.length
+
+  return media
+}
+
 // Make MessageMedia into badge.
 export const badge = async (media: MessageMedia) => {
   let extension = media.mimetype.split('/')[1].toLowerCase()
