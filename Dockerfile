@@ -32,6 +32,7 @@ RUN apt update && \
     libpangocairo-1.0-0 \
     librsvg2-dev \
     libstdc++6 \
+    libu2f-udev \
     libx11-6 \
     libx11-xcb1 \
     libxcb1 \
@@ -50,11 +51,11 @@ RUN apt update && \
     xdg-utils
 RUN if [ `arch` = 'x86_64' ]; \
     then \
-        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-        dpkg -i google-chrome-stable_current_amd64.deb && \
-        rm google-chrome-stable_current_amd64.deb; \
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i google-chrome-stable_current_amd64.deb && \
+    rm google-chrome-stable_current_amd64.deb; \
     else \
-        apt install -y chromium; \
+    apt install -y chromium; \
     fi
 WORKDIR /usr/src/app
 COPY . .
