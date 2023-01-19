@@ -40,13 +40,15 @@ export const badge = async (media: MessageMedia) => {
 
   // Read media as Buffer
   const img = Buffer.from(media.data, 'base64')
+  console.log('read media buffer')
 
   // Badge overlay
   const badge = Buffer.from(
     '<svg><rect x="0" y="0" width="512" height="512" rx="256" ry="256"/></svg>'
   )
 
-  // Convert to (animated) badge
+  // Convert to (animated) webp badge and update media metadata
+  console.log('Converting to badge')
   media.data = (
     await sharp(img, { animated: true })
       .webp()
@@ -61,11 +63,11 @@ export const badge = async (media: MessageMedia) => {
       ])
       .toBuffer()
   ).toString('base64')
-
-  // Adjust filesize and mimetype
   media.filesize = media.data.length
   media.mimetype = 'image/webp'
   media.filename = media.filename?.replace(extension, 'webp')
+  console.log('Converted to badge')
+  console.log(media)
 
   // All done, return the modified media object
   return media
