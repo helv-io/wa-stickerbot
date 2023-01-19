@@ -41,7 +41,7 @@ export const convertToWebp = async (img: Buffer | string) => {
 // Make MessageMedia into round image.
 export const roundImage = async (media: MessageMedia) => {
   const img = Buffer.from(media.data, 'base64')
-  const round = Buffer.from('<svg><rect x="0" y="0" width="100%" height="100%" rx="50" ry="50"/></svg>')
+  const round = Buffer.from('<svg><rect x="0" y="0" width="512" height="512" rx="256" ry="256"/></svg>')
 
   media.data = (await sharp(img, { animated: true })
     .resize(512, 512, { fit: 'inside' })
@@ -53,5 +53,8 @@ export const roundImage = async (media: MessageMedia) => {
     .toBuffer())
     .toString('base64')
 
+  media.filesize = media.data.length
+
+  console.log(media)
   return media
 }
