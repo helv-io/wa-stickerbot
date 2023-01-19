@@ -16,6 +16,7 @@ export const handleMedia = async (message: Message, chat: Chat) => {
 
   const media = await message.downloadMedia()
   const contact = await message.getContact()
+  media.filename = media.filename || `${message.id.id}.${media.mimetype.split('/')[1]}` || message.id.id
 
   // Log mimetype for statistics
   await addCount(media.mimetype)
@@ -27,10 +28,6 @@ export const handleMedia = async (message: Message, chat: Chat) => {
       // Badge mode
       await chat.sendMessage(await roundImage(media), stickerMeta)
     } else if (media.mimetype.startsWith('audio')) {
-      // Audio File
-      // Extract base64 from Media and save to file
-      media.filename = message.id.id
-
       // Transcribe
       const transcription = await transcribeAudio(media)
 
