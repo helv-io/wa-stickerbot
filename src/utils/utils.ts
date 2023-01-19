@@ -30,10 +30,11 @@ export const proxyImage = async (url: string) => {
 
 // Make MessageMedia into badge.
 export const badge = async (media: MessageMedia) => {
+  const extension = media.mimetype.split('/')[1].toLowerCase()
   console.log('Pre Convert')
   console.log(media)
   // Convert to GIF if it's MP4
-  if (media.filename?.toLowerCase().endsWith('mp4')) media = await mp4ToGif(media)
+  if (extension === 'mp4') media = await mp4ToGif(media)
   console.log('Post Convert')
   console.log(media)
 
@@ -64,6 +65,7 @@ export const badge = async (media: MessageMedia) => {
   // Adjust filesize and mimetype
   media.filesize = media.data.length
   media.mimetype = 'image/webp'
+  media.filename = media.filename?.replace(extension, 'webp')
 
   // All done, return the modified media object
   return media
@@ -97,6 +99,7 @@ const mp4ToGif = async (media: MessageMedia) => {
   media.data = await fs.readFile(gifFile, 'base64')
   media.filesize = media.data.length
   media.mimetype = 'image/gif'
+  media.filename = media.filename?.replace('.mp4', '.gif')
 
   // Delete gif file
   await fs.unlink(gifFile)
