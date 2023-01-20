@@ -155,6 +155,7 @@ export const handleText = async (
             const media = await MessageMedia.fromUrl(url)
             await chat.sendMessage(media, stickerMeta)
           } catch (error) {
+            console.error(url)
             console.error(error)
           }
         }
