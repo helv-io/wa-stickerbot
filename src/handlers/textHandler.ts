@@ -21,7 +21,6 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
-import { proxyImage } from '../utils/utils'
 
 import { ask } from './aiHandler'
 import { synthesizeText } from './speechHandler'
@@ -153,7 +152,7 @@ export const handleText = async (
 
         for (const url of urls) {
           try {
-            const media = await proxyImage(url)
+            const media = await MessageMedia.fromUrl(url)
             await chat.sendMessage(media, stickerMeta)
           } catch (error) {
             console.error(error)

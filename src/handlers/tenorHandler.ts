@@ -1,7 +1,7 @@
 import { TenorResponse, TenorSearch } from '../types/Tenor'
 import { paramSerializer } from '../utils/utils'
 
-const tenorURL = 'https://g.tenor.com/v1/search?'
+const tenorURL = 'https://tenor.googleapis.com/v2/search?'
 
 export const getTenors = async (search: TenorSearch) => {
   if (!search.key) return []
@@ -12,9 +12,7 @@ export const getTenors = async (search: TenorSearch) => {
     const urls: string[] = []
     for (const tenor of tenors.results)
       urls.push(
-        tenor.media[0].gif.size <= 1400000
-          ? tenor.media[0].gif.url
-          : tenor.media[0].tinygif.url
+        tenor.media_formats.webp_transparent.url
       )
 
     return urls

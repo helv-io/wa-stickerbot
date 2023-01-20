@@ -1,39 +1,38 @@
 export interface TenorSearch {
   key: string
+  q: string
+  client_key?: string
+  searchfilter?: 'sticker' | 'static' | '-static' | 'sticker,-static'
   locale?: string
   media_filter?: string
   limit?: number
-  q: string
-  type?: string
+  type?: 'featured' | 'trending'
+  random?: boolean
 }
 
 export interface TenorResponse {
   next: string
-  results: TenorGifObject[]
+  results: TenorObject[]
 }
 
-export interface TenorGifObject {
-  created: number
-  hasaudio: boolean
+export interface TenorObject {
   id: string
-  media: TenorMediaObject[]
-  tags: string[]
   title: string
+  media_formats: TenorMediaObject
+  created: number
+  content_description: string
   itemurl: string
-  hascaption: boolean
   url: string
+  tags: string[]
+  flags: string[]
+  hasaudio: boolean
 }
 
 export interface TenorMediaObject {
-  gif: {
-    preview: string
+  webp_transparent: {
     url: string
-    dims: number[]
-    size: number
-  }
-  tinygif: {
+    duration: number
     preview: string
-    url: string
     dims: number[]
     size: number
   }

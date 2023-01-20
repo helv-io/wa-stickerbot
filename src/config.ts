@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-import Imgproxy from 'imgproxy'
 import { ClientOptions, LocalAuth, MessageSendOptions } from 'whatsapp-web.js'
 
 import { GiphySearch } from './types/Giphy'
@@ -60,24 +59,12 @@ export const giphySearch: GiphySearch = {
   type: 'gif'
 }
 
-// https://tenor.com/gifapi/documentation#endpoints-search
+// https://developers.google.com/tenor/guides/endpoints
 export const tenorSearch: TenorSearch = {
   key: process.env.TENOR_API || '',
+  client_key: process.env.WA_SESSION_ID,
   locale: process.env.TENOR_LOCALE || 'pt_BR',
-  media_filter: 'minimal',
+  media_filter: 'webp_transparent',
   limit: 1,
-  q: 'placeholder',
-  type: 'gif'
+  q: 'placeholder'
 }
-
-export const imgproxy =
-  process.env.IMGPROXY_URL &&
-    process.env.IMGPROXY_KEY &&
-    process.env.IMGPROXY_SALT
-    ? new Imgproxy({
-      baseUrl: process.env.IMGPROXY_URL,
-      key: process.env.IMGPROXY_KEY,
-      salt: process.env.IMGPROXY_SALT,
-      encode: true
-    })
-    : undefined
