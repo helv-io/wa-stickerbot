@@ -11,6 +11,7 @@ import ffmpeg from 'fluent-ffmpeg'
 import {
   AudioConfig,
   AutoDetectSourceLanguageConfig,
+  ProfanityOption,
   SpeechConfig,
   SpeechRecognizer,
   SpeechSynthesizer
@@ -51,6 +52,9 @@ export const transcribeAudio = async (media: MessageMedia) => {
       botOptions.azureSpeechKey,
       botOptions.azureSpeechRegion
     )
+
+    // Allow profanity
+    sConfig.setProfanity(ProfanityOption.Raw)
 
     // Read wav file and create recognizer
     const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wavFile))
