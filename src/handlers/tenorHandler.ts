@@ -12,7 +12,7 @@ export const getTenors = async (search: TenorSearch) => {
     const urls: string[] = []
     for (const tenor of tenors.results)
       urls.push(
-        tenor.media_formats.webp_transparent.url
+        tenor.media_formats.webp_transparent?.url || tenor.media_formats.gif.url
       )
 
     return urls

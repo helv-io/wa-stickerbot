@@ -29,7 +29,14 @@ export interface TenorObject {
 }
 
 export interface TenorMediaObject {
-  webp_transparent: {
+  webp_transparent?: {
+    url: string
+    duration: number
+    preview: string
+    dims: number[]
+    size: number
+  }
+  gif: {
     url: string
     duration: number
     preview: string
