@@ -35,7 +35,6 @@ export const stickerToGif = async (media: MessageMedia) => {
     .toBuffer()).toString('base64')
   media.filename = 'sticker.gif'
   media.mimetype = 'image/gif'
-  media.filesize = media.data.length
 
   return media
 }
@@ -72,11 +71,8 @@ export const badge = async (media: MessageMedia) => {
       ])
       .toBuffer()
   ).toString('base64')
-  media.filesize = media.data.length
   media.mimetype = 'image/webp'
   media.filename = media.filename?.replace(extension, 'webp')
-
-  await fs.writeFile('/data/animated.webp', media.data, 'base64')
 
   // All done, return the modified media object
   return media
@@ -102,7 +98,6 @@ const mp4ToGif = async (media: MessageMedia) => {
   })
   // Replace media.data with gif data and adjust size/mime
   media.data = await fs.readFile(gifFile, { encoding: 'base64' })
-  media.filesize = media.data.length
   media.mimetype = 'image/gif'
   media.filename = media.filename?.replace('.mp4', '.gif')
 

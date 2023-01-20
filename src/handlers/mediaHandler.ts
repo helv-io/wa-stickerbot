@@ -1,5 +1,5 @@
 
-import { Chat, Message, MessageMedia } from 'whatsapp-web.js'
+import { Chat, Message } from 'whatsapp-web.js'
 
 import { stickerMeta } from '../config'
 import { addCount } from '../handlers/dbHandler'
@@ -38,13 +38,7 @@ export const handleMedia = async (message: Message, chat: Chat) => {
         // Image to Sticker
         await chat.sendMessage(media, stickerMeta)
         // Badge mode
-        console.log(await chat.sendMessage(await badge(media), stickerMeta))
-        // From File
-        const mediaFromFile = MessageMedia.fromFilePath('/data/animated.webp')
-        console.log(await chat.sendMessage(mediaFromFile, stickerMeta))
-        // debug?!
-        console.log(media)
-        console.log(mediaFromFile)
+        await chat.sendMessage(await badge(media), stickerMeta)
       }
       // Sticker to Image
       else {
