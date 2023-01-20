@@ -60,7 +60,7 @@ export const badge = async (media: MessageMedia) => {
   media.data = (
     await sharp(img, { animated: true })
       .resize(512, 512, { fit: 'cover' })
-      .webp({ effort: 6, quality: 50 })
+      .webp(/*{ effort: 6, quality: 50 }*/)
       .composite([
         {
           input: badge,
