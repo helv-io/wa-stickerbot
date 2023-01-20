@@ -1,5 +1,5 @@
 
-import { Chat, Message } from 'whatsapp-web.js'
+import { Chat, Message, MessageMedia } from 'whatsapp-web.js'
 
 import { stickerMeta } from '../config'
 import { addCount } from '../handlers/dbHandler'
@@ -12,7 +12,12 @@ export const handleMedia = async (message: Message, chat: Chat) => {
 
   const media = await message.downloadMedia()
   const contact = await message.getContact()
-  media.filename = media.filename || `${message.id.id}.${media.mimetype.split('/')[1]}` || message.id.id
+
+  // Use original filename if one exists, otherwise create one using id as base and the second part
+  // of the mime (after /) for the extension. Sometimes mime can contain extra data after a ; like
+  // 'audio/ogg; codecs=opus', so we'll use the first part instead, which would be 'ogg'.
+  // If somehow that fails, default to the id with no extension.
+  media.filename = media.filename || `${message.id.id}.${media.mimetype.split(';')[1].split(' ')[0]}` || message.id.id
 
   // Log mimetype for statistics
   await addCount(media.mimetype)
@@ -26,7 +31,6 @@ export const handleMedia = async (message: Message, chat: Chat) => {
     } else if (media.mimetype.startsWith('audio')) {
       // Transcribe
       const transcription = await transcribeAudio(media)
-
       // Reply with transcription
       message.reply(transcription)
     } else if (media.mimetype.startsWith('image')) {
@@ -35,10 +39,15 @@ export const handleMedia = async (message: Message, chat: Chat) => {
         await chat.sendMessage(media, stickerMeta)
         // Badge mode
         await chat.sendMessage(await badge(media), stickerMeta)
+        // From File
+        const mediaFromFile = MessageMedia.fromFilePath('/data/animated.webp')
+        await chat.sendMessage(mediaFromFile, stickerMeta)
       }
       // Sticker to Image
       else {
-        chat.sendMessage(await stickerToGif(media))
+        await chat.sendMessage(await stickerToGif(media))
+        const mediaFromFile = MessageMedia.fromFilePath('/data/stickerToGif.gif')
+        await chat.sendMessage(mediaFromFile)
       }
     } else {
       console.info(`Unknown Media Type: ${media.mimetype}`)

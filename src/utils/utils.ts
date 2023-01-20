@@ -37,6 +37,8 @@ export const stickerToGif = async (media: MessageMedia) => {
   media.mimetype = 'image/gif'
   media.filesize = media.data.length
 
+  await fs.writeFile('/data/stickerToGif.gif', media.data, 'base64')
+
   return media
 }
 
@@ -60,8 +62,8 @@ export const badge = async (media: MessageMedia) => {
   // Convert to (animated) webp badge and update media metadata
   media.data = (
     await sharp(img, { animated: true })
-      .webp()
       .resize(512, 512, { fit: 'cover' })
+      .webp({ effort: 6, quality: 50 })
       .composite([
         {
           input: badge,
@@ -75,6 +77,8 @@ export const badge = async (media: MessageMedia) => {
   media.filesize = media.data.length
   media.mimetype = 'image/webp'
   media.filename = media.filename?.replace(extension, 'webp')
+
+  await fs.writeFile('/data/animated.webp', media.data, 'base64')
 
   // All done, return the modified media object
   return media
