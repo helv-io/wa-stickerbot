@@ -206,7 +206,7 @@ export const handleText = async (
             mentions += `@${participant.id.user} `
           }
           await message.delete(true)
-          await chat.sendMessage(`${mentions.trim()}\n${broadcast}`, {
+          await chat.sendMessage(`${broadcast}\n\n${mentions.trim()}`, {
             mentions: contacts
           })
         }
