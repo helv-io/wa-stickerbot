@@ -148,9 +148,8 @@ export const handleText = async (
 
         const giphyURLs = await getGiphys(searches.giphySearch)
         const tenorURLs = await getTenors(searches.tenorSearch)
-        const urls = giphyURLs.concat(tenorURLs)
 
-        for (const url of urls) {
+        for (const url of giphyURLs.concat(tenorURLs)) {
           try {
             const media = await MessageMedia.fromUrl(url)
             await chat.sendMessage(media, stickerMeta)

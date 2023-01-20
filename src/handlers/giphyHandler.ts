@@ -22,12 +22,7 @@ export const getGiphys = async (search: GiphySearch) => {
 
     const urls: string[] = []
     for (const giphy of giphys)
-      urls.push(
-        (giphy.images.original.webp_size <= '1400000'
-          ? giphy.images.original.webp
-          : giphy.images.fixed_width.webp
-        ).replace(/media[0-9]/, 'i')
-      )
+      urls.push(`https://i.giphy.com/media/${giphy.id}/200.webp`)
 
     return urls
   } catch (e) {
