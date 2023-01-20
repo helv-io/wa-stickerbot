@@ -148,7 +148,7 @@ export const handleText = async (
 
         const giphyURLs = await getGiphys(searches.giphySearch)
         const tenorURLs = await getTenors(searches.tenorSearch)
-f
+
         // Shuffle array of URLs to make the results more uniform
         const urls = giphyURLs.concat(tenorURLs).sort(() => 0.5 - Math.random());
 
