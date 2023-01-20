@@ -38,16 +38,17 @@ export const handleMedia = async (message: Message, chat: Chat) => {
         // Image to Sticker
         await chat.sendMessage(media, stickerMeta)
         // Badge mode
-        await chat.sendMessage(await badge(media), stickerMeta)
+        console.log(await chat.sendMessage(await badge(media), stickerMeta))
         // From File
         const mediaFromFile = MessageMedia.fromFilePath('/data/animated.webp')
-        await chat.sendMessage(mediaFromFile, stickerMeta)
+        console.log(await chat.sendMessage(mediaFromFile, stickerMeta))
+        // debug?!
+        console.log(media)
+        console.log(mediaFromFile)
       }
       // Sticker to Image
       else {
         await chat.sendMessage(await stickerToGif(media))
-        const mediaFromFile = MessageMedia.fromFilePath('/data/stickerToGif.gif')
-        await chat.sendMessage(mediaFromFile)
       }
     } else {
       console.info(`Unknown Media Type: ${media.mimetype}`)

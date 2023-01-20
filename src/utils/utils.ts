@@ -37,8 +37,6 @@ export const stickerToGif = async (media: MessageMedia) => {
   media.mimetype = 'image/gif'
   media.filesize = media.data.length
 
-  await fs.writeFile('/data/stickerToGif.gif', media.data, 'base64')
-
   return media
 }
 
