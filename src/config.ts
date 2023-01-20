@@ -65,7 +65,7 @@ export const tenorSearch: TenorSearch = {
   client_key: process.env.WA_SESSION_ID,
   locale: process.env.TENOR_LOCALE || 'pt_BR',
   media_filter: 'webp_transparent',
-  searchfilter: 'sticker,-static'
+  searchfilter: 'sticker,-static',
   limit: 1,
   q: 'placeholder'
 }
