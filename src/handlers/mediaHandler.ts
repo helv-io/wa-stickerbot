@@ -17,7 +17,7 @@ export const handleMedia = async (message: Message, chat: Chat) => {
   // of the mime (after /) for the extension. Sometimes mime can contain extra data after a ; like
   // 'audio/ogg; codecs=opus', so we'll use the first part instead, which would be 'ogg'.
   // If somehow that fails, default to the id with no extension.
-  media.filename = media.filename || `${message.id.id}.${media.mimetype.split(';')[1].split(' ')[0]}` || message.id.id
+  media.filename = media.filename || `${message.id.id}.${media.mimetype.split('/')[1].split(';')[0]}` || message.id.id
 
   // Log mimetype for statistics
   await addCount(media.mimetype)
