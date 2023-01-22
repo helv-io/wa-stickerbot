@@ -6,7 +6,7 @@ const key = process.env.OPENAI_API_KEY
 export const ask = async (question: string) => {
   if (org && key) {
     const completionRequest: CreateCompletionRequest = {
-      model: 'code-davinci-002',
+      model: 'code-davinci-003',
       prompt: `//Human readable\nQ: ${question}\nA:`,
       stop: '\n',
       temperature: 0.25,
