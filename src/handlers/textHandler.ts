@@ -187,6 +187,7 @@ export const handleText = async (
           const response = `${name},${(await ask(question)) || ''}`
           await message.reply(response)
         } catch (e) {
+          console.error(e)
           await message.reply('👎')
         }
         break
