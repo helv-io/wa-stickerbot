@@ -18,10 +18,11 @@ export const ask = async (question: string) => {
       apiKey: key
     })
     const openai = new OpenAIApi(configuration)
-    const aiResponse = (await openai.createCompletion(completionRequest)).data
-      .choices
+    const aiResponse = await openai.createCompletion(completionRequest)
+    console.log(aiResponse)
+    const choices = aiResponse.data.choices
     if (aiResponse) {
-      return aiResponse[0].text
+      return choices[0].text
     }
     return '👎'
   }
