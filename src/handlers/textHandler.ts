@@ -1,15 +1,9 @@
 import * as fs from 'fs/promises'
 
-import {
-  Chat,
-  Contact,
-  GroupChat,
-  Message,
-  MessageMedia
-} from 'whatsapp-web.js'
+import { GroupMetadata, MiscMessageGenerationOptions, WAMessage } from '@adiwajshing/baileys'
 
-import { waClient } from '..'
-import { botOptions, stickerMeta } from '../config'
+import { client } from '../bot'
+import { botOptions } from '../config'
 import {
   addCount,
   ban,
@@ -21,35 +15,36 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
+import { deleteMessage, react } from '../utils/baileysHelper'
 
 import { ask } from './aiHandler'
 import { synthesizeText } from './speechHandler'
 
 export const handleText = async (
-  message: Message,
-  chat: Chat,
-  group: GroupChat | undefined,
-  isOwner: boolean,
-  isAdmin: boolean
+  message: WAMessage, body: string, group: GroupMetadata | undefined, isOwner: boolean, isAdmin: boolean
 ) => {
+  // Fix remote Jid - will never be empty
+  const jid = message.key.remoteJid || ''
+
+  // Easy quote
+  const quote: MiscMessageGenerationOptions = { quoted: message }
+
   // Get Action from Text
-  const action = await getTextAction(message.body)
+  const action = await getTextAction(body)
 
   if (action) {
     // Add to Statistics
     addCount(action)
-    // Start typing
-    await chat.sendStateTyping()
-    await message.react('🤖')
+    await react(message, '🤖')
 
     switch (action) {
       case actions.INSTRUCTIONS:
         console.log('Sending instructions')
 
         if (group) {
-          await message.reply(group.description)
+          await client.sendMessage(jid, { text: group.desc || '¯\\_(ツ)_/¯' }, quote)
         } else {
-          await message.reply('¯\\_(ツ)_/¯')
+          await client.sendMessage(jid, { text: '¯\\_(ツ)_/¯' }, quote)
         }
         break
 
@@ -57,15 +52,13 @@ export const handleText = async (
         if (!group) return
         console.log('Sending Link')
 
-        await message.reply(
-          `https://chat.whatsapp.com/${await group.getInviteCode()}`
-        )
+        await client.sendMessage(jid, { text: `https://chat.whatsapp.com/${group.inviteCode}` }, quote)
         break
 
       case actions.MEME_LIST:
         console.log('Sending meme list')
 
-        await message.reply(await getMemeList())
+        await client.sendMessage(jid, { text: await getMemeList() }, quote)
         break
 
       case actions.STATS:
@@ -96,16 +89,15 @@ export const handleText = async (
           stats += `\n\n${await getDonors()}`
         }
 
-        await message.reply(stats)
+        await client.sendMessage(jid, { text: stats }, quote)
         break
 
       case actions.MEME:
-        console.log(`Sending (${message.body.split('\n').join(')(')})`)
+        console.log(`Sending (${body.split('\n').join(')(')})`)
 
         try {
-          const url = await makeMeme(message.body)
-          const media = await MessageMedia.fromUrl(url)
-          await message.reply(media, undefined, stickerMeta)
+          const url = await makeMeme(body)
+          await client.sendMessage(jid, { sticker: { url } }, quote)
         } catch (error) {
           console.error(error)
         }
@@ -113,28 +105,26 @@ export const handleText = async (
 
       case actions.TEXT:
         try {
-          const text = message.body.slice(6)
+          const text = body.slice(6)
           const endpoints = ['ttp', 'attp']
           for (const endpoint of endpoints) {
             const url = `https://api.helv.io/${endpoint}?text=${encodeURIComponent(
               text
             )}`
-            const media = await MessageMedia.fromUrl(url, { unsafeMime: true })
-            await chat.sendMessage(media, stickerMeta)
+            await client.sendMessage(jid, { sticker: { url } })
           }
         } catch (e) {
           console.error(e)
-          await chat.sendMessage('👎')
+          await client.sendMessage(jid, { text: '👎' }, quote)
         }
         break
 
       case actions.SYNTH:
         let file = ''
         try {
-          const synth = message.body.slice(6)
+          const synth = body.slice(6)
           file = await synthesizeText(synth)
-          const voiceMedia = await MessageMedia.fromFilePath(file)
-          await message.reply(voiceMedia, undefined, { sendAudioAsVoice: true })
+          await client.sendMessage(jid, { audio: { url: file }, ptt: true })
         } catch (error) {
           console.error(error)
         } finally {
@@ -143,7 +133,7 @@ export const handleText = async (
         break
 
       case actions.STICKER:
-        const searches = getStickerSearches(message.body)
+        const searches = getStickerSearches(body)
         console.log('Sending Stickers for', searches.giphySearch.q)
 
         const giphyURLs = await getGiphys(searches.giphySearch)
@@ -154,8 +144,7 @@ export const handleText = async (
 
         for (const url of urls) {
           try {
-            const media = await MessageMedia.fromUrl(url)
-            await chat.sendMessage(media, stickerMeta)
+            await client.sendMessage(jid, { sticker: { url } })
           } catch (error) {
             console.error(url)
             console.error(error)
@@ -165,51 +154,45 @@ export const handleText = async (
 
       case actions.BAN:
         if (isOwner || isAdmin) {
-          const user = message.body.slice(4).replace(/\D/g, '')
+          const user = body.slice(4).replace(/\D/g, '')
           await ban(user)
-          await message.react('👎')
+          await react(message, '👎')
         }
         break
 
       case actions.UNBAN:
         if (isOwner || isAdmin) {
-          const user = message.body.slice(6).replace(/\D/g, '')
+          const user = body.slice(6).replace(/\D/g, '')
           await unban(user)
-          await message.react('👍')
+          await react(message, '👍')
         }
         break
 
       case actions.AI:
         try {
-          const question = message.body.slice(5)
+          const question = body.slice(5)
           console.log(question)
-          const name = (await message.getContact()).pushname
+          const name = message.pushName || 'Hmm'
           const response = `${name},${(await ask(question)) || ''}`
-          await message.reply(response)
+          await client.sendMessage(jid, { text: response }, quote)
         } catch (e) {
           console.error(e)
-          await message.reply('👎')
+          await client.sendMessage(jid, { text: '👎' }, quote)
         }
         break
 
       case actions.ALL:
         if (group) {
-          const broadcast = message.body.slice(5)
+          let broadcast = body.slice(5)
           console.log('Broadcast', broadcast)
-          const contacts: Contact[] = []
-          let mentions = ''
+          const mentions = []
+          broadcast += '\n\n'
           for (const participant of group.participants) {
-            const contact = await waClient.getContactById(
-              participant.id._serialized
-            )
-
-            contacts.push(contact)
-            mentions += `@${participant.id.user} `
+            mentions.push(participant.id)
+            broadcast += `@${participant.id.split('@')[0]} `
           }
-          await message.delete(true)
-          await chat.sendMessage(`${broadcast}\n\n${mentions.trim()}`, {
-            mentions: contacts
-          })
+          await deleteMessage(message)
+          await client.sendMessage(jid, { text: broadcast, mentions })
         }
         break
     }

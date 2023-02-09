@@ -1,13 +1,14 @@
 {
   "name": "wa-stickerbot",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "WhatsApp Sticker Bot",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node src/bot.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "build": "npm i --omit=dev && npx esbuild src/index.ts --bundle --minify --platform=node --outfile=dist/dist.js --packages=external"
+    "build": "npm i --omit=dev && npx esbuild src/bot.ts --bundle --minify --platform=node --outfile=dist/dist.js --packages=external",
+    "debug": "npx nodemon --ignore wa-stickerbot src/bot.ts"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "microsoft-cognitiveservices-speech-sdk": "^1.25.0",
     "openai": "^3.1.0",
+    "pino": "^8.9.0",
     "qrcode": "^1.5.1",
     "qrcode-terminal": "^0.12.0",
     "qs": "^6.11.0",
@@ -47,11 +49,13 @@
     "@types/fluent-ffmpeg": "^2.1.20",
     "@types/mime-types": "^2.1.1",
     "@types/node": "^18.13.0",
+    "@types/pino": "^7.0.5",
     "@types/qrcode": "^1.5.0",
     "@types/qrcode-terminal": "^0.12.0",
     "@types/qs": "^6.9.7",
     "@types/sharp": "^0.30.5",
     "@types/sqlite3": "^3.1.8",
+    "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "eslint": "^8.33.0",

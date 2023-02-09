@@ -28,6 +28,8 @@ export const clientConfig: ClientOptions = {
   }
 }
 
+export const sessionId = process.env.WA_SESSION_ID || 'wa-stickerbot'
+
 // Number of stickers when seraching for multiples
 // Interact with Groups only
 // Custom Instructions
