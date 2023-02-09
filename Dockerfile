@@ -2,61 +2,15 @@ FROM node:latest
 RUN apt update && \
     apt install -y \
     build-essential \
-    ca-certificates \
     ffmpeg \
-    fonts-liberation \
-    gconf-service \
     imagemagick \
-    libappindicator1 \
-    libasound2 \
-    libatk1.0-0 \
-    libc6 \
-    libcairo2 \
     libcairo2-dev \
-    libcups2 \
-    libdbus-1-3 \
-    libexpat1 \
-    libfontconfig1 \
-    libgbm-dev \
-    libgcc1 \
-    libgconf-2-4 \
-    libgdk-pixbuf2.0-0 \
     libgif-dev \
-    libglib2.0-0 \
-    libgtk-3-0 \
     libjpeg-dev \
-    libnss3 \
-    libnspr4 \
-    libpango-1.0-0 \
     libpango1.0-dev \
-    libpangocairo-1.0-0 \
     librsvg2-dev \
-    libstdc++6 \
     libu2f-udev \
-    libx11-6 \
-    libx11-xcb1 \
-    libxcb1 \
-    libxcomposite1 \
-    libxcursor1 \
-    libxdamage1 \
-    libxext6 \
-    libxfixes3 \
-    libxi6 \
-    libxrandr2 \
-    libxrender1 \
-    libxss1 \
-    libxtst6 \
-    lsb-release \
-    wget \
-    xdg-utils
-RUN if [ `arch` = 'x86_64' ]; \
-    then \
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    dpkg -i google-chrome-stable_current_amd64.deb && \
-    rm google-chrome-stable_current_amd64.deb; \
-    else \
-    apt install -y chromium; \
-    fi
+    libxcb1
 WORKDIR /usr/src/app
 COPY . .
 RUN npm run build

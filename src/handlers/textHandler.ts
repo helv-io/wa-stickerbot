@@ -35,7 +35,6 @@ export const handleText = async (
   if (action) {
     // Add to Statistics
     addCount(action)
-    await react(message, '🤖')
 
     switch (action) {
       case actions.INSTRUCTIONS:
@@ -50,18 +49,21 @@ export const handleText = async (
 
       case actions.LINK:
         if (!group) return
+        await react(message, '🤖')
         console.log('Sending Link')
 
         await client.sendMessage(jid, { text: `https://chat.whatsapp.com/${group.inviteCode}` }, quote)
         break
 
       case actions.MEME_LIST:
+        await react(message, '🤖')
         console.log('Sending meme list')
 
         await client.sendMessage(jid, { text: await getMemeList() }, quote)
         break
 
       case actions.STATS:
+        await react(message, '🤖')
         // Build stats text
         let stats = `*Current Usage*\n\n`
 
@@ -93,6 +95,7 @@ export const handleText = async (
         break
 
       case actions.MEME:
+        await react(message, '🤖')
         console.log(`Sending (${body.split('\n').join(')(')})`)
 
         try {
@@ -104,6 +107,7 @@ export const handleText = async (
         break
 
       case actions.TEXT:
+        await react(message, '🤖')
         try {
           const text = body.slice(6)
           const endpoints = ['ttp', 'attp']
@@ -120,6 +124,7 @@ export const handleText = async (
         break
 
       case actions.SYNTH:
+        await react(message, '🤖')
         let file = ''
         try {
           const synth = body.slice(6)
@@ -133,6 +138,7 @@ export const handleText = async (
         break
 
       case actions.STICKER:
+        await react(message, '🤖')
         const searches = getStickerSearches(body)
         console.log('Sending Stickers for', searches.giphySearch.q)
 
@@ -141,6 +147,9 @@ export const handleText = async (
 
         // Shuffle array of URLs to make the results more uniform
         const urls = giphyURLs.concat(tenorURLs).sort(() => 0.5 - Math.random());
+
+        console.log('Giphy and Tenor URLs:')
+        console.log(urls)
 
         for (const url of urls) {
           try {
@@ -169,6 +178,7 @@ export const handleText = async (
         break
 
       case actions.AI:
+        await react(message, '🤖')
         try {
           const question = body.slice(5)
           console.log(question)

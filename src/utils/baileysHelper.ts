@@ -17,6 +17,7 @@ export const deleteMessage = async (message: WAMessage) => {
 }
 
 export const makeSticker = async (message: WAMessage) => {
+    await react(message, '🤖')
     message.key.remoteJid = message.key.remoteJid || ''
     const buffer = <Buffer>await downloadMediaMessage(message, 'buffer', {})
 

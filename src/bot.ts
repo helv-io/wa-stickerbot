@@ -5,7 +5,7 @@ import { pino } from 'pino'
 import { addCount, isUserBanned } from './handlers/dbHandler'
 import baileysClient from './utils/baileysClient'
 import { botOptions, sessionId } from './config'
-import { deleteMessage, makeSticker, react } from './utils/baileysHelper'
+import { deleteMessage, makeSticker } from './utils/baileysHelper'
 import { handleText } from './handlers/textHandler'
 
 export let client: baileysClient
@@ -85,7 +85,6 @@ const connectToWhatsApp = async () => {
             }
 
             if (messageType === 'imageMessage' || messageType === 'videoMessage') await makeSticker(message)
-            await react(message, '🤖')
         }
     })
 }
