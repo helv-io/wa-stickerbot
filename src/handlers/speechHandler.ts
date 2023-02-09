@@ -16,16 +16,15 @@ import {
   SpeechRecognizer,
   SpeechSynthesizer
 } from 'microsoft-cognitiveservices-speech-sdk'
-import { MessageMedia } from 'whatsapp-web.js'
 
 import { botOptions } from '../config'
 
-const convertAudio = async (media: MessageMedia) => {
+const convertAudio = async (filename: string, data: string) => {
   return new Promise<string>(async (resolve, reject) => {
     // Initialize the temporary files
-    const waveFile = path.join(tmpdir(), `${media.filename}.wav`)
-    const origFile = path.join(tmpdir(), `${media.filename}.ogg`)
-    await fs.writeFile(origFile, media.data, { encoding: 'base64' })
+    const waveFile = path.join(tmpdir(), `${filename}.wav`)
+    const origFile = path.join(tmpdir(), `${filename}.ogg`)
+    await fs.writeFile(origFile, data, { encoding: 'base64' })
 
     // Azure requires PCM 16K with 1 channel
     ffmpeg({ source: origFile })
@@ -39,12 +38,12 @@ const convertAudio = async (media: MessageMedia) => {
   })
 }
 
-export const transcribeAudio = async (media: MessageMedia) => {
+export const transcribeAudio = async (filename: string, data: string) => {
   // Since the Transcription is an asynchronous streaming service,
   // the whole function must be wrapped as a Promise
   return new Promise<string>(async (resolve) => {
     // Convert ogg file to wav
-    const wavFile = await convertAudio(media)
+    const wavFile = await convertAudio(filename, data)
 
     // Initialize Azure SDK Speech Recognition Object from
     // Environment Vars and wav file

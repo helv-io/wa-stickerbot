@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-import { ClientOptions, LocalAuth, MessageSendOptions } from 'whatsapp-web.js'
 
 import { GiphySearch } from './types/Giphy'
 import { TenorSearch } from './types/Tenor'
@@ -7,25 +6,12 @@ import { TenorSearch } from './types/Tenor'
 // Load OS Env Vars
 dotenv.config()
 
+// TODO: REMOVE
 // https://docs.wwebjs.dev/global.html#StickerMetadata
-export const stickerMeta: MessageSendOptions = {
+export const stickerMeta = {
   sendMediaAsSticker: true,
   stickerAuthor: process.env.SB_AUTHOR || 'Helvio',
   stickerName: process.env.SB_PACK || 'Sticker Bot'
-}
-
-// https://docs.wwebjs.dev/Client.html#info
-export const clientConfig: ClientOptions = {
-  authStrategy: new LocalAuth({
-    clientId: process.env.WA_SESSION_ID,
-    dataPath: '/data'
-  }),
-  ffmpegPath: '/usr/bin/ffmpeg',
-  takeoverOnConflict: true,
-  puppeteer: {
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    executablePath: process.arch === 'x64' ? '/usr/bin/google-chrome' : '/usr/bin/chromium'
-  }
 }
 
 export const sessionId = process.env.WA_SESSION_ID || 'wa-stickerbot'

@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "build": "npm i --omit=dev && npx esbuild src/bot.ts --bundle --minify --platform=node --outfile=dist/dist.js --packages=external",
-    "debug": "npx nodemon --ignore wa-stickerbot src/bot.ts"
+    "debug": "npx nodemon src/bot.ts"
   },
   "repository": {
     "type": "git",
@@ -41,8 +41,7 @@
     "sharp": "^0.30.5",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.4",
-    "wa-sticker-formatter": "^4.3.2",
-    "whatsapp-web.js": "^1.19.3"
+    "wa-sticker-formatter": "^4.3.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",

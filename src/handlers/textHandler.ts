@@ -1,6 +1,10 @@
 import * as fs from 'fs/promises'
 
-import { GroupMetadata, MiscMessageGenerationOptions, WAMessage } from '@adiwajshing/baileys'
+import {
+  GroupMetadata,
+  MiscMessageGenerationOptions,
+  WAMessage
+} from '@adiwajshing/baileys'
 
 import { client } from '../bot'
 import { botOptions } from '../config'
@@ -21,7 +25,11 @@ import { ask } from './aiHandler'
 import { synthesizeText } from './speechHandler'
 
 export const handleText = async (
-  message: WAMessage, body: string, group: GroupMetadata | undefined, isOwner: boolean, isAdmin: boolean
+  message: WAMessage,
+  body: string,
+  group: GroupMetadata | undefined,
+  isOwner: boolean,
+  isAdmin: boolean
 ) => {
   // Fix remote Jid - will never be empty
   const jid = message.key.remoteJid || ''
@@ -41,7 +49,11 @@ export const handleText = async (
         console.log('Sending instructions')
 
         if (group) {
-          await client.sendMessage(jid, { text: group.desc || '¯\\_(ツ)_/¯' }, quote)
+          await client.sendMessage(
+            jid,
+            { text: group.desc || '¯\\_(ツ)_/¯' },
+            quote
+          )
         } else {
           await client.sendMessage(jid, { text: '¯\\_(ツ)_/¯' }, quote)
         }
@@ -52,7 +64,11 @@ export const handleText = async (
         await react(message, '🤖')
         console.log('Sending Link')
 
-        await client.sendMessage(jid, { text: `https://chat.whatsapp.com/${group.inviteCode}` }, quote)
+        await client.sendMessage(
+          jid,
+          { text: `https://chat.whatsapp.com/${group.inviteCode}` },
+          quote
+        )
         break
 
       case actions.MEME_LIST:
@@ -146,7 +162,7 @@ export const handleText = async (
         const tenorURLs = await getTenors(searches.tenorSearch)
 
         // Shuffle array of URLs to make the results more uniform
-        const urls = giphyURLs.concat(tenorURLs).sort(() => 0.5 - Math.random());
+        const urls = giphyURLs.concat(tenorURLs).sort(() => 0.5 - Math.random())
 
         console.log('Giphy and Tenor URLs:')
         console.log(urls)
