@@ -19,7 +19,6 @@ export const ask = async (question: string) => {
     })
     const openai = new OpenAIApi(configuration)
     const aiResponse = await openai.createCompletion(completionRequest)
-    console.log(aiResponse)
     const choices = aiResponse.data.choices
     if (aiResponse) {
       return choices[0].text
