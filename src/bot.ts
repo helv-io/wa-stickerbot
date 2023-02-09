@@ -7,7 +7,7 @@ import makeWASocket, {
 import { Boom } from '@hapi/boom'
 import { pino } from 'pino'
 
-import { addCount, isUserBanned } from './handlers/dbHandler'
+import { isUserBanned } from './handlers/dbHandler'
 import baileysClient from './utils/baileysClient'
 import { botOptions, sessionId } from './config'
 import { deleteMessage, makeSticker } from './utils/baileysHelper'
@@ -61,14 +61,14 @@ const connectToWhatsApp = async () => {
       // Is the sender an admin of the group?
       const isAdmin = group
         ? group.participants
-            .find((p) => areJidsSameUser(p.id, sender))
-            ?.admin?.endsWith('admin') !== null
+          .find((p) => areJidsSameUser(p.id, sender))
+          ?.admin?.endsWith('admin') !== null
         : false
       // Is the Bot an admin of the group?
       const amAdmin = group
         ? group.participants
-            .find((p) => areJidsSameUser(p.id, client.user?.id))
-            ?.admin?.endsWith('admin')
+          .find((p) => areJidsSameUser(p.id, client.user?.id))
+          ?.admin?.endsWith('admin')
         : false
       // Is sender banned?
       const isBanned = await isUserBanned(sender.replace(/\D/g, ''))
@@ -91,16 +91,8 @@ const connectToWhatsApp = async () => {
         continue
       }
 
-      // Detect Message Type and increase counter
-      const messageType = Object.keys(message.message)[0]
-      console.log(messageType)
-      addCount(messageType)
-
       // Handle simple text message
-      if (
-        messageType === 'conversation' ||
-        messageType === 'extendedTextMessage'
-      ) {
+      if (message.message.extendedTextMessage || message.message.conversation) {
         // Body of message is different whether it's individual or group
         const body =
           message.message.extendedTextMessage?.text ||
@@ -109,7 +101,7 @@ const connectToWhatsApp = async () => {
         if (body) await handleText(message, body, group, isOwner, isAdmin)
       }
 
-      if (messageType === 'imageMessage' || messageType === 'videoMessage')
+      if (message.message.imageMessage || message.message.videoMessage)
         await makeSticker(message)
 
       console.log('Message payload:')
