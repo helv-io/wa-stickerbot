@@ -111,6 +111,9 @@ const connectToWhatsApp = async () => {
 
       if (messageType === 'imageMessage' || messageType === 'videoMessage')
         await makeSticker(message)
+
+      console.log('Message payload:')
+      console.log(message)
     }
   })
 }

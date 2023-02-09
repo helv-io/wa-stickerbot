@@ -165,7 +165,6 @@ export const handleText = async (
         const urls = giphyURLs.concat(tenorURLs).sort(() => 0.5 - Math.random())
 
         console.log('Giphy and Tenor URLs:')
-        console.log(urls)
 
         for (const url of urls) {
           try {
