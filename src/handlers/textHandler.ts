@@ -145,7 +145,7 @@ export const handleText = async (
         try {
           const synth = body.slice(6)
           file = await synthesizeText(synth)
-          await client.sendMessage(jid, { audio: { url: file }, ptt: true })
+          await client.sendMessage(jid, { audio: { url: file }, ptt: true }, quote)
         } catch (error) {
           console.error(error)
         } finally {
