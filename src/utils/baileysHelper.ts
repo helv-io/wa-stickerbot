@@ -5,30 +5,38 @@ import { client } from '../bot'
 import { stickerMeta } from '../config'
 
 export const react = async (message: WAMessage, emoji: string) => {
-  message.key.remoteJid = message.key.remoteJid || ''
+  const jid = message.key.remoteJid || ''
   const reaction = { react: { text: emoji, key: message.key } }
-  await client.sendMessage(message.key.remoteJid, reaction)
+  await client.sendMessage(jid, reaction)
 }
 
 export const deleteMessage = async (message: WAMessage) => {
-  message.key.remoteJid = message.key.remoteJid || ''
-  await client.sendMessage(message.key.remoteJid, { delete: message.key })
+  const jid = message.key.remoteJid || ''
+  await client.sendMessage(jid, { delete: message.key })
 }
 
-export const makeSticker = async (message: WAMessage) => {
+export const makeSticker = async (message: WAMessage, url = '') => {
   await react(message, '🤖')
-  message.key.remoteJid = message.key.remoteJid || ''
-  const buffer = <Buffer>await downloadMediaMessage(message, 'buffer', {})
+  const jid = message.key.remoteJid || ''
+  if (!url) {
+    const buffer = <Buffer>await downloadMediaMessage(message, 'buffer', {})
 
-  const types = [StickerTypes.DEFAULT, StickerTypes.CIRCLE, StickerTypes.ROUNDED]
+    const types = [StickerTypes.DEFAULT, StickerTypes.CIRCLE, StickerTypes.ROUNDED]
 
-  for (const type of types) {
-    const sticker = new Sticker(buffer, {
+    for (const type of types) {
+      const sticker = new Sticker(buffer, {
+        pack: stickerMeta.stickerName,
+        author: stickerMeta.stickerAuthor,
+        type
+      })
+
+      client.sendMessage(jid, await sticker.toMessage())
+    }
+  } else {
+    const sticker = new Sticker(url, {
       pack: stickerMeta.stickerName,
-      author: stickerMeta.stickerAuthor,
-      type
+      author: stickerMeta.stickerAuthor
     })
-
-    client.sendMessage(message.key.remoteJid, await sticker.toMessage())
+    client.sendMessage(jid, await sticker.toMessage())
   }
 }

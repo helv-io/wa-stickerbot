@@ -19,7 +19,7 @@ import { getGiphys } from '../handlers/giphyHandler'
 import { getMemeList, makeMeme } from '../handlers/memeHandler'
 import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
-import { deleteMessage, react } from '../utils/baileysHelper'
+import { deleteMessage, react, makeSticker } from '../utils/baileysHelper'
 
 import { ask } from './aiHandler'
 import { synthesizeText } from './speechHandler'
@@ -116,7 +116,7 @@ export const handleText = async (
 
         try {
           const url = await makeMeme(body)
-          await client.sendMessage(jid, { sticker: { url } }, quote)
+          await makeSticker(message, url)
         } catch (error) {
           console.error(error)
         }
@@ -131,7 +131,7 @@ export const handleText = async (
             const url = `https://api.helv.io/${endpoint}?text=${encodeURIComponent(
               text
             )}`
-            await client.sendMessage(jid, { sticker: { url } })
+            await makeSticker(message, url)
           }
         } catch (e) {
           console.error(e)
@@ -172,7 +172,7 @@ export const handleText = async (
 
         for (const url of urls) {
           try {
-            await client.sendMessage(jid, { sticker: { url } })
+            await makeSticker(message, url)
           } catch (error) {
             console.error(url)
             console.error(error)
