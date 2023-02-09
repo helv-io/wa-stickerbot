@@ -21,7 +21,7 @@ export const makeSticker = async (message: WAMessage, url = '') => {
   if (!url) {
     const buffer = <Buffer>await downloadMediaMessage(message, 'buffer', {})
 
-    const types = [StickerTypes.DEFAULT, StickerTypes.CIRCLE, StickerTypes.ROUNDED]
+    const types = [StickerTypes.DEFAULT, StickerTypes.CIRCLE, StickerTypes.ROUNDED, StickerTypes.STAR]
 
     for (const type of types) {
       const sticker = new Sticker(buffer, {
