@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/helv-io/wa-stickerbot#readme",
   "dependencies": {
-    "@adiwajshing/baileys": "^5.0.0",
+    "@adiwajshing/baileys": "github:adiwajshing/baileys",
     "@azure/ai-text-analytics": "^5.1.0",
     "@hapi/boom": "^10.0.1",
     "canvagif": "^0.1.14",

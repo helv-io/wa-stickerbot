@@ -44,8 +44,12 @@ const connectToWhatsApp = async () => {
     for (const message of event.messages) {
       // This is where the fun begins!
 
-      // Do nothing if self, if no message, no remoteJid or Broadcast
-      if (message.key.fromMe || !message.message || !message.key.remoteJid || message.key.remoteJid === 'status@broadcast')
+      // Do nothing if self, if no message, no remoteJid, Broadcast, Reaction
+      if (message.key.fromMe ||
+        !message.message ||
+        !message.key.remoteJid ||
+        message.key.remoteJid === 'status@broadcast' ||
+        message.message.reactionMessage)
         continue
 
       // Get the sender of the message
