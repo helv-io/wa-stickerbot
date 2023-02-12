@@ -98,11 +98,18 @@ const connectToWhatsApp = async () => {
           message.message.extendedTextMessage?.text ||
           message.message.conversation ||
           ''
-        if (body) await handleText(message, body, group, isOwner, isAdmin)
+        if (body) {
+          await handleText(message, body, group, isOwner, isAdmin)
+          continue
+        }
+
       }
 
-      if (message.message.imageMessage || message.message.videoMessage)
+      // Handle Image / GIF / Video message
+      if (message.message.imageMessage || message.message.videoMessage) {
         await makeSticker(message)
+        continue
+      }
 
       console.log('Message payload:')
       console.log(message)

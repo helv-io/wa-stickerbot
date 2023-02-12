@@ -230,15 +230,18 @@ export const handleText = async (
 
 export const stickerRegExp = /(sticker|figurinha)(s?) d[a|e|o]s? (.*)/i
 
+// Attempt to match a message body with an action
 export const getTextAction = async (message: string) => {
   if (message) {
     message = message.toLowerCase()
 
+    // Exact matches
     if (message === 'stats') return actions.STATS
     if (message === 'memes') return actions.MEME_LIST
     if (message === 'link') return actions.LINK
     if (message === 'rtfm') return actions.INSTRUCTIONS
-    if (stickerRegExp.exec(message)) return actions.STICKER
+
+    // Starts With matches
     if (message.startsWith('meme ')) return actions.MEME
     if (message.startsWith('texto ')) return actions.TEXT
     if (message.startsWith('bot, ')) return actions.AI
@@ -246,6 +249,9 @@ export const getTextAction = async (message: string) => {
     if (message.startsWith('unban ')) return actions.UNBAN
     if (message.startsWith('synth ')) return actions.SYNTH
     if (message.startsWith('@all ')) return actions.ALL
+
+    // RegExp matches
+    if (stickerRegExp.exec(message)) return actions.STICKER
   }
 }
 
