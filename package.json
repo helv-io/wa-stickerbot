@@ -11,6 +11,7 @@
     "debug": "npx nodemon src/bot.ts",
     "publish": "release-it"
   },
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/helv-io/wa-stickerbot.git"
