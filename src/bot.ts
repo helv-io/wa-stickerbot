@@ -12,6 +12,7 @@ import baileysClient from './utils/baileysClient'
 import { botOptions, sessionId } from './config'
 import { deleteMessage, makeSticker } from './utils/baileysHelper'
 import { handleText } from './handlers/textHandler'
+import { handleAudio } from './handlers/mediaHandler'
 
 export let client: baileysClient
 
@@ -103,6 +104,12 @@ const connectToWhatsApp = async () => {
           continue
         }
 
+      }
+
+      // Handle audio message
+      if (message.message.audioMessage) {
+        await handleAudio(message)
+        continue
       }
 
       // Handle Image / GIF / Video message
