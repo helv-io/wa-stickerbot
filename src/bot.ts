@@ -44,8 +44,8 @@ const connectToWhatsApp = async () => {
     for (const message of event.messages) {
       // This is where the fun begins!
 
-      // Do nothing if self, if no message or no remote JID
-      if (message.key.fromMe || !message.message || !message.key.remoteJid)
+      // Do nothing if self, if no message, no remoteJid or Broadcast
+      if (message.key.fromMe || !message.message || !message.key.remoteJid || message.key.remoteJid === 'status@broadcast')
         continue
 
       // Get the sender of the message
@@ -104,7 +104,6 @@ const connectToWhatsApp = async () => {
           await handleText(message, body, group, isOwner, isAdmin)
           continue
         }
-
       }
 
       // Handle audio message
