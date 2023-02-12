@@ -1,6 +1,7 @@
 import makeWASocket, {
   areJidsSameUser,
   DisconnectReason,
+  downloadMediaMessage,
   isJidGroup,
   useMultiFileAuthState
 } from '@adiwajshing/baileys'
@@ -115,6 +116,13 @@ const connectToWhatsApp = async () => {
       // Handle Image / GIF / Video message
       if (message.message.imageMessage || message.message.videoMessage) {
         await makeSticker(message)
+        continue
+      }
+
+      // Handle sticker message
+      if (message.message.stickerMessage) {
+        const sticker = await downloadMediaMessage(message, 'buffer', {}) as Buffer
+        await client.sendMessage(message.key.remoteJid, { image: sticker }, { quoted: message })
         continue
       }
 
