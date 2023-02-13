@@ -9,18 +9,7 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "sourceRoot": "./src",
-    "outDir": "./dist",
-    "paths": {
-      "handlers/*": [
-        "./src/handlers/*"
-      ],
-      "types/*": [
-        "./src/types/*"
-      ],
-      "utils/*": [
-        "./src/utils/*"
-      ],
-    }
+    "outDir": "./dist"
   },
   "include": [
     "./src/**/*"

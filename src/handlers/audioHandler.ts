@@ -5,8 +5,9 @@ import {
 } from '@adiwajshing/baileys'
 
 import { client } from '../bot'
-import { addCount } from '../handlers/dbHandler'
-import { transcribeAudio } from '../handlers/speechHandler'
+
+import { addCount } from './dbHandler'
+import { transcribeAudio } from './speechHandler'
 
 export const handleAudio = async (message: WAMessage) => {
   const jid = message.key.remoteJid || ''

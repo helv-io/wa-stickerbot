@@ -15,7 +15,7 @@ import baileysClient from './utils/baileysClient'
 import { botOptions, sessionId } from './config'
 import { deleteMessage, makeSticker } from './utils/baileysHelper'
 import { handleText } from './handlers/textHandler'
-import { handleAudio } from './handlers/mediaHandler'
+import { handleAudio } from './handlers/audioHandler'
 
 export let client: baileysClient
 
@@ -76,14 +76,14 @@ const connectToWhatsApp = async () => {
       // Is the sender an admin of the group?
       const isAdmin = group
         ? group.participants
-            .find((p) => areJidsSameUser(p.id, sender))
-            ?.admin?.endsWith('admin') !== null
+          .find((p) => areJidsSameUser(p.id, sender))
+          ?.admin?.endsWith('admin') !== null
         : false
       // Is the Bot an admin of the group?
       const amAdmin = group
         ? group.participants
-            .find((p) => areJidsSameUser(p.id, client.user?.id))
-            ?.admin?.endsWith('admin')
+          .find((p) => areJidsSameUser(p.id, client.user?.id))
+          ?.admin?.endsWith('admin')
         : false
       // Is sender banned?
       const isBanned = await isUserBanned(sender.replace(/\D/g, ''))

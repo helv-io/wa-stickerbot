@@ -10,7 +10,8 @@ dotenv.config()
 // https://docs.wwebjs.dev/global.html#StickerMetadata
 export const stickerMeta: IStickerOptions = {
   author: process.env.SB_AUTHOR || 'Helvio',
-  pack: process.env.SB_PACK || 'Sticker Bot'
+  pack: process.env.SB_PACK || 'Sticker Bot',
+  quality: 70
 }
 
 export const sessionId = process.env.WA_SESSION_ID || 'wa-stickerbot'
