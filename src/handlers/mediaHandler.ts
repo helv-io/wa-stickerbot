@@ -1,4 +1,8 @@
-import { WAMessage, downloadMediaMessage, WA_DEFAULT_EPHEMERAL } from '@adiwajshing/baileys'
+import {
+  WAMessage,
+  downloadMediaMessage,
+  WA_DEFAULT_EPHEMERAL
+} from '@adiwajshing/baileys'
 
 import { client } from '../bot'
 import { addCount } from '../handlers/dbHandler'
@@ -7,7 +11,7 @@ import { transcribeAudio } from '../handlers/speechHandler'
 export const handleAudio = async (message: WAMessage) => {
   const jid = message.key.remoteJid || ''
 
-  const media = await downloadMediaMessage(message, 'buffer', {}) as Buffer
+  const media = (await downloadMediaMessage(message, 'buffer', {})) as Buffer
   const mimetype = message.message?.audioMessage?.mimetype || ''
 
   // Use id as base and the second part of the mime (after /) for the extension.
@@ -20,9 +24,16 @@ export const handleAudio = async (message: WAMessage) => {
   console.log(`${mimetype} (${message.pushName})[${message.key.participant}]`)
   try {
     // Transcribe
-    const transcription = await transcribeAudio(filename, media.toString('base64'))
+    const transcription = await transcribeAudio(
+      filename,
+      media.toString('base64')
+    )
     // Reply with transcription
-    client.sendMessage(jid, { text: transcription }, { quoted: message, ephemeralExpiration: WA_DEFAULT_EPHEMERAL })
+    client.sendMessage(
+      jid,
+      { text: transcription },
+      { quoted: message, ephemeralExpiration: WA_DEFAULT_EPHEMERAL }
+    )
   } catch (error) {
     console.error(`Error transcribing message: ${error}`)
   }

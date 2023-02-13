@@ -24,7 +24,11 @@ export const makeSticker = async (message: WAMessage, url = '') => {
   } else {
     const buffer = <Buffer>await downloadMediaMessage(message, 'buffer', {})
 
-    const types = [StickerTypes.DEFAULT, StickerTypes.CIRCLE, StickerTypes.ROUNDED]
+    const types = [
+      StickerTypes.DEFAULT,
+      StickerTypes.CIRCLE,
+      StickerTypes.ROUNDED
+    ]
 
     for (const type of types) {
       const meta = stickerMeta
@@ -33,6 +37,5 @@ export const makeSticker = async (message: WAMessage, url = '') => {
 
       client.sendMessage(jid, await sticker.toMessage(), ephemeral)
     }
-
   }
 }

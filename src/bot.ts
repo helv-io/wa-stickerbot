@@ -20,7 +20,9 @@ import { handleAudio } from './handlers/mediaHandler'
 export let client: baileysClient
 
 // Default ephemeral
-export const ephemeral: MiscMessageGenerationOptions = { ephemeralExpiration: WA_DEFAULT_EPHEMERAL }
+export const ephemeral: MiscMessageGenerationOptions = {
+  ephemeralExpiration: WA_DEFAULT_EPHEMERAL
+}
 
 const connectToWhatsApp = async () => {
   const { state, saveCreds } = await useMultiFileAuthState(`/data/${sessionId}`)
@@ -50,11 +52,13 @@ const connectToWhatsApp = async () => {
       // This is where the fun begins!
 
       // Do nothing if self, if no message, no remoteJid, Broadcast, Reaction
-      if (message.key.fromMe ||
+      if (
+        message.key.fromMe ||
         !message.message ||
         !message.key.remoteJid ||
         message.key.remoteJid === 'status@broadcast' ||
-        message.message.reactionMessage)
+        message.message.reactionMessage
+      )
         continue
 
       // Get the sender of the message
@@ -72,14 +76,14 @@ const connectToWhatsApp = async () => {
       // Is the sender an admin of the group?
       const isAdmin = group
         ? group.participants
-          .find((p) => areJidsSameUser(p.id, sender))
-          ?.admin?.endsWith('admin') !== null
+            .find((p) => areJidsSameUser(p.id, sender))
+            ?.admin?.endsWith('admin') !== null
         : false
       // Is the Bot an admin of the group?
       const amAdmin = group
         ? group.participants
-          .find((p) => areJidsSameUser(p.id, client.user?.id))
-          ?.admin?.endsWith('admin')
+            .find((p) => areJidsSameUser(p.id, client.user?.id))
+            ?.admin?.endsWith('admin')
         : false
       // Is sender banned?
       const isBanned = await isUserBanned(sender.replace(/\D/g, ''))
@@ -122,15 +126,28 @@ const connectToWhatsApp = async () => {
       }
 
       // Handle Image / GIF / Video message
-      if (message.message.imageMessage || message.message.videoMessage) {
+      if (
+        message.message.imageMessage ||
+        message.message.videoMessage ||
+        message.message.viewOnceMessageV2?.message?.imageMessage ||
+        message.message.viewOnceMessageV2?.message?.videoMessage
+      ) {
         await makeSticker(message)
         continue
       }
 
       // Handle sticker message
       if (message.message.stickerMessage) {
-        const sticker = await downloadMediaMessage(message, 'buffer', {}) as Buffer
-        await client.sendMessage(message.key.remoteJid, { image: sticker }, { quoted: message, ephemeralExpiration: WA_DEFAULT_EPHEMERAL })
+        const sticker = (await downloadMediaMessage(
+          message,
+          'buffer',
+          {}
+        )) as Buffer
+        await client.sendMessage(
+          message.key.remoteJid,
+          { image: sticker },
+          { quoted: message, ephemeralExpiration: WA_DEFAULT_EPHEMERAL }
+        )
         continue
       }
 

@@ -36,7 +36,10 @@ export const handleText = async (
   const jid = message.key.remoteJid || ''
 
   // Easy quote
-  const quote: MiscMessageGenerationOptions = { quoted: message, ephemeralExpiration: WA_DEFAULT_EPHEMERAL }
+  const quote: MiscMessageGenerationOptions = {
+    quoted: message,
+    ephemeralExpiration: WA_DEFAULT_EPHEMERAL
+  }
 
   // Get Action from Text
   const action = await getTextAction(body)
@@ -224,7 +227,11 @@ export const handleText = async (
             broadcast += `@${participant.id.split('@')[0]} `
           }
           await deleteMessage(message)
-          await client.sendMessage(jid, { text: broadcast, mentions }, ephemeral)
+          await client.sendMessage(
+            jid,
+            { text: broadcast, mentions },
+            ephemeral
+          )
         }
         break
     }
