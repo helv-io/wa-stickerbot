@@ -1,4 +1,5 @@
 import dotenv from 'dotenv'
+import { IStickerOptions } from 'wa-sticker-formatter/dist'
 
 import { GiphySearch } from './types/Giphy'
 import { TenorSearch } from './types/Tenor'
@@ -6,12 +7,10 @@ import { TenorSearch } from './types/Tenor'
 // Load OS Env Vars
 dotenv.config()
 
-// TODO: REMOVE
 // https://docs.wwebjs.dev/global.html#StickerMetadata
-export const stickerMeta = {
-  sendMediaAsSticker: true,
-  stickerAuthor: process.env.SB_AUTHOR || 'Helvio',
-  stickerName: process.env.SB_PACK || 'Sticker Bot'
+export const stickerMeta: IStickerOptions = {
+  author: process.env.SB_AUTHOR || 'Helvio',
+  pack: process.env.SB_PACK || 'Sticker Bot'
 }
 
 export const sessionId = process.env.WA_SESSION_ID || 'wa-stickerbot'

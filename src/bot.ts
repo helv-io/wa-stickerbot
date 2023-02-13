@@ -3,7 +3,9 @@ import makeWASocket, {
   DisconnectReason,
   downloadMediaMessage,
   isJidGroup,
-  useMultiFileAuthState
+  MiscMessageGenerationOptions,
+  useMultiFileAuthState,
+  WA_DEFAULT_EPHEMERAL
 } from '@adiwajshing/baileys'
 import { Boom } from '@hapi/boom'
 import { pino } from 'pino'
@@ -16,6 +18,9 @@ import { handleText } from './handlers/textHandler'
 import { handleAudio } from './handlers/mediaHandler'
 
 export let client: baileysClient
+
+// Default ephemeral
+export const ephemeral: MiscMessageGenerationOptions = { ephemeralExpiration: WA_DEFAULT_EPHEMERAL }
 
 const connectToWhatsApp = async () => {
   const { state, saveCreds } = await useMultiFileAuthState(`/data/${sessionId}`)
@@ -125,7 +130,7 @@ const connectToWhatsApp = async () => {
       // Handle sticker message
       if (message.message.stickerMessage) {
         const sticker = await downloadMediaMessage(message, 'buffer', {}) as Buffer
-        await client.sendMessage(message.key.remoteJid, { image: sticker }, { quoted: message })
+        await client.sendMessage(message.key.remoteJid, { image: sticker }, { quoted: message, ephemeralExpiration: WA_DEFAULT_EPHEMERAL })
         continue
       }
 

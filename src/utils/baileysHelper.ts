@@ -1,7 +1,7 @@
 import { downloadMediaMessage, WAMessage } from '@adiwajshing/baileys'
 import { Sticker, StickerTypes } from 'wa-sticker-formatter'
 
-import { client } from '../bot'
+import { client, ephemeral } from '../bot'
 import { stickerMeta } from '../config'
 
 export const react = async (message: WAMessage, emoji: string) => {
@@ -18,25 +18,21 @@ export const deleteMessage = async (message: WAMessage) => {
 export const makeSticker = async (message: WAMessage, url = '') => {
   await react(message, '🤖')
   const jid = message.key.remoteJid || ''
-  if (!url) {
+  if (url) {
+    const sticker = new Sticker(url, stickerMeta)
+    client.sendMessage(jid, await sticker.toMessage(), ephemeral)
+  } else {
     const buffer = <Buffer>await downloadMediaMessage(message, 'buffer', {})
 
     const types = [StickerTypes.DEFAULT, StickerTypes.CIRCLE, StickerTypes.ROUNDED]
 
     for (const type of types) {
-      const sticker = new Sticker(buffer, {
-        pack: stickerMeta.stickerName,
-        author: stickerMeta.stickerAuthor,
-        type
-      })
+      const meta = stickerMeta
+      meta.type = type
+      const sticker = new Sticker(buffer, meta)
 
-      client.sendMessage(jid, await sticker.toMessage())
+      client.sendMessage(jid, await sticker.toMessage(), ephemeral)
     }
-  } else {
-    const sticker = new Sticker(url, {
-      pack: stickerMeta.stickerName,
-      author: stickerMeta.stickerAuthor
-    })
-    client.sendMessage(jid, await sticker.toMessage())
+
   }
 }

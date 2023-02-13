@@ -1,4 +1,4 @@
-import { WAMessage, downloadMediaMessage } from '@adiwajshing/baileys'
+import { WAMessage, downloadMediaMessage, WA_DEFAULT_EPHEMERAL } from '@adiwajshing/baileys'
 
 import { client } from '../bot'
 import { addCount } from '../handlers/dbHandler'
@@ -22,7 +22,7 @@ export const handleAudio = async (message: WAMessage) => {
     // Transcribe
     const transcription = await transcribeAudio(filename, media.toString('base64'))
     // Reply with transcription
-    client.sendMessage(jid, { text: transcription }, { quoted: message })
+    client.sendMessage(jid, { text: transcription }, { quoted: message, ephemeralExpiration: WA_DEFAULT_EPHEMERAL })
   } catch (error) {
     console.error(`Error transcribing message: ${error}`)
   }
