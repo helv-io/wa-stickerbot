@@ -64,9 +64,11 @@ export const handleText = async (
         await react(message, '🤖')
         console.log('Sending Link')
 
+        const code = await client.groupInviteCode(group.id)
+
         await client.sendMessage(
           jid,
-          { text: `https://chat.whatsapp.com/${group.inviteCode}` },
+          { text: `https://chat.whatsapp.com/${code}` },
           quote
         )
         break
