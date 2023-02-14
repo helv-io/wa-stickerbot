@@ -129,6 +129,10 @@ const connectToWhatsApp = async () => {
       if (
         message.message.imageMessage ||
         message.message.videoMessage ||
+        message.message.ephemeralMessage?.message?.imageMessage ||
+        message.message.ephemeralMessage?.message?.videoMessage ||
+        message.message.viewOnceMessage?.message?.imageMessage ||
+        message.message.viewOnceMessage?.message?.videoMessage ||
         message.message.viewOnceMessageV2?.message?.imageMessage ||
         message.message.viewOnceMessageV2?.message?.videoMessage
       ) {

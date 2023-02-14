@@ -11,7 +11,7 @@ dotenv.config()
 export const stickerMeta: IStickerOptions = {
   author: process.env.SB_AUTHOR || 'Helvio',
   pack: process.env.SB_PACK || 'Sticker Bot',
-  quality: 70
+  quality: 80
 }
 
 export const sessionId = process.env.WA_SESSION_ID || 'wa-stickerbot'
