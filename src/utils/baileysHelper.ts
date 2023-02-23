@@ -3,6 +3,7 @@ import { Sticker, StickerTypes } from 'wa-sticker-formatter'
 
 import { client, ephemeral } from '../bot'
 import { stickerMeta } from '../config'
+import { clone } from './utils'
 
 export const react = async (message: WAMessage, emoji: string) => {
   const jid = message.key.remoteJid || ''
@@ -31,7 +32,7 @@ export const makeSticker = async (message: WAMessage, url = '') => {
     ]
 
     for (const type of types) {
-      const meta = stickerMeta
+      const meta = clone(stickerMeta)
       meta.type = type
       const sticker = new Sticker(buffer, meta)
 

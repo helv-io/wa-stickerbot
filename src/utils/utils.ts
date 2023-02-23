@@ -11,3 +11,6 @@ export const paramSerializer = (p: TenorSearch | GiphySearch) => {
 export const oneChanceIn = (odds: number) => {
   return Math.floor(Math.random() * odds) === 0
 }
+
+// Clones an object o, preserving type T
+export const clone = <T>(o: T): T => JSON.parse(JSON.stringify(o))
