@@ -3,6 +3,7 @@ import { Sticker, StickerTypes } from 'wa-sticker-formatter'
 
 import { client, ephemeral } from '../bot'
 import { stickerMeta } from '../config'
+
 import { clone } from './utils'
 
 export const react = async (message: WAMessage, emoji: string) => {
