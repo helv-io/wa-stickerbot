@@ -76,14 +76,14 @@ const connectToWhatsApp = async () => {
       // Is the sender an admin of the group?
       const isAdmin = group
         ? group.participants
-          .find((p) => areJidsSameUser(p.id, sender))
-          ?.admin?.endsWith('admin') !== null
+            .find((p) => areJidsSameUser(p.id, sender))
+            ?.admin?.endsWith('admin') !== null
         : false
       // Is the Bot an admin of the group?
       const amAdmin = group
         ? group.participants
-          .find((p) => areJidsSameUser(p.id, client.user?.id))
-          ?.admin?.endsWith('admin')
+            .find((p) => areJidsSameUser(p.id, client.user?.id))
+            ?.admin?.endsWith('admin')
         : false
       // Is sender banned?
       const isBanned = await isUserBanned(sender.replace(/\D/g, ''))
@@ -107,11 +107,18 @@ const connectToWhatsApp = async () => {
       }
 
       // Handle simple text message
-      if (message.message.extendedTextMessage || message.message.conversation) {
+      if (
+        message.message.extendedTextMessage ||
+        message.message.conversation ||
+        message.message.ephemeralMessage
+      ) {
         // Body of message is different whether it's individual or group
         const body =
           message.message.extendedTextMessage?.text ||
           message.message.conversation ||
+          message.message.ephemeralMessage?.message?.extendedTextMessage
+            ?.text ||
+          message.message.ephemeralMessage?.message?.conversation ||
           ''
         if (body) {
           await handleText(message, body, group, isOwner, isAdmin)
