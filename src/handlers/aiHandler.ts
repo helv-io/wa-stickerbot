@@ -13,7 +13,8 @@ export const ask = async (question: string) => {
       top_p: 0.25,
       max_tokens: 1024,
       frequency_penalty: 1,
-      presence_penalty: 1
+      presence_penalty: 1,
+      n: 5
     }
     const configuration = new Configuration({
       organization: org,
@@ -23,9 +24,14 @@ export const ask = async (question: string) => {
     const openai = new OpenAIApi(configuration)
     const aiResponse = await openai.createCompletion(completionRequest)
     const choices = aiResponse.data.choices
-    if (aiResponse) {
-      return choices[0].text
-    }
-    return '👎'
+    return choices.reduce((prev, choice) => {
+      const choiceLength = choice.text ? choice.text.length : 0;
+      const accLength = prev.text ? prev.text.length : 0;
+      if (choiceLength > accLength) {
+        return choice;
+      } else {
+        return prev;
+      }
+    }).text || '👎'
   }
 }
