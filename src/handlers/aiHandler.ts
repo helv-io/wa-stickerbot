@@ -2,12 +2,13 @@ import { Configuration, CreateCompletionRequest, OpenAIApi } from 'openai'
 
 const org = process.env.OPENAI_API_ORG
 const key = process.env.OPENAI_API_KEY
+const base = process.env.OPENAI_API_BASE
 
 export const ask = async (question: string) => {
   if (org && key) {
     const completionRequest: CreateCompletionRequest = {
       model: 'code-davinci-002',
-      prompt: `//Human readable\nQ: ${question}\nA:`,
+      prompt: question,
       stop: '\n',
       temperature: 0.25,
       max_tokens: 1024,
@@ -15,7 +16,8 @@ export const ask = async (question: string) => {
     }
     const configuration = new Configuration({
       organization: org,
-      apiKey: key
+      apiKey: key,
+      basePath: base
     })
     const openai = new OpenAIApi(configuration)
     const aiResponse = await openai.createCompletion(completionRequest)
