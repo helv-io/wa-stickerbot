@@ -10,9 +10,10 @@ export const ask = async (question: string) => {
       model: 'code-davinci-002',
       prompt: question,
       stop: '\n',
-      temperature: 0.25,
+      top_p: 0.25,
       max_tokens: 1024,
-      frequency_penalty: 1
+      frequency_penalty: 1,
+      presence_penalty: 1
     }
     const configuration = new Configuration({
       organization: org,
