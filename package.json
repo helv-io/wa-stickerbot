@@ -37,12 +37,14 @@
     "microsoft-cognitiveservices-speech-sdk": "^1.26.0",
     "openai": "^3.2.1",
     "pino": "^8.11.0",
+    "qr-image": "^3.2.0",
     "qrcode": "^1.5.1",
     "qrcode-terminal": "^0.12.0",
     "qs": "^6.11.1",
     "sharp": "^0.30.5",
     "sqlite": "^4.1.2",
     "sqlite3": "^5.1.6",
+    "stripe": "^11.16.0",
     "wa-sticker-formatter": "^4.4.4"
   },
   "devDependencies": {
@@ -51,6 +53,7 @@
     "@types/mime-types": "^2.1.1",
     "@types/node": "^18.15.5",
     "@types/pino": "^7.0.5",
+    "@types/qr-image": "^3.2.5",
     "@types/qrcode": "^1.5.0",
     "@types/qrcode-terminal": "^0.12.0",
     "@types/qs": "^6.9.7",
