@@ -24,14 +24,16 @@ export const ask = async (question: string) => {
     const openai = new OpenAIApi(configuration)
     const aiResponse = await openai.createCompletion(completionRequest)
     const choices = aiResponse.data.choices
-    return choices.reduce((prev, choice) => {
-      const choiceLength = choice.text ? choice.text.length : 0;
-      const accLength = prev.text ? prev.text.length : 0;
-      if (choiceLength > accLength) {
-        return choice;
-      } else {
-        return prev;
-      }
-    }).text || '👎'
+    return (
+      choices.reduce((prev, choice) => {
+        const choiceLength = choice.text ? choice.text.length : 0
+        const accLength = prev.text ? prev.text.length : 0
+        if (choiceLength > accLength) {
+          return choice
+        } else {
+          return prev
+        }
+      }).text || '👎'
+    )
   }
 }

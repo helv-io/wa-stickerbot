@@ -11,6 +11,7 @@ import makeWASocket, {
 import { Boom } from '@hapi/boom'
 import { pino } from 'pino'
 import express from 'express'
+import bodyParser from 'body-parser'
 import { imageSync } from 'qr-image'
 
 import { isUserBanned } from './handlers/dbHandler'
@@ -22,6 +23,7 @@ import { handleAudio } from './handlers/audioHandler'
 
 export let client: baileysClient
 const app = express()
+app.use(bodyParser.urlencoded({ extended: true }))
 let qr: string | undefined
 
 // Default ephemeral
@@ -36,7 +38,7 @@ const connectToWhatsApp = async () => {
     printQRInTerminal: true,
     logger: pino({ level: 'silent' })
   })
-  client.ev.on('connection.update', state => qr = state.qr)
+  client.ev.on('connection.update', (state) => (qr = state.qr))
   client.ev.on('creds.update', saveCreds)
   client.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect } = update
@@ -82,14 +84,14 @@ const connectToWhatsApp = async () => {
       // Is the sender an admin of the group?
       const isAdmin = group
         ? group.participants
-          .find((p) => areJidsSameUser(p.id, sender))
-          ?.admin?.endsWith('admin') !== null
+            .find((p) => areJidsSameUser(p.id, sender))
+            ?.admin?.endsWith('admin') !== null
         : false
       // Is the Bot an admin of the group?
       const amAdmin = group
         ? group.participants
-          .find((p) => areJidsSameUser(p.id, client.user?.id))
-          ?.admin?.endsWith('admin')
+            .find((p) => areJidsSameUser(p.id, client.user?.id))
+            ?.admin?.endsWith('admin')
         : false
       // Is sender banned?
       const isBanned = await isUserBanned(sender.replace(/\D/g, ''))
@@ -176,12 +178,11 @@ const connectToWhatsApp = async () => {
 // run in main file
 connectToWhatsApp()
 app.get('/qr', (_req, res) => {
-  if (qr)
-    res.end(imageSync(qr))
-  else
-    res.end(client.authState.creds.me?.id)
+  if (qr) res.end(imageSync(qr))
+  else res.end(client.authState.creds.me?.id)
 })
 app.post('/api/webhook', (req, res) => {
   console.log(req.body)
+  res.end(req.body)
 })
 app.listen(3000, () => console.log('Web Server Started'))
