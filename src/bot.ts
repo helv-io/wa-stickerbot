@@ -11,7 +11,6 @@ import makeWASocket, {
 import { Boom } from '@hapi/boom'
 import { pino } from 'pino'
 import express from 'express'
-import bodyParser from 'body-parser'
 import { imageSync } from 'qr-image'
 
 import { isUserBanned } from './handlers/dbHandler'
@@ -21,9 +20,15 @@ import { deleteMessage, makeSticker } from './utils/baileysHelper'
 import { handleText } from './handlers/textHandler'
 import { handleAudio } from './handlers/audioHandler'
 
+// create exportable WA Client
 export let client: baileysClient
+
+// create express webserver
 const app = express()
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+// create QR string holder
 let qr: string | undefined
 
 // Default ephemeral
@@ -84,14 +89,14 @@ const connectToWhatsApp = async () => {
       // Is the sender an admin of the group?
       const isAdmin = group
         ? group.participants
-            .find((p) => areJidsSameUser(p.id, sender))
-            ?.admin?.endsWith('admin') !== null
+          .find((p) => areJidsSameUser(p.id, sender))
+          ?.admin?.endsWith('admin') !== null
         : false
       // Is the Bot an admin of the group?
       const amAdmin = group
         ? group.participants
-            .find((p) => areJidsSameUser(p.id, client.user?.id))
-            ?.admin?.endsWith('admin')
+          .find((p) => areJidsSameUser(p.id, client.user?.id))
+          ?.admin?.endsWith('admin')
         : false
       // Is sender banned?
       const isBanned = await isUserBanned(sender.replace(/\D/g, ''))
@@ -183,6 +188,6 @@ app.get('/qr', (_req, res) => {
 })
 app.post('/api/webhook', (req, res) => {
   console.log(req.body)
-  res.end(req.body)
+  res.json({ status: 'ok', data: req.body })
 })
 app.listen(3000, () => console.log('Web Server Started'))
