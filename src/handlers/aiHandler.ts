@@ -1,5 +1,4 @@
 import { Configuration, CreateCompletionRequest, OpenAIApi } from 'openai'
-import { Bard } from 'googlebard'
 
 const bardCookie = process.env.BARD_COOKIE
 
@@ -8,6 +7,7 @@ const key = process.env.OPENAI_API_KEY
 const base = process.env.OPENAI_API_BASE
 
 export const ask = async (question: string, sender: string = '') => {
+  const Bard = (await require('googlebard')).Bard
   if (bardCookie) {
     const bot = new Bard(bardCookie)
     return await bot.ask(question, sender)
