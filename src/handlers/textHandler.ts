@@ -30,7 +30,8 @@ export const handleText = async (
   body: string,
   group: GroupMetadata | undefined,
   isOwner: boolean,
-  isAdmin: boolean
+  isAdmin: boolean,
+  sender: string
 ) => {
   // Fix remote Jid - will never be empty
   const jid = message.key.remoteJid || ''
@@ -208,7 +209,7 @@ export const handleText = async (
           const question = body.slice(5)
           console.log(question)
           const name = message.pushName || 'Hmm'
-          const response = `${name},${(await ask(question)) || ''}`
+          const response = `${name},${(await ask(question, sender)) || ''}`
           await client.sendMessage(jid, { text: response }, quote)
         } catch (e) {
           console.error(e)

@@ -134,7 +134,7 @@ const connectToWhatsApp = async () => {
           message.message.ephemeralMessage?.message?.conversation ||
           ''
         if (body) {
-          await handleText(message, body, group, isOwner, isAdmin)
+          await handleText(message, body, group, isOwner, isAdmin, sender)
           continue
         }
       }

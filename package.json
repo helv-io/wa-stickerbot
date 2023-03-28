@@ -34,6 +34,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "fluent-ffmpeg": "^2.1.2",
+    "googlebard": "^1.0.4",
     "microsoft-cognitiveservices-speech-sdk": "^1.26.0",
     "openai": "^3.2.1",
     "pino": "^8.11.0",

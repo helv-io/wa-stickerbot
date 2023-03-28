@@ -1,11 +1,18 @@
 import { Configuration, CreateCompletionRequest, OpenAIApi } from 'openai'
+import { Bard } from 'googlebard'
+
+const bardCookie = process.env.BARD_COOKIE
 
 const org = process.env.OPENAI_API_ORG
 const key = process.env.OPENAI_API_KEY
 const base = process.env.OPENAI_API_BASE
 
-export const ask = async (question: string) => {
-  if (org && key) {
+export const ask = async (question: string, sender: string = '') => {
+  if (bardCookie) {
+    const bot = new Bard(bardCookie)
+    return await bot.ask(question, sender)
+  }
+  else if (org && key) {
     const completionRequest: CreateCompletionRequest = {
       model: 'code-davinci-002',
       prompt: question,
