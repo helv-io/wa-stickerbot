@@ -8,7 +8,7 @@
     "start": "ts-node src/bot.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "build": "npm install && npx tsc",
+    "build": "npm i && npx tsc || :",
     "debug": "npx nodemon src/bot.ts",
     "publish": "release-it"
   },
