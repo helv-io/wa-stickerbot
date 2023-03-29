@@ -94,14 +94,14 @@ const connectToWhatsApp = async () => {
       // Is the sender an admin of the group?
       const isAdmin = group
         ? group.participants
-            .find((p) => areJidsSameUser(p.id, sender))
-            ?.admin?.endsWith('admin') !== null
+          .find((p) => areJidsSameUser(p.id, sender))
+          ?.admin?.endsWith('admin') !== null
         : false
       // Is the Bot an admin of the group?
       const amAdmin = group
         ? group.participants
-            .find((p) => areJidsSameUser(p.id, client.user?.id))
-            ?.admin?.endsWith('admin')
+          .find((p) => areJidsSameUser(p.id, client.user?.id))
+          ?.admin?.endsWith('admin')
         : false
       // Is sender banned?
       const isBanned = await isUserBanned(sender.replace(/\D/g, ''))
@@ -196,4 +196,3 @@ app.post('/api/webhook', (req, res) => {
   res.json({ status: 'ok', data: req.body })
 })
 app.listen(3000, () => console.log('Web Server Started'))
-ask('Hey there!')
