@@ -7,23 +7,23 @@ import {
   WA_DEFAULT_EPHEMERAL
 } from '@adiwajshing/baileys'
 
-import { client, ephemeral } from '../bot'
-import { botOptions } from '../config'
+import { client, ephemeral } from '../bot.js'
+import { botOptions } from '../config.js'
 import {
   addCount,
   ban,
   getCount,
   getDonors,
   unban
-} from '../handlers/dbHandler'
-import { getGiphys } from '../handlers/giphyHandler'
-import { getMemeList, makeMeme } from '../handlers/memeHandler'
-import { getStickerSearches } from '../handlers/stickerHandler'
-import { getTenors } from '../handlers/tenorHandler'
-import { deleteMessage, react, makeSticker } from '../utils/baileysHelper'
+} from '../handlers/dbHandler.js'
+import { getGiphys } from '../handlers/giphyHandler.js'
+import { getMemeList, makeMeme } from '../handlers/memeHandler.js'
+import { getStickerSearches } from '../handlers/stickerHandler.js'
+import { getTenors } from '../handlers/tenorHandler.js'
+import { deleteMessage, react, makeSticker } from '../utils/baileysHelper.js'
 
-import { ask } from './aiHandler'
-import { synthesizeText } from './speechHandler'
+import { ask } from './aiHandler.js'
+import { synthesizeText } from './speechHandler.js'
 
 export const handleText = async (
   message: WAMessage,

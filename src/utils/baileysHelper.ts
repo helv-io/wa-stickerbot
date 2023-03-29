@@ -1,10 +1,10 @@
 import { downloadMediaMessage, WAMessage } from '@adiwajshing/baileys'
 import { Sticker, StickerTypes } from 'wa-sticker-formatter'
 
-import { client, ephemeral } from '../bot'
-import { stickerMeta } from '../config'
+import { client, ephemeral } from '../bot.js'
+import { stickerMeta } from '../config.js'
 
-import { clone } from './utils'
+import { clone } from './utils.js'
 
 export const react = async (message: WAMessage, emoji: string) => {
   const jid = message.key.remoteJid || ''

@@ -1,4 +1,7 @@
-import makeWASocket, {
+import Module from "node:module";
+const require = Module.createRequire(import.meta.url);
+
+import {
   areJidsSameUser,
   DisconnectReason,
   downloadMediaMessage,
@@ -13,12 +16,13 @@ import { pino } from 'pino'
 import express from 'express'
 import { imageSync } from 'qr-image'
 
-import { isUserBanned } from './handlers/dbHandler'
-import baileysClient from './utils/baileysClient'
-import { botOptions, sessionId } from './config'
-import { deleteMessage, makeSticker } from './utils/baileysHelper'
-import { handleText } from './handlers/textHandler'
-import { handleAudio } from './handlers/audioHandler'
+import { isUserBanned } from './handlers/dbHandler.js'
+import baileysClient from './utils/baileysClient.js'
+import { botOptions, sessionId } from './config.js'
+import { deleteMessage, makeSticker } from './utils/baileysHelper.js'
+import { handleText } from './handlers/textHandler.js'
+import { handleAudio } from './handlers/audioHandler.js'
+import { ask } from './handlers/aiHandler.js'
 
 // create exportable WA Client
 export let client: baileysClient
@@ -38,6 +42,7 @@ export const ephemeral: MiscMessageGenerationOptions = {
 
 const connectToWhatsApp = async () => {
   const { state, saveCreds } = await useMultiFileAuthState(`/data/${sessionId}`)
+  const makeWASocket = require('@adiwajshing/baileys').default
   client = <baileysClient>makeWASocket({
     auth: state,
     printQRInTerminal: true,
@@ -191,3 +196,4 @@ app.post('/api/webhook', (req, res) => {
   res.json({ status: 'ok', data: req.body })
 })
 app.listen(3000, () => console.log('Web Server Started'))
+ask('Hey there!')

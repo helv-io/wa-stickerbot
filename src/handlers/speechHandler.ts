@@ -17,7 +17,7 @@ import {
   SpeechSynthesizer
 } from 'microsoft-cognitiveservices-speech-sdk'
 
-import { botOptions } from '../config'
+import { botOptions } from '../config.js'
 
 const convertAudio = async (filename: string, data: string) => {
   return new Promise<string>(async (resolve, reject) => {

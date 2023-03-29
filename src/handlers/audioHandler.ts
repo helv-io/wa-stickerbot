@@ -4,10 +4,10 @@ import {
   WA_DEFAULT_EPHEMERAL
 } from '@adiwajshing/baileys'
 
-import { client } from '../bot'
+import { client } from '../bot.js'
 
-import { addCount } from './dbHandler'
-import { transcribeAudio } from './speechHandler'
+import { addCount } from './dbHandler.js'
+import { transcribeAudio } from './speechHandler.js'
 
 export const handleAudio = async (message: WAMessage) => {
   const jid = message.key.remoteJid || ''
