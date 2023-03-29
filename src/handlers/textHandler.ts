@@ -207,9 +207,8 @@ export const handleText = async (
         await react(message, '🤖')
         try {
           const question = body.slice(5)
-          console.log(question)
-          const name = message.pushName || 'Hmm'
-          const response = `${name},${(await ask(question, sender)) || ''}`
+          console.log(`[${sender}] ${question}`)
+          const response = `${(await ask(question, sender))}`
           await client.sendMessage(jid, { text: response }, quote)
         } catch (e) {
           console.error(e)

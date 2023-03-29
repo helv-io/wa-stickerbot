@@ -7,7 +7,7 @@ const org = process.env.OPENAI_API_ORG
 const key = process.env.OPENAI_API_KEY
 const base = process.env.OPENAI_API_BASE
 
-export const ask = async (question: string, sender: string = '') => {
+export const ask = async (question: string, sender: string) => {
   if (bardCookie) {
     const bot = new Bard(bardCookie)
     const response = await bot.ask(question, sender)
