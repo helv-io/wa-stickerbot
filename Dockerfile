@@ -17,4 +17,4 @@ RUN npm run build
 EXPOSE 3000
 VOLUME ["/data"]
 ENTRYPOINT ["node"]
-CMD ["dist/dist.js"]
+CMD ["dist/bot.js"]
