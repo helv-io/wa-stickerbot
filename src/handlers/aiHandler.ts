@@ -12,8 +12,7 @@ export const ask = async (question: string, sender: string = '') => {
     const bot = new Bard(bardCookie)
     const response = await bot.ask(question, sender)
     return response
-  }
-  else if (org && key) {
+  } else if (org && key) {
     const completionRequest: CreateCompletionRequest = {
       model: 'code-davinci-002',
       prompt: question,

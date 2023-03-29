@@ -1,5 +1,5 @@
-import Module from "node:module";
-const require = Module.createRequire(import.meta.url);
+import Module from 'node:module'
+const require = Module.createRequire(import.meta.url)
 
 import {
   areJidsSameUser,
@@ -94,14 +94,14 @@ const connectToWhatsApp = async () => {
       // Is the sender an admin of the group?
       const isAdmin = group
         ? group.participants
-          .find((p) => areJidsSameUser(p.id, sender))
-          ?.admin?.endsWith('admin') !== null
+            .find((p) => areJidsSameUser(p.id, sender))
+            ?.admin?.endsWith('admin') !== null
         : false
       // Is the Bot an admin of the group?
       const amAdmin = group
         ? group.participants
-          .find((p) => areJidsSameUser(p.id, client.user?.id))
-          ?.admin?.endsWith('admin')
+            .find((p) => areJidsSameUser(p.id, client.user?.id))
+            ?.admin?.endsWith('admin')
         : false
       // Is sender banned?
       const isBanned = await isUserBanned(sender.replace(/\D/g, ''))
