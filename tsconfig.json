@@ -1,12 +1,26 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
+    "baseUrl": "./src",
+    "outDir": "./dist",
     "module": "ESNext",
     "target": "ESNext",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "moduleResolution": "node",
+    "sourceMap": true,
     "esModuleInterop": true,
     "strict": true,
-    "baseUrl": "./src",
-    "outDir": "./dist"
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "typeRoots": [
+      "./src/@types"
+    ],
+    "types": [
+      "long"
+    ]
   },
   "include": [
     "src/**/*"

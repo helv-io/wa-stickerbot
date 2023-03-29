@@ -1,7 +1,6 @@
 import Module from 'node:module'
-const require = Module.createRequire(import.meta.url)
 
-import {
+import makeWASocket, {
   areJidsSameUser,
   DisconnectReason,
   downloadMediaMessage,
@@ -17,15 +16,13 @@ import express from 'express'
 import { imageSync } from 'qr-image'
 
 import { isUserBanned } from './handlers/dbHandler.js'
-import baileysClient from './utils/baileysClient.js'
 import { botOptions, sessionId } from './config.js'
 import { deleteMessage, makeSticker } from './utils/baileysHelper.js'
 import { handleText } from './handlers/textHandler.js'
 import { handleAudio } from './handlers/audioHandler.js'
-import { ask } from './handlers/aiHandler.js'
 
 // create exportable WA Client
-export let client: baileysClient
+export let client: ReturnType<typeof makeWASocket>
 
 // create express webserver
 const app = express()
@@ -42,8 +39,11 @@ export const ephemeral: MiscMessageGenerationOptions = {
 
 const connectToWhatsApp = async () => {
   const { state, saveCreds } = await useMultiFileAuthState(`/data/${sessionId}`)
-  const makeWASocket = require('@adiwajshing/baileys').default
-  client = <baileysClient>makeWASocket({
+
+  // Require makeWASocket in ESM format. Hacky, but works
+  const require = Module.createRequire(import.meta.url)
+  const makeSocket: typeof makeWASocket = require('@adiwajshing/baileys').default
+  client = makeSocket({
     auth: state,
     printQRInTerminal: true,
     logger: pino({ level: 'silent' })
@@ -139,7 +139,7 @@ const connectToWhatsApp = async () => {
           message.message.ephemeralMessage?.message?.conversation ||
           ''
         if (body) {
-          await handleText(message, body, group, isOwner, isAdmin, sender)
+          await handleText(message, body, group, isOwner, isAdmin)
           continue
         }
       }

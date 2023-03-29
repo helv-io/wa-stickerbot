@@ -30,8 +30,7 @@ export const handleText = async (
   body: string,
   group: GroupMetadata | undefined,
   isOwner: boolean,
-  isAdmin: boolean,
-  sender: string
+  isAdmin: boolean
 ) => {
   // Fix remote Jid - will never be empty
   const jid = message.key.remoteJid || ''
@@ -206,9 +205,11 @@ export const handleText = async (
       case actions.AI:
         await react(message, '🤖')
         try {
+          // Make the sender be the group id, or individual ID if not a group message
+          const sender = group?.id || message.key.participant || message.key.remoteJid || ''
           const question = body.slice(5)
           console.log(`[${sender}] ${question}`)
-          const response = `${(await ask(question, sender))}`
+          const response = `${await ask(question, sender)}`
           await client.sendMessage(jid, { text: response }, quote)
         } catch (e) {
           console.error(e)
