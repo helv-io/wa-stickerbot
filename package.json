@@ -38,7 +38,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "googlebard": "^1.0.4",
     "long": "^4.0.0",
-    "microsoft-cognitiveservices-speech-sdk": "^1.26.0",
+    "microsoft-cognitiveservices-speech-sdk": "^1.27.0",
     "openai": "^3.2.1",
     "pino": "^8.11.0",
     "qr-image": "^3.2.0",
