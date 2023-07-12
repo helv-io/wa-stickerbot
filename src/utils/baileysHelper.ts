@@ -1,4 +1,4 @@
-import { downloadMediaMessage, WAMessage } from '@adiwajshing/baileys'
+import { downloadMediaMessage, WAMessage } from '@whiskeysockets/baileys'
 import { Sticker, StickerTypes } from 'wa-sticker-formatter'
 
 import { client, ephemeral } from '../bot.js'

@@ -14,13 +14,7 @@
     "esModuleInterop": true,
     "strict": true,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "typeRoots": [
-      "./src/@types"
-    ],
-    "types": [
-      "long"
-    ]
+    "declaration": true
   },
   "include": [
     "src/**/*"

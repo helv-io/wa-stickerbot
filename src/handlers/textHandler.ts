@@ -5,7 +5,7 @@ import {
   MiscMessageGenerationOptions,
   WAMessage,
   WA_DEFAULT_EPHEMERAL
-} from '@adiwajshing/baileys'
+} from '@whiskeysockets/baileys'
 
 import { client, ephemeral } from '../bot.js'
 import { botOptions } from '../config.js'

@@ -2,7 +2,7 @@ import {
   WAMessage,
   downloadMediaMessage,
   WA_DEFAULT_EPHEMERAL
-} from '@adiwajshing/baileys'
+} from '@whiskeysockets/baileys'
 
 import { client } from '../bot.js'
 

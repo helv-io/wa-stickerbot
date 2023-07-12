@@ -8,7 +8,7 @@ import makeWASocket, {
   MiscMessageGenerationOptions,
   useMultiFileAuthState,
   WA_DEFAULT_EPHEMERAL
-} from '@adiwajshing/baileys'
+} from '@whiskeysockets/baileys'
 
 import { Boom } from '@hapi/boom'
 import { pino } from 'pino'
@@ -42,7 +42,7 @@ const connectToWhatsApp = async () => {
 
   // Require makeWASocket in ESM format. Hacky, but works
   const require = Module.createRequire(import.meta.url)
-  const makeSocket: typeof makeWASocket = require('@adiwajshing/baileys').default
+  const makeSocket: typeof makeWASocket = require('@whiskeysockets/baileys').default
   client = makeSocket({
     auth: state,
     printQRInTerminal: true,
