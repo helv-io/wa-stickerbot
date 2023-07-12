@@ -50,7 +50,6 @@ export const makeSDSticker = async (message: WAMessage, url: string, payload: st
     'Content-Type': 'application/json'
   })
   const data = await (await fetch(url, { method: 'POST', body: payload, headers: headers })).json()
-  const b64 = Buffer.from(<string>data.images[0], 'base64')
-  const sticker = new Sticker(b64, stickerMeta)
-  client.sendMessage(jid, await sticker.toMessage(), ephemeral)
+  const sticker = Buffer.from(<string>data.images[0], 'base64')
+  return new Sticker(sticker, stickerMeta)
 }

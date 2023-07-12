@@ -161,14 +161,17 @@ export const handleText = async (
 
       case actions.AI:
         await react(message, '🤖')
+        const prompt = body.slice(4)
+        console.log(`Stable Diffusion: ${prompt}`)
         try {
           const payload = {
-            prompt: body.slice(4),
+            prompt,
             steps: 20,
             restore_faces: true
           }
           const url = `https://ai.helv.io/sdapi/v1/txt2img`
-          await makeSDSticker(message, url, JSON.stringify(payload))
+          const sticker = await makeSDSticker(message, url, JSON.stringify(payload))
+          await client.sendMessage(jid, await sticker.toMessage(), quote)
         } catch (e) {
           console.error(e)
           await client.sendMessage(jid, { text: '👎' }, quote)
