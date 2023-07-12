@@ -22,7 +22,6 @@ import { getStickerSearches } from '../handlers/stickerHandler.js'
 import { getTenors } from '../handlers/tenorHandler.js'
 import { deleteMessage, react, makeSticker } from '../utils/baileysHelper.js'
 
-import { ask } from './aiHandler.js'
 import { synthesizeText } from './speechHandler.js'
 
 export const handleText = async (
@@ -103,9 +102,6 @@ export const handleText = async (
 
         stats += `Text\n`
         stats += `${await getCount('Text')}\n\n`
-
-        stats += `AI\n`
-        stats += `${await getCount('AI')}\n\n`
 
         if (botOptions.donationLink) {
           stats += `Donation:\n`
@@ -202,21 +198,6 @@ export const handleText = async (
         }
         break
 
-      case actions.AI:
-        await react(message, '🤖')
-        try {
-          // Make the sender be the group id, or individual ID if not a group message
-          const sender = group?.id || message.key.participant || message.key.remoteJid || ''
-          const question = body.slice(5)
-          console.log(`[${sender}] ${question}`)
-          const response = `${await ask(question, sender)}`
-          await client.sendMessage(jid, { text: response }, quote)
-        } catch (e) {
-          console.error(e)
-          await client.sendMessage(jid, { text: '👎' }, quote)
-        }
-        break
-
       case actions.ALL:
         if (group) {
           let broadcast = body.slice(5)
@@ -255,7 +236,6 @@ export const getTextAction = async (message: string) => {
     // Starts With matches
     if (message.startsWith('meme ')) return actions.MEME
     if (message.startsWith('texto ')) return actions.TEXT
-    if (message.startsWith('bot, ')) return actions.AI
     if (message.startsWith('ban ')) return actions.BAN
     if (message.startsWith('unban ')) return actions.UNBAN
     if (message.startsWith('synth ')) return actions.SYNTH
@@ -274,7 +254,6 @@ export enum actions {
   LINK = 'Link',
   STATS = 'Statistics',
   TEXT = 'Text',
-  AI = 'AI',
   BAN = 'Ban',
   UNBAN = 'Unban',
   SYNTH = 'Speak',
