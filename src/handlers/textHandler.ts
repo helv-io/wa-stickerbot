@@ -46,6 +46,7 @@ export const handleText = async (
   if (action) {
     // Add to Statistics
     addCount(action)
+    await client.readMessages([message.key])
 
     switch (action) {
       case actions.INSTRUCTIONS:
