@@ -158,7 +158,7 @@ export const handleText = async (
           await fs.unlink(file)
         }
         break
-      
+
       case actions.AI:
         await react(message, '🤖')
         try {
@@ -168,7 +168,7 @@ export const handleText = async (
             restore_faces: true
           }
           const url = `https://ai.helv.io/sdapi/v1/txt2img`
-          await makeSDSticker(message, url, payload)
+          await makeSDSticker(message, url, JSON.stringify(payload))
         } catch (e) {
           console.error(e)
           await client.sendMessage(jid, { text: '👎' }, quote)
