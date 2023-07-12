@@ -41,3 +41,10 @@ export const makeSticker = async (message: WAMessage, url = '') => {
     }
   }
 }
+
+export const makeSDSticker = async (message: WAMessage, url: string, payload: object) => {
+  await react(message, '🤖')
+  const jid = message.key.remoteJid || ''
+  const res = await (await fetch(url, { method: 'POST', body: JSON.stringify(payload) })).json()
+  client.sendMessage(jid, await res.images[0], ephemeral)
+}

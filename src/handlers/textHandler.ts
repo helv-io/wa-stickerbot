@@ -20,7 +20,7 @@ import { getGiphys } from '../handlers/giphyHandler.js'
 import { getMemeList, makeMeme } from '../handlers/memeHandler.js'
 import { getStickerSearches } from '../handlers/stickerHandler.js'
 import { getTenors } from '../handlers/tenorHandler.js'
-import { deleteMessage, react, makeSticker } from '../utils/baileysHelper.js'
+import { deleteMessage, react, makeSticker, makeSDSticker } from '../utils/baileysHelper.js'
 
 import { synthesizeText } from './speechHandler.js'
 
@@ -158,6 +158,22 @@ export const handleText = async (
           await fs.unlink(file)
         }
         break
+      
+      case actions.AI:
+        await react(message, '🤖')
+        try {
+          const payload = {
+            prompt: body.slice(4),
+            steps: 20,
+            restore_faces: true
+          }
+          const url = `https://ai.helv.io/sdapi/v1/txt2img`
+          await makeSDSticker(message, url, payload)
+        } catch (e) {
+          console.error(e)
+          await client.sendMessage(jid, { text: '👎' }, quote)
+        }
+        break
 
       case actions.STICKER:
         await react(message, '🤖')
@@ -239,6 +255,7 @@ export const getTextAction = async (message: string) => {
     if (message.startsWith('ban ')) return actions.BAN
     if (message.startsWith('unban ')) return actions.UNBAN
     if (message.startsWith('synth ')) return actions.SYNTH
+    if (message.startsWith('/ai ')) return actions.AI
     if (message.startsWith('@all ')) return actions.ALL
 
     // RegExp matches
@@ -257,5 +274,6 @@ export enum actions {
   BAN = 'Ban',
   UNBAN = 'Unban',
   SYNTH = 'Speak',
+  AI = 'AI',
   ALL = 'Broadcast'
 }
