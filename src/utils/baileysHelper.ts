@@ -18,7 +18,6 @@ export const deleteMessage = async (message: WAMessage) => {
 }
 
 export const makeSticker = async (message: WAMessage, url = '') => {
-  await react(message, '🤖')
   const jid = message.key.remoteJid || ''
   if (url) {
     const sticker = new Sticker(url, stickerMeta)
@@ -43,7 +42,6 @@ export const makeSticker = async (message: WAMessage, url = '') => {
 }
 
 export const makeSDSticker = async (message: WAMessage, url: string, payload: string) => {
-  await react(message, '🤖')
   const jid = message.key.remoteJid || ''
   const headers = new Headers({
     'Accept': 'application/json',
