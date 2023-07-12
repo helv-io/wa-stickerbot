@@ -45,9 +45,14 @@ export const makeSticker = async (message: WAMessage, url = '') => {
 export const makeSDSticker = async (message: WAMessage, url: string, payload: string) => {
   await react(message, '🤖')
   const jid = message.key.remoteJid || ''
+  const headers = new Headers({
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  })
   console.log(url)
   console.log(payload)
-  const res = await fetch(url, { method: 'POST', body: payload })
+  console.log(headers)
+  const res = await fetch(url, { method: 'POST', body: payload, headers: headers })
   const data = await (res).json()
   console.log(res)
   console.log(data)
