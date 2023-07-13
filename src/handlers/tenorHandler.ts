@@ -1,5 +1,5 @@
-import { TenorResponse, TenorSearch } from '../types/Tenor.js'
-import { paramSerializer } from '../utils/utils.js'
+import { TenorResponse, TenorSearch } from '../types/Tenor'
+import { paramSerializer } from '../utils/utils'
 
 const tenorURL = 'https://tenor.googleapis.com/v2/search?'
 

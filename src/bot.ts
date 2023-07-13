@@ -1,5 +1,4 @@
-import Module from 'node:module'
-
+import { Boom } from '@hapi/boom'
 import makeWASocket, {
   areJidsSameUser,
   DisconnectReason,
@@ -9,17 +8,15 @@ import makeWASocket, {
   useMultiFileAuthState,
   WA_DEFAULT_EPHEMERAL
 } from '@whiskeysockets/baileys'
-
-import { Boom } from '@hapi/boom'
-import { pino } from 'pino'
 import express from 'express'
+import { pino } from 'pino'
 import { imageSync } from 'qr-image'
 
-import { isUserBanned } from './handlers/dbHandler.js'
-import { botOptions, sessionId } from './config.js'
-import { deleteMessage, makeSticker } from './utils/baileysHelper.js'
-import { handleText } from './handlers/textHandler.js'
-import { handleAudio } from './handlers/audioHandler.js'
+import { botOptions, sessionId } from './config'
+import { handleAudio } from './handlers/audioHandler'
+import { isUserBanned } from './handlers/dbHandler'
+import { handleText } from './handlers/textHandler'
+import { deleteMessage, makeSticker } from './utils/baileysHelper'
 
 // create exportable WA Client
 export let client: ReturnType<typeof makeWASocket>
@@ -40,10 +37,7 @@ export const ephemeral: MiscMessageGenerationOptions = {
 const connectToWhatsApp = async () => {
   const { state, saveCreds } = await useMultiFileAuthState(`/data/${sessionId}`)
 
-  // Require makeWASocket in ESM format. Hacky, but works
-  const require = Module.createRequire(import.meta.url)
-  const makeSocket: typeof makeWASocket = require('@whiskeysockets/baileys').default
-  client = makeSocket({
+  client = makeWASocket({
     auth: state,
     printQRInTerminal: true,
     logger: pino({ level: 'silent' })
@@ -175,7 +169,8 @@ const connectToWhatsApp = async () => {
         await client.sendMessage(
           message.key.remoteJid,
           { image: sticker },
-          { quoted: message, ephemeralExpiration: WA_DEFAULT_EPHEMERAL }
+          { quoted: message,
+            ephemeralExpiration: WA_DEFAULT_EPHEMERAL }
         )
         continue
       }
@@ -193,6 +188,7 @@ app.get('/qr', (_req, res) => {
 })
 app.post('/api/webhook', (req, res) => {
   console.log(req.body)
-  res.json({ status: 'ok', data: req.body })
+  res.json({ status: 'ok',
+    data: req.body })
 })
 app.listen(3000, () => console.log('Web Server Started'))

@@ -1,13 +1,11 @@
 import {
-  WAMessage,
   downloadMediaMessage,
-  WA_DEFAULT_EPHEMERAL
-} from '@whiskeysockets/baileys'
+  WA_DEFAULT_EPHEMERAL,
+  WAMessage} from '@whiskeysockets/baileys'
 
-import { client } from '../bot.js'
-
-import { addCount } from './dbHandler.js'
-import { transcribeAudio } from './speechHandler.js'
+import { client } from '../bot'
+import { addCount } from './dbHandler'
+import { transcribeAudio } from './speechHandler'
 
 export const handleAudio = async (message: WAMessage) => {
   const jid = message.key.remoteJid || ''
@@ -33,7 +31,10 @@ export const handleAudio = async (message: WAMessage) => {
     client.sendMessage(
       jid,
       { text: transcription },
-      { quoted: message, ephemeralExpiration: WA_DEFAULT_EPHEMERAL }
+      { 
+        quoted: message,
+        ephemeralExpiration: WA_DEFAULT_EPHEMERAL
+      }
     )
   } catch (error) {
     console.error(`Error transcribing message: ${error}`)

@@ -1,4 +1,4 @@
-import { Meme } from '../types/Meme.js'
+import { Meme } from '../types/Meme'
 
 const memesBaseURL = 'https://meme.helv.io'
 const memesGetURL = `${memesBaseURL}/templates`

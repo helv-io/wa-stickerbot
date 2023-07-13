@@ -1,14 +1,14 @@
 import { downloadMediaMessage, WAMessage } from '@whiskeysockets/baileys'
 import { Sticker, StickerTypes } from 'wa-sticker-formatter'
 
-import { client, ephemeral } from '../bot.js'
-import { stickerMeta } from '../config.js'
-
-import { clone } from './utils.js'
+import { client, ephemeral } from '../bot'
+import { stickerMeta } from '../config'
+import { clone } from './utils'
 
 export const react = async (message: WAMessage, emoji: string) => {
   const jid = message.key.remoteJid || ''
-  const reaction = { react: { text: emoji, key: message.key } }
+  const reaction = { react: { text: emoji,
+    key: message.key } }
   await client.sendMessage(jid, reaction)
 }
 
@@ -46,6 +46,8 @@ export const imagine = async (url: string, payload: string) => {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   })
-  const data = await (await fetch(url, { method: 'POST', body: payload, headers: headers })).json()
+  const data = await (await fetch(url, { method: 'POST',
+    body: payload,
+    headers: headers })).json()
   return Buffer.from(<string>data.images[0], 'base64')
 }

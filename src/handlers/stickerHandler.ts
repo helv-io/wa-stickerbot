@@ -1,5 +1,5 @@
-import { botOptions, giphySearch, tenorSearch } from '../config.js'
-import { stickerRegExp } from '../handlers/textHandler.js'
+import { botOptions, giphySearch, tenorSearch } from '../config'
+import { stickerRegExp } from '../handlers/textHandler'
 
 export const getStickerSearches = (message: string) => {
   const keywords = stickerRegExp.exec(message) || []
@@ -11,5 +11,8 @@ export const getStickerSearches = (message: string) => {
   giphySearch.q = q
   tenorSearch.q = q
 
-  return { giphySearch, tenorSearch }
+  return {
+    giphySearch,
+    tenorSearch
+  }
 }
