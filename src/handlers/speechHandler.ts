@@ -35,8 +35,7 @@ const convertAudio = async (filename: string, data: string) => {
           resolve(waveFile)
         })
         .save(waveFile)
-    })()
-      .catch((error) => reject(error))
+    })().catch((error) => reject(error))
   })
 }
 
@@ -44,8 +43,8 @@ const convertAudio = async (filename: string, data: string) => {
 export const transcribeAudio = async (filename: string, data: string) => {
   // Since the Transcription is an asynchronous streaming service,
   // the whole function must be wrapped as a Promise
-  return new Promise<string>((resolve) => {
-    ( async () => {
+  return new Promise<string>((resolve, reject) => {
+    (async () => {
     // Convert ogg file to wav
       const wavFile = await convertAudio(filename, data)
 
@@ -86,7 +85,7 @@ export const transcribeAudio = async (filename: string, data: string) => {
 
       // Start the recognition
       reco.startContinuousRecognitionAsync()
-    })
+    })().catch((error) => reject(error))
   })
 }
 
@@ -138,7 +137,7 @@ export const synthesizeText = async (text: string) => {
         console.error(error)
         reject(error)
       }
-    })
+    })().catch((error) => reject(error))
   })
 }
 
