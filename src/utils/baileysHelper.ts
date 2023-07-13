@@ -42,19 +42,14 @@ export const makeSticker = async (message: WAMessage, url = '') => {
 }
 
 export const imagine = async (prompt: string) => {
-  const lorasUrl = `${SDSettings.baseUrl}/sdapi/v1/loras`
   const txt2imgUrl = `${SDSettings.baseUrl}/sdapi/v1/txt2img`
   const headers = new Headers({
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   })
-
-  const loras: string[] = []
-  const resLoras = <{name: string, alias: string}[]> await (await fetch(lorasUrl, { headers })).json()
-  resLoras.forEach(lora => loras.push(`<lora:${lora.alias}:1>`))
   
   const payload = {
-    prompt: `${prompt} ${SDSettings.addPrompt} ${loras.join(' ')}`,
+    prompt: `${SDSettings.addPrompt}, ${prompt}`,
     steps: SDSettings.steps,
     restore_faces: true,
     negative_prompt: SDSettings.negativePrompt,
