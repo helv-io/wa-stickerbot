@@ -195,7 +195,7 @@ export const handleText = async (
             height: SDSettings.height,
             cfg_scale: SDSettings.cfg
           }
-          const url = 'https://ai.helv.io/sdapi/v1/txt2img'
+          const url = `${SDSettings.baseUrl}/sdapi/v1/txt2img`
           const dream = await imagine(url, JSON.stringify(payload))
           await react(message, '🤖')
           await client.sendMessage(jid, await new Sticker(dream, stickerMeta).toMessage(), quote)
