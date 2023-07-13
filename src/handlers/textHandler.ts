@@ -192,7 +192,7 @@ export const handleText = async (
         const url = 'https://ai.helv.io/sdapi/v1/txt2img'
         const dream = await imagine(url, JSON.stringify(payload))
         await react(message, '🤖')
-        await client.sendMessage(jid, await (new Sticker(dream, stickerMeta)).toMessage(), quote)
+        await client.sendMessage(jid, await new Sticker(dream, stickerMeta).toMessage(), quote)
         await client.sendMessage(jid, { image: dream }, quote)
       } catch (e) {
         console.error(e)
