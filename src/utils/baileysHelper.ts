@@ -2,7 +2,7 @@ import { downloadMediaMessage, WAMessage } from '@whiskeysockets/baileys'
 import { Sticker, StickerTypes } from 'wa-sticker-formatter'
 
 import { client, ephemeral } from '../bot'
-import { stickerMeta } from '../config'
+import { SDSettings, stickerMeta } from '../config'
 import { clone } from './utils'
 
 export const react = async (message: WAMessage, emoji: string) => {
@@ -41,13 +41,31 @@ export const makeSticker = async (message: WAMessage, url = '') => {
   }
 }
 
-export const imagine = async (url: string, payload: string) => {
+export const imagine = async (prompt: string) => {
+  const lorasUrl = `${SDSettings.baseUrl}/sdapi/v1/loras`
+  const txt2imgUrl = `${SDSettings.baseUrl}/sdapi/v1/txt2img`
   const headers = new Headers({
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   })
-  const data = await (await fetch(url, { method: 'POST',
-    body: payload,
-    headers: headers })).json()
+
+  const loras: string[] = []
+  const resLoras = <{name: string, alias: string}[]> await (await fetch(lorasUrl, { headers })).json()
+  resLoras.forEach(lora => loras.push(`<lora:${lora.alias}:1>`))
+  
+  const payload = {
+    prompt: `${prompt} ${SDSettings.addPrompt} ${loras.join(' ')}`,
+    steps: SDSettings.steps,
+    restore_faces: true,
+    negative_prompt: SDSettings.negativePrompt,
+    width: SDSettings.width,
+    height: SDSettings.height,
+    cfg_scale: SDSettings.cfg
+  }
+  const data = await (await fetch(txt2imgUrl, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers
+  })).json()
   return Buffer.from(<string>data.images[0], 'base64')
 }

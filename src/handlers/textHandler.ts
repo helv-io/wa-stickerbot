@@ -186,17 +186,7 @@ export const handleText = async (
         const prompt = body.slice(4)
         console.log(`Stable Diffusion: ${prompt}`)
         try {
-          const payload = {
-            prompt: `${prompt} ${SDSettings.addPrompt}`,
-            steps: SDSettings.steps,
-            restore_faces: true,
-            negative_prompt: SDSettings.negativePrompt,
-            width: SDSettings.width,
-            height: SDSettings.height,
-            cfg_scale: SDSettings.cfg
-          }
-          const url = `${SDSettings.baseUrl}/sdapi/v1/txt2img`
-          const dream = await imagine(url, JSON.stringify(payload))
+          const dream = await imagine(prompt)
           await react(message, '🤖')
           await client.sendMessage(jid, await new Sticker(dream, stickerMeta).toMessage(), quote)
           await client.sendMessage(jid, { image: dream }, quote)
