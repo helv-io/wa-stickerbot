@@ -187,7 +187,7 @@ export const handleText = async (
         console.log(`Stable Diffusion: ${prompt}`)
         try {
           const payload = {
-            prompt: `prompt ${SDSettings.addPrompt}`,
+            prompt: `${prompt} ${SDSettings.addPrompt}`,
             steps: SDSettings.steps,
             restore_faces: true,
             negative_prompt: SDSettings.negativePrompt,
