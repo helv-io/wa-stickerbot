@@ -8,7 +8,7 @@ import * as fs from 'fs/promises'
 import Sticker from 'wa-sticker-formatter'
 
 import { client, ephemeral } from '../bot'
-import { botOptions, stickerMeta } from '../config'
+import { botOptions, SDSettings, stickerMeta } from '../config'
 import {
   addCount,
   ban,
@@ -180,23 +180,30 @@ export const handleText = async (
 
     case actions.AI:
     {
-      await react(message, '⏳')
-      const prompt = body.slice(4)
-      console.log(`Stable Diffusion: ${prompt}`)
-      try {
-        const payload = {
-          prompt,
-          steps: 20,
-          restore_faces: true
+      if(SDSettings.baseUrl)
+      {
+        await react(message, '⏳')
+        const prompt = body.slice(4)
+        console.log(`Stable Diffusion: ${prompt}`)
+        try {
+          const payload = {
+            prompt: `prompt ${SDSettings.addPrompt}`,
+            steps: SDSettings.steps,
+            restore_faces: true,
+            negative_prompt: SDSettings.negativePrompt,
+            width: SDSettings.width,
+            height: SDSettings.height,
+            cfg_scale: SDSettings.cfg
+          }
+          const url = 'https://ai.helv.io/sdapi/v1/txt2img'
+          const dream = await imagine(url, JSON.stringify(payload))
+          await react(message, '🤖')
+          await client.sendMessage(jid, await new Sticker(dream, stickerMeta).toMessage(), quote)
+          await client.sendMessage(jid, { image: dream }, quote)
+        } catch (e) {
+          console.error(e)
+          await react(message, '👎')
         }
-        const url = 'https://ai.helv.io/sdapi/v1/txt2img'
-        const dream = await imagine(url, JSON.stringify(payload))
-        await react(message, '🤖')
-        await client.sendMessage(jid, await new Sticker(dream, stickerMeta).toMessage(), quote)
-        await client.sendMessage(jid, { image: dream }, quote)
-      } catch (e) {
-        console.error(e)
-        await react(message, '👎')
       }
       break
     }

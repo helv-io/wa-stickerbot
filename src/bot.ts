@@ -12,7 +12,7 @@ import express from 'express'
 import { pino } from 'pino'
 import { imageSync } from 'qr-image'
 
-import { botOptions, sessionId } from './config'
+import { botOptions } from './config'
 import { handleAudio } from './handlers/audioHandler'
 import { isUserBanned } from './handlers/dbHandler'
 import { handleText } from './handlers/textHandler'
@@ -35,7 +35,7 @@ export const ephemeral: MiscMessageGenerationOptions = {
 }
 
 const connectToWhatsApp = async () => {
-  const { state, saveCreds } = await useMultiFileAuthState(`/data/${sessionId}`)
+  const { state, saveCreds } = await useMultiFileAuthState(`/data/${botOptions.sessionId}`)
 
   client = makeWASocket({
     auth: state,

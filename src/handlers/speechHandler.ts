@@ -16,7 +16,7 @@ import {
 import { tmpdir } from 'os'
 import path from 'path'
 
-import { botOptions } from '../config'
+import { AzureConfig } from '../config'
 
 const convertAudio = async (filename: string, data: string) => {
   return new Promise<string>((resolve, reject) => {
@@ -51,8 +51,8 @@ export const transcribeAudio = async (filename: string, data: string) => {
       // Initialize Azure SDK Speech Recognition Object from
       // Environment Vars and wav file
       const sConfig = SpeechConfig.fromSubscription(
-        botOptions.azureSpeechKey,
-        botOptions.azureSpeechRegion
+        AzureConfig.azureSpeechKey,
+        AzureConfig.azureSpeechRegion
       )
 
       // Allow profanity
@@ -62,7 +62,7 @@ export const transcribeAudio = async (filename: string, data: string) => {
       const aConfig = AudioConfig.fromWavFileInput(await fs.readFile(wavFile))
       const reco = SpeechRecognizer.FromConfig(
         sConfig,
-        AutoDetectSourceLanguageConfig.fromLanguages(botOptions.enabledLanguages),
+        AutoDetectSourceLanguageConfig.fromLanguages(AzureConfig.enabledLanguages),
         aConfig
       )
 
@@ -99,8 +99,8 @@ export const synthesizeText = async (text: string) => {
 
         // Create a Speech Configuration
         const sConfig = SpeechConfig.fromSubscription(
-          botOptions.azureSpeechKey,
-          botOptions.azureSpeechRegion
+          AzureConfig.azureSpeechKey,
+          AzureConfig.azureSpeechRegion
         )
 
         // Set the langage
@@ -144,8 +144,8 @@ export const synthesizeText = async (text: string) => {
 export const detectTextLanguage = async (text: string) => {
   // Initialize Azure Text Client
   const client = new TextAnalyticsClient(
-    botOptions.azureTextEndpoint,
-    new AzureKeyCredential(botOptions.azureTextKey)
+    AzureConfig.azureTextEndpoint,
+    new AzureKeyCredential(AzureConfig.azureTextKey)
   )
 
   // Send single text to have its language recognized
@@ -154,11 +154,11 @@ export const detectTextLanguage = async (text: string) => {
   // Return the ln-RG format of the recognized language
   if (!result.error)
     return (
-      botOptions.enabledLanguages.find((lang) =>
+      AzureConfig.enabledLanguages.find((lang) =>
         lang.startsWith(result.primaryLanguage.iso6391Name)
-      ) || botOptions.enabledLanguages[0]
+      ) || AzureConfig.enabledLanguages[0]
     )
 
   // Or the first config language if there's an error
-  return botOptions.enabledLanguages[0]
+  return AzureConfig.enabledLanguages[0]
 }
