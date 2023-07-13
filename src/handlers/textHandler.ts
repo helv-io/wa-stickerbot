@@ -32,6 +32,9 @@ export const handleText = async (
   isOwner: boolean,
   isAdmin: boolean
 ) => {
+  // Mark all messages as read
+  await client.readMessages([message.key])
+
   // Fix remote Jid - will never be empty
   const jid = message.key.remoteJid || ''
 
@@ -47,7 +50,6 @@ export const handleText = async (
   if (action) {
     // Add to Statistics
     addCount(action)
-    await client.readMessages([message.key])
 
     switch (action) {
       case actions.INSTRUCTIONS:
