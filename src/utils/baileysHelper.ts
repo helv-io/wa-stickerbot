@@ -41,13 +41,11 @@ export const makeSticker = async (message: WAMessage, url = '') => {
   }
 }
 
-export const makeSDSticker = async (message: WAMessage, url: string, payload: string) => {
-  const jid = message.key.remoteJid || ''
+export const imagine = async (url: string, payload: string) => {
   const headers = new Headers({
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   })
   const data = await (await fetch(url, { method: 'POST', body: payload, headers: headers })).json()
-  const sticker = Buffer.from(<string>data.images[0], 'base64')
-  return new Sticker(sticker, stickerMeta)
+  return Buffer.from(<string>data.images[0], 'base64')
 }

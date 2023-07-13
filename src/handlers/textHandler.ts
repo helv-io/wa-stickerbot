@@ -8,7 +8,7 @@ import {
 } from '@whiskeysockets/baileys'
 
 import { client, ephemeral } from '../bot.js'
-import { botOptions } from '../config.js'
+import { botOptions, stickerMeta } from '../config.js'
 import {
   addCount,
   ban,
@@ -20,9 +20,10 @@ import { getGiphys } from '../handlers/giphyHandler.js'
 import { getMemeList, makeMeme } from '../handlers/memeHandler.js'
 import { getStickerSearches } from '../handlers/stickerHandler.js'
 import { getTenors } from '../handlers/tenorHandler.js'
-import { deleteMessage, react, makeSticker, makeSDSticker } from '../utils/baileysHelper.js'
+import { deleteMessage, react, makeSticker, imagine } from '../utils/baileysHelper.js'
 
 import { synthesizeText } from './speechHandler.js'
+import Sticker from 'wa-sticker-formatter'
 
 export const handleText = async (
   message: WAMessage,
@@ -171,9 +172,10 @@ export const handleText = async (
             restore_faces: true
           }
           const url = `https://ai.helv.io/sdapi/v1/txt2img`
-          const sticker = await makeSDSticker(message, url, JSON.stringify(payload))
+          const dream = await imagine(url, JSON.stringify(payload))
           await react(message, '🤖')
-          await client.sendMessage(jid, await sticker.toMessage(), quote)
+          await client.sendMessage(jid, await new Sticker(dream, stickerMeta).toMessage(), quote)
+          await client.sendMessage(jid, { image: dream }, quote)
         } catch (e) {
           console.error(e)
           await react(message, '👎')
