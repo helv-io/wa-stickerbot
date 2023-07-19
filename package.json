@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node src/bot.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "npx eslint ./src --ext .ts --fix",    
+    "format": "npx eslint ./src --ext .ts --fix",
     "lint": "npx eslint ./src --ext .ts",
     "build": "npm i && npx tsc",
     "debug": "npx nodemon ./src/bot.ts",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/helv-io/wa-stickerbot#readme",
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.3.1",
+    "@whiskeysockets/baileys": "^6.4.0",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@azure/ai-text-analytics": "^5.1.0",
     "@hapi/boom": "^10.0.1",
