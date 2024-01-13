@@ -174,9 +174,6 @@ const connectToWhatsApp = async () => {
         )
         continue
       }
-
-      console.log('Message payload:')
-      console.log(message)
     }
   })
 }

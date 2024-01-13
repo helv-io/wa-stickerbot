@@ -274,7 +274,7 @@ export const handleText = async (
       await react(message, '🙏')
       const feedback = body.slice(10)
       console.log('Feedback', feedback)
-      const sender = jidDecode(message.key.participant || '')
+      const sender = jidDecode(message.key.participant!)
       await client.sendMessage(
         jidEncode(botOptions.ownerNumber, 's.whatsapp.net'),
         {
