@@ -87,11 +87,11 @@ export const handleText = async (
     case actions.PING:
     {
       console.log('Ping')
-      console.log(message)
+      const time = <number>message.messageTimestamp * 1000
 
       await client.sendMessage(
         jid,
-        { text: `pong (${message.messageC2STimestamp})` },
+        { text: `pong (${new Date().getTime() - time})` },
         quote
       )
       await react(message, '🤖')
