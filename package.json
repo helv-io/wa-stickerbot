@@ -1,6 +1,6 @@
 {
   "name": "wa-stickerbot",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "WhatsApp Sticker Bot",
   "main": "bot.js",
   "scripts": {
