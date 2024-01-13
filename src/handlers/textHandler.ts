@@ -1,5 +1,6 @@
 import {
   GroupMetadata,
+  jidEncode,
   MiscMessageGenerationOptions,
   WA_DEFAULT_EPHEMERAL,
   WAMessage
@@ -266,6 +267,21 @@ export const handleText = async (
       }
       break
     }
+
+    case actions.FEEDBACK:
+    {
+      const feedback = body.slice(10)
+      console.log('Feedback', feedback)
+      console.log(message)
+      await client.sendMessage(
+        jidEncode(botOptions.ownerNumber, 's.whatsapp.net'),
+        {
+          text: feedback
+        },
+        ephemeral
+      )
+      break
+    }
     }
   }
 }
@@ -291,6 +307,7 @@ export const getTextAction = async (message: string) => {
     if (message.startsWith('synth ')) return actions.SYNTH
     if (message.startsWith('/ai ')) return actions.AI
     if (message.startsWith('@all ')) return actions.ALL
+    if (message.startsWith('feedback: ')) return actions.FEEDBACK
 
     // RegExp matches
     if (stickerRegExp.exec(message)) return actions.STICKER
@@ -309,5 +326,6 @@ export enum actions {
   UNBAN = 'Unban',
   SYNTH = 'Speak',
   AI = 'AI',
-  ALL = 'Broadcast'
+  ALL = 'Broadcast',
+  FEEDBACK = 'Feedback'
 }
