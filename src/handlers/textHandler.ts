@@ -84,6 +84,20 @@ export const handleText = async (
       break
     }
 
+    case actions.PING:
+    {
+      console.log('Ping')
+      console.log(message)
+
+      await client.sendMessage(
+        jid,
+        { text: `pong (${message.messageC2STimestamp})` },
+        quote
+      )
+      await react(message, '🤖')
+      break
+    }
+
     case actions.MEME_LIST:
     {
       await react(message, '🤖')
@@ -299,6 +313,7 @@ export const getTextAction = async (message: string) => {
     if (message === 'stats') return actions.STATS
     if (message === 'memes') return actions.MEME_LIST
     if (message === 'link') return actions.LINK
+    if (message === 'ping') return actions.PING
     if (message === 'rtfm') return actions.INSTRUCTIONS
 
     // Starts With matches
@@ -322,6 +337,7 @@ export enum actions {
   INSTRUCTIONS = 'Instructions',
   STICKER = 'Stickers',
   LINK = 'Link',
+  PING = 'Ping',
   STATS = 'Statistics',
   TEXT = 'Text',
   BAN = 'Ban',
