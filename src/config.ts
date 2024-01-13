@@ -11,7 +11,7 @@ dotenv.config()
 export const stickerMeta: IStickerOptions = {
   author: process.env.SB_AUTHOR || 'Helvio',
   pack: process.env.SB_PACK || 'Sticker Bot',
-  quality: 80
+  quality: +(process.env.SB_STICKER_QUALITY || 70)
 }
 
 // Number of stickers when seraching for multiples

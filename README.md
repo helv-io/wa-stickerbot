@@ -40,6 +40,7 @@ All variables are optional
 | SB_DONATION                | Donation Link / Text                  | pix@helv.io |
 | SB_DONATION_MESSAGE_CHANCE | 1 chance in X of a donation message   | 30          |
 | SB_STICKERS                | Number of Stickers to sead (each API) | 10          |
+| SB_STICKER_QUALITY         | Quality (0-100) of Sticker WebP       | 70          |
 | SB_GROUP_ADMIN_ONLY        | Only interact if bot is Group Admin   | true        |
 | SB_GROUPS_ONLY             | Only interact with Group Chats        | true        |
 | SB_WELCOME_MESSAGE         | Optional Welcome Message (Groups)     | true        |
