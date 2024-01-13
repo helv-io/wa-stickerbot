@@ -91,7 +91,7 @@ export const handleText = async (
 
       await client.sendMessage(
         jid,
-        { text: `pong (${new Date().getTime() - time})` },
+        { text: `pong (${new Date().getTime() - time}ns)` },
         quote
       )
       await react(message, '🤖')

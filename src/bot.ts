@@ -62,9 +62,6 @@ const connectToWhatsApp = async () => {
   client.ev.on('messages.upsert', async (event) => {
     for (const message of event.messages) {
       // This is where the fun begins!
-      
-      // Replace the message timestamp with ms precision
-      message.messageTimestamp = new Date().getTime()
 
       // Do nothing if self, if no message, no remoteJid, Broadcast, Reaction
       if (
