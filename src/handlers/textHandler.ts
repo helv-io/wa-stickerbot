@@ -1,5 +1,6 @@
 import {
   GroupMetadata,
+  jidDecode,
   jidEncode,
   MiscMessageGenerationOptions,
   WA_DEFAULT_EPHEMERAL,
@@ -270,13 +271,14 @@ export const handleText = async (
 
     case actions.FEEDBACK:
     {
+      await react(message, '🙏')
       const feedback = body.slice(10)
       console.log('Feedback', feedback)
-      console.log(message)
+      const sender = jidDecode(message.key.participant || '')
       await client.sendMessage(
         jidEncode(botOptions.ownerNumber, 's.whatsapp.net'),
         {
-          text: feedback
+          text: `${message.pushName} (${sender?.user}):\n${feedback}`
         },
         ephemeral
       )
