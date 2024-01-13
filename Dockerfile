@@ -10,7 +10,8 @@ RUN apt update && \
     libpango1.0-dev \
     librsvg2-dev \
     libu2f-udev \
-    libxcb1
+    libxcb1 \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install -g npm@latest
