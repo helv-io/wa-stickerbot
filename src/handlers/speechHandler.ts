@@ -95,7 +95,6 @@ export const synthesizeText = async (text: string) => {
       try {
       // Detect the text language to properly synthesize
         const lang = await detectTextLanguage(text)
-        console.log(`Synthesizing: "${text}" in ${lang}`)
 
         // Create a Speech Configuration
         const sConfig = SpeechConfig.fromSubscription(
@@ -110,6 +109,16 @@ export const synthesizeText = async (text: string) => {
         const hash = createHash('sha256').update(text).digest('hex').slice(0, 8)
         const mp3file = path.join(tmpdir(), `${hash}.mp3`)
         const oggfile = path.join(tmpdir(), `${hash}.opus`)
+
+        // Get list of available voices for a given language
+        const voiceClient = new SpeechSynthesizer(sConfig)
+        const voices = (await voiceClient.getVoicesAsync()).voices.filter(v => v.locale.startsWith(lang))
+        const voice = voices[Math.floor(Math.random() * voices.length)]
+
+        console.log(`Synthesizing: "${text}" in ${lang} using ${voice.displayName}`)
+
+        // Use a random voice
+        sConfig.speechSynthesisVoiceName = voice.shortName
 
         // Creates the Synthesizer based on inputs and expected outputs
         const synt = new SpeechSynthesizer(
