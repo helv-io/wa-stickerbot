@@ -11,16 +11,14 @@ export const transcribeAudio = async (filename: string, data: string) => {
 }
 
 export const translateAudio = async (filename: string, data: string) => {
-  let lang = await detectLanguage(filename, data)
-  console.log(lang)
-  lang = lang === 'en' ? 'pt' : 'en'
-  console.log('Converting...')
-  console.log(lang)
+  const lang = await detectLanguage(filename, data)
+  if (lang === 'en')
+    return ''
   const form = new formdata()
   form.append('audio_file', Buffer.from(data, 'base64'), filename)
   const headers = {'Content-Type': 'multipart/form-data'}
   return (await axios.post<string>(
-    `${botOptions.whisperEndpoint}/asr?task=translate&language=${lang}`,
+    `${botOptions.whisperEndpoint}/asr?task=translate`,
     form, { headers })).data
 }
 
