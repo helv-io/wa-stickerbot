@@ -4,6 +4,7 @@ import {
   WAMessage} from '@whiskeysockets/baileys'
 
 import { client } from '../bot'
+import { react } from '../utils/baileysHelper'
 import { addCount } from './dbHandler'
 import { transcribeAudio } from './whisperHandler'
 
@@ -22,6 +23,7 @@ export const handleAudio = async (message: WAMessage) => {
   await addCount(mimetype)
   console.log(`${mimetype} (${message.pushName})[${message.key.participant}]`)
   try {
+    await react(message, '🎙️')
     // Transcribe
     const transcription = await transcribeAudio(
       filename,

@@ -9,7 +9,6 @@ import makeWASocket, {
   WA_DEFAULT_EPHEMERAL
 } from '@whiskeysockets/baileys'
 import express from 'express'
-import { pino } from 'pino'
 import { imageSync } from 'qr-image'
 
 import { botOptions } from './config'
@@ -39,8 +38,7 @@ const connectToWhatsApp = async () => {
 
   client = makeWASocket({
     auth: state,
-    printQRInTerminal: true,
-    logger: pino({ level: 'silent' })
+    printQRInTerminal: true
   })
   client.ev.on('connection.update', (state) => (qr = state.qr))
   client.ev.on('creds.update', saveCreds)
