@@ -36,7 +36,7 @@ export const handleAudio = async (message: WAMessage) => {
     // Reply with transcription and Translation
     await client.sendMessage(
       jid,
-      { text: `${transcription}\n(${translation})` },
+      { text: `${transcription}\n${translation}` },
       { 
         quoted: message,
         ephemeralExpiration: WA_DEFAULT_EPHEMERAL
