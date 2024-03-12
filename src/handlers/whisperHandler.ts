@@ -12,7 +12,7 @@ export const transcribeAudio = async (filename: string, data: string) => {
             }
         })
         console.log(response)
-        return await response.data
+        return response.data
     } catch (e) {
         console.error(e)
         return 'Womp Womp Womp'
