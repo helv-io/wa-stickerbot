@@ -15,6 +15,6 @@ export const translateAudio = async (filename: string, data: string, lang?: stri
   form.append('audio_file', Buffer.from(data, 'base64'), filename)
   const headers = {'Content-Type': 'multipart/form-data'}
   return (await axios.post<string>(
-    `${botOptions.whisperEndpoint}/asr&task=translate&language=${lang}`,
+    `${botOptions.whisperEndpoint}/asr?task=translate&language=${lang}`,
     form, { headers })).data
 }
