@@ -1,13 +1,12 @@
 import { botOptions } from '../config'
 import axios from 'axios'
-import * as fs from 'fs'
+import formdata from 'form-data'
 
 export const transcribeAudio = async (filename: string, data: string) => {
-    const form = new FormData()
-    const blob = new Blob([Buffer.from(data, 'base64')])
-    form.append('audio_file', blob, filename)
+    const form = new formdata()
+    form.append('audio_file', Buffer.from(data, 'base64'), filename)
     try {
-        const response = await axios.post(`${botOptions.whisperEndpoint}/asr`, form, {
+        const response = await axios.post<string>(`${botOptions.whisperEndpoint}/asr`, form, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
