@@ -25,7 +25,8 @@ export const botOptions = {
   groupAdminOnly: JSON.parse(process.env.SB_GROUP_ADMIN_ONLY || 'false'),
   groupsOnly: JSON.parse(process.env.SB_GROUPS_ONLY || 'false'),
   welcomeMessage: process.env.SB_WELCOME_MESSAGE,
-  ownerNumber: process.env.SB_OWNER_NUMBER || ''
+  ownerNumber: process.env.SB_OWNER_NUMBER || '',
+  whisperEndpoint: process.env.WHISPER_ENDPOINT || 'http://whisper:9000'
 }
 
 // Azure configuration
