@@ -6,7 +6,7 @@ import {
 import { client } from '../bot'
 import { react } from '../utils/baileysHelper'
 import { addCount } from './dbHandler'
-import { transcribeAudio } from './whisperHandler'
+import { transcribeAudio, translateAudio } from './whisperHandler'
 
 export const handleAudio = async (message: WAMessage) => {
   const jid = message.key.remoteJid || ''
@@ -29,10 +29,14 @@ export const handleAudio = async (message: WAMessage) => {
       filename,
       media.toString('base64')
     )
-    // Reply with transcription
-    client.sendMessage(
+    const translation = await translateAudio(
+      filename,
+      media.toString('base64')
+    )
+    // Reply with transcription and Translation
+    await client.sendMessage(
       jid,
-      { text: transcription },
+      { text: `${transcription}\n(${translation})` },
       { 
         quoted: message,
         ephemeralExpiration: WA_DEFAULT_EPHEMERAL
