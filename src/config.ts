@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { IStickerOptions } from 'wa-sticker-formatter/dist'
+import { IStickerOptions } from 'wa-sticker-formatter'
 
 import { GiphySearch } from './types/Giphy'
 import { TenorSearch } from './types/Tenor'
