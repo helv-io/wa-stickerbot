@@ -93,7 +93,7 @@ const connectToWhatsApp = async () => {
       const amAdmin = group
         ? group.participants
           .find((p) => areJidsSameUser(p.id, client.user?.id))
-          ?.admin?.endsWith('admin')
+          ?.admin?.endsWith('admin') !== undefined
         : false
       // Is sender banned?
       const isBanned = await isUserBanned(sender.replace(/\D/g, ''))
