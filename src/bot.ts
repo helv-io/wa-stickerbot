@@ -87,7 +87,7 @@ const connectToWhatsApp = async () => {
       const isAdmin = group
         ? group.participants
           .find((p) => areJidsSameUser(p.id, sender))
-          ?.admin?.endsWith('admin') !== null
+          ?.admin?.endsWith('admin') !== undefined
         : false
       // Is the Bot an admin of the group?
       const amAdmin = group
