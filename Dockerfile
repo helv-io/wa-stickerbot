@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:lts
 RUN apt update && \
     apt install -y \
     build-essential \
