@@ -32,7 +32,7 @@ export const addCount = async (type: string) => {
 
 export const getDonors = async () => {
   let donors = ''
-  await db.each('SELECT * FROM Donors ORDER BY amount DESC', (err, row) => {
+  await db.each('SELECT * FROM Donors ORDER BY amount DESC', (_err, row) => {
     donors += `${row.name}\n`
   })
   if (donors) donors = `🙌🙌🙌\n${donors}`

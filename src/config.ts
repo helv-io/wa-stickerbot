@@ -128,3 +128,10 @@ export const tenorSearch: TenorSearch = {
   limit: 1,
   q: 'placeholder'
 }
+
+// OpenAI settings
+export const openaiConfig = {
+  baseUrl: process.env.OPENAI_BASE_URL || 'http://opened-ai:8000',
+  model: process.env.OPENAI_MODEL || 'tts-1-hd',
+  voice: process.env.OPENAI_VOICE || 'trump'
+}
