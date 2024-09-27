@@ -355,7 +355,7 @@ export const handleText = async (
         await react(message, '🇧🇷')
         let file = ''
         try {
-          const tts = body.slice(6)
+          const tts = body.slice(11)
           console.log(`Bolsonaro says: "${tts}"`)
           file = await bolsonaro(tts)
           console.log(file)
