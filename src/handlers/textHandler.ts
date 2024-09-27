@@ -24,7 +24,7 @@ import { getStickerSearches } from '../handlers/stickerHandler'
 import { getTenors } from '../handlers/tenorHandler'
 import { deleteMessage, imagine, makeSticker, react } from '../utils/baileysHelper'
 import { synthesizeText } from './speechHandler'
-import { elon, trump } from './openaiHandler'
+import { bolsonaro, elon, trump } from './openaiHandler'
 
 export const handleText = async (
   message: WAMessage,
@@ -327,12 +327,37 @@ export const handleText = async (
 
       case actions.ELON:
       {
-        await react(message, '🇺🇸')
+        await react(message, '🤖')
         let file = ''
         try {
           const tts = body.slice(6)
           console.log(`Elon says: "${tts}"`)
           file = await elon(tts)
+          console.log(file)
+          await client.sendMessage(
+            jid,
+            {
+              audio: { url: file },
+              ptt: true
+            },
+            quote
+          )
+        } catch (error) {
+          console.error(error)
+        } finally {
+          await fs.unlink(file)
+        }
+        break
+      }
+
+      case actions.BOLSONARO:
+      {
+        await react(message, '🇧🇷')
+        let file = ''
+        try {
+          const tts = body.slice(6)
+          console.log(`Bolsonaro says: "${tts}"`)
+          file = await bolsonaro(tts)
           console.log(file)
           await client.sendMessage(
             jid,
@@ -378,6 +403,7 @@ export const getTextAction = async (message: string) => {
     if (message.startsWith('feedback: ')) return actions.FEEDBACK
     if (message.startsWith('/trump ')) return actions.TRUMP
     if (message.startsWith('/elon ')) return actions.ELON
+    if (message.startsWith('/bolsonaro ')) return actions.BOLSONARO
 
     // RegExp matches
     if (stickerRegExp.exec(message)) return actions.STICKER
@@ -400,5 +426,6 @@ export enum actions {
   ALL = 'Broadcast',
   FEEDBACK = 'Feedback',
   TRUMP = 'Trump',
-  ELON = 'Elon'
+  ELON = 'Elon',
+  BOLSONARO = 'Bolsonaro'
 }
