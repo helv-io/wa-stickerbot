@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "npx eslint ./src --ext .ts --fix",
     "lint": "npx eslint ./src --ext .ts",
-    "build": "npm i && npx esbuild src/bot.ts --bundle --platform=node --outfile=dist/bot.js --external:sharp --external:sqlite3",
+    "build": "npm i && npx esbuild src/bot.ts --bundle --platform=node --outfile=dist/bot.js --external:sharp --external:sqlite3 --external:axios",
     "debug": "npx nodemon ./src/bot.ts",
     "publish": "release-it",
     "update": "npx npm-check-updates -u -x pino,sharp"
@@ -33,7 +33,6 @@
     "@azure/ai-text-analytics": "^5.1.0",
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^6.7.18",
-    "canvagif": "^0.1.14",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "fluent-ffmpeg": "^2.1.3",
@@ -46,7 +45,6 @@
     "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",
     "qs": "^6.14.0",
-    "sharp": "^0.32.2",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "wa-sticker-formatter": "^4.4.4"
@@ -60,10 +58,7 @@
     "@types/qrcode": "^1.5.5",
     "@types/qrcode-terminal": "^0.12.2",
     "@types/qs": "^6.14.0",
-    "@types/sharp": "^0.32.0",
-    "@types/sqlite3": "^5.1.0",
     "@types/ws": "^8.18.1",
-    "release-it": "^19.0.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
