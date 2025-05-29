@@ -37,8 +37,7 @@ const connectToWhatsApp = async () => {
   const { state, saveCreds } = await useMultiFileAuthState(`/data/${botOptions.sessionId}`)
 
   client = makeWASocket({
-    auth: state,
-    printQRInTerminal: true
+    auth: state
   })
   client.ev.on('connection.update', (state) => (qr = state.qr))
   client.ev.on('creds.update', saveCreds)
