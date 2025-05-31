@@ -16,6 +16,7 @@ import { handleAudio } from './handlers/audioHandler'
 import { isUserBanned } from './handlers/dbHandler'
 import { handleText } from './handlers/textHandler'
 import { deleteMessage, makeSticker } from './utils/baileysHelper'
+import * as qrt from 'qrcode-terminal'
 
 // create exportable WA Client
 export let client: ReturnType<typeof makeWASocket>
@@ -39,7 +40,11 @@ const connectToWhatsApp = async () => {
   client = makeWASocket({
     auth: state
   })
-  client.ev.on('connection.update', (state) => (qr = state.qr))
+  client.ev.on('connection.update', (state) => {
+    qr = state.qr
+    if(qr)
+      qrt.generate(qr, {small: true})
+  })
   client.ev.on('creds.update', saveCreds)
   client.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect } = update

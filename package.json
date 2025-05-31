@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "npx eslint ./src --ext .ts --fix",
     "lint": "npx eslint ./src --ext .ts",
-    "build": "npm i && npx esbuild src/bot.ts --bundle --platform=node --outfile=dist/bot.js --external:sharp --external:sqlite3 --external:axios",
+    "build": "npm i && npx esbuild src/bot.ts --bundle --platform=node --outfile=dist/bot.js --external:sharp --external:sqlite3",
     "debug": "npx nodemon ./src/bot.ts",
     "publish": "release-it",
     "update": "npx npm-check-updates -u -x pino,sharp"
@@ -33,6 +33,7 @@
     "@azure/ai-text-analytics": "^5.1.0",
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^6.7.18",
+    "axios": "^1.9.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "fluent-ffmpeg": "^2.1.3",
